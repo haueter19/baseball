@@ -1,0 +1,95 @@
+{% extends "header.html" %}
+{% block title %}Clubhouse{% endblock %}
+{% block content %}
+{{ org }} | {{ league }} | {{ tm }} | {{ year }} | {{ sort }} | {{ asc }}
+<br />
+<form action="/stats/{{ org }}?">
+<table id="options">
+    <tr>
+        <td>
+            <label for="year_list">Choose a Year:</label>
+            <select name="year" id="year_list">
+                <option value=2018>2018</option>
+                <option value=2017>2017</option>
+                <option value=2016>2016</option>
+                <option value=2015>2015</option>
+            </select>
+        </td>
+        <td>
+            <input type="radio" id="18" name="league" value=18>
+            <label for="18">18+</label><br>
+            <input type="radio" id="35" name="league" value=35>
+            <label for="35">35+</label><br>
+            <input type="radio" id="45" name="league" value=45>
+            <label for="45">45+</label>
+        </td>
+        <td>
+            <label for="team_list">Choose a Team:</label>
+            <select name="tm" id="team_list">
+                <option value="Athletics">Athletics</option>
+                <option value="Blue Jays">Blue Jays</option>
+                <option value="Los Banditos">Los Banditos</option>
+                <option value="Monarchs">Monarchs</option>
+                <option value="Orioles">Orioles</option>
+                <option value="Angels">Angels</option>
+            </select>
+            
+        </td>
+        <td>
+            <label for="sort_list">Sort by:</label>
+            <select name="sort" id="sort_list">
+                <option value="Team">Team</option>
+                <option value="Year">Year</option>
+                <option value="Last">Last</option>
+                <option value="PA">PA</option>
+                <option value="H">H</option>
+                <option value="BA">BA</option>
+                <option value="OPS">OPS</option>
+            </select>
+        </td>
+        <td>
+            <input type="radio" id="asc" name="asc" value=True>
+            <label for="asc">Ascending</label><br>
+            <input type="radio" id="desc" name="asc" value=False>
+            <label for="desc">Descending</label><br>
+        </td>
+    </tr>
+</table>
+<input type="submit" value="Submit">
+</form>
+<br />
+<div id="df_table">
+{{ df|safe }}
+</div>
+<br />
+
+<script>
+var el;
+el = document.getElementsByName("league");
+var i;
+for (i = 0; i < el.length; i++) {
+    if (el[i].value == {{ league }}){
+        el[i].checked = true;
+    }
+}
+var url_string = window.location.href;
+var url = new URL(url_string);
+var c = url.searchParams.get("tm");
+document.getElementById("team_list").value = c
+
+var c = url.searchParams.get("year");
+document.getElementById("year_list").value = c
+
+var c = url.searchParams.get("sort");
+document.getElementById("sort_list").value = c
+
+var c = url.searchParams.get("asc");
+el = document.getElementsByName("asc");
+var i;
+for (i = 0; i < el.length; i++) {
+    if (el[i].value == c){
+        el[i].checked = true;
+    }
+}
+</script>
+{% endblock %}

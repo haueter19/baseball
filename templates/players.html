@@ -1,0 +1,17 @@
+{% extends "header.html" %}
+{% block title %}Clubhouse{% endblock %}
+{% block content %}
+
+<br />
+{{ fname }} {{ lname }}
+<br />
+<form action="/player/">
+    <input type='text'>
+    <input type="submit" value="Submit">
+</form>
+<div id="df_table">
+{{ df|safe }}
+</div>
+<br />
+
+{% endblock %}
