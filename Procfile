@@ -1,1 +1,1 @@
-worker: uvicorn main:app --reload
+web: uvicorn main:app --reload --host "0.0.0.0" --port 8050
