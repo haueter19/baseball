@@ -3,6 +3,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from starlette.responses import RedirectResponse
 import pandas as pd
 import numpy as np
 df = pd.read_csv('Master_Hitting.csv')
@@ -82,7 +83,7 @@ async def stats_page(request: Request, org: str, team: Optional[str] = None, sor
 
 @app.get("/")
 def read_root():
-    return {'status':'success'}
+    return RedirectResponse('/home')
 
 @app.get("/player/")
 async def player(request: Request):
