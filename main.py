@@ -79,6 +79,11 @@ async def stats_page(request: Request, org: str, team: Optional[str] = None, sor
     df2 = df2.sort_values([sort, "Year"], ascending=asc)
     return templates.TemplateResponse("index.html", {"request": request, "org":org, "df":df2.to_html(index=False), "league":league, "tm":team, "year":year, "sort":sort, "asc":asc, "teams":team_list})
 
+
+@app.get("/")
+def read_root():
+    return {'status':'success'}
+
 @app.get("/player/")
 async def player(request: Request):
     df2 = df['PID'].unique()
