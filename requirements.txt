@@ -12,3 +12,4 @@ starlette==0.13.6
 uvicorn==0.13.1
 Werkzeug==0.15.4
 aiofile==3.5.0
+gunicorn==20.0.4
