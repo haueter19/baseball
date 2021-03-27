@@ -3,13 +3,19 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from starlette.responses import RedirectResponse
 import pandas as pd
 import numpy as np
-df = pd.read_csv('Master_Hitting.csv')
+#mabl = pd.read_csv('C:\\Users\\Daniel\\Documents\\Python Scripts\\MABL_Hitting.csv')
+#rrl = pd.read_csv('C:\\Users\\Daniel\\Documents\\Python Scripts\\RRL_Hitting.csv')
+#mscr = pd.read_csv('C:\\Users\\Daniel\\Documents\\Python Scripts\\hitting.csv')
+df = pd.read_csv('C:\\Users\\Daniel\\Documents\\Rockers\\Master_Hitting.csv')
 df['League'].fillna('None', inplace=True)
 df['Team'].fillna('None', inplace=True)
-for i in ['GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB', 'wRAA']:
+df.loc[df['Year']==2019, 'den'] = 4
+df.loc[df['Year']==2018, 'den'] = 3
+df.loc[df['Year']==2017, 'den'] = 2
+df.loc[df['Year']==2016, 'den'] = 1
+for i in ['GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB', 'wRAA', 'den']:
     df[i].fillna(0, inplace=True)
 
 app = FastAPI()
@@ -80,11 +86,6 @@ async def stats_page(request: Request, org: str, team: Optional[str] = None, sor
     df2 = df2.sort_values([sort, "Year"], ascending=asc)
     return templates.TemplateResponse("index.html", {"request": request, "org":org, "df":df2.to_html(index=False), "league":league, "tm":team, "year":year, "sort":sort, "asc":asc, "teams":team_list})
 
-
-@app.get("/")
-def read_root():
-    return RedirectResponse('/home')
-
 @app.get("/player/")
 async def player(request: Request):
     df2 = df['PID'].unique()
@@ -120,6 +121,14 @@ async def teams_page(request: Request, org: Optional[str] = None, league: Option
 async def home(request: Request):
     orgs = df['Org'].sort_values().unique()
     return templates.TemplateResponse("home.html", {"request": request, 'orgs':orgs})
+
+@app.get("/{org}/{lg}/{tm}/projections")
+async def league(request: Request, org: str, lg: str, tm: str):
+    df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm) & (df['Year'].isin([2019, 2018, 2017, 2016]))]
+    from projections import make_projections
+    pa = 50
+    df2 = make_projections(df2, pa)
+    return templates.TemplateResponse("projections.html", {"request": request, 'org':org, 'lg':lg, 'df':df2.to_html(index=False), 'df2':df2, 'pid':df2['PID']})
 
 @app.get("/{org}")
 async def org(request: Request, org: str):
