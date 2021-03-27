@@ -1,1 +1,1 @@
-web: uvicorn main:app --reload --host "0.0.0.0" --port 8050
+web: uvicorn main:app --reload --host "0.0.0.0"
