@@ -11,6 +11,7 @@ import numpy as np
 df = pd.read_csv('Master_Hitting.csv')
 df['League'].fillna('None', inplace=True)
 df['Team'].fillna('None', inplace=True)
+
 df.loc[df['Year']==2019, 'den'] = 4
 df.loc[df['Year']==2018, 'den'] = 3
 df.loc[df['Year']==2017, 'den'] = 2
