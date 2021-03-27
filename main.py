@@ -8,7 +8,7 @@ import numpy as np
 #mabl = pd.read_csv('C:\\Users\\Daniel\\Documents\\Python Scripts\\MABL_Hitting.csv')
 #rrl = pd.read_csv('C:\\Users\\Daniel\\Documents\\Python Scripts\\RRL_Hitting.csv')
 #mscr = pd.read_csv('C:\\Users\\Daniel\\Documents\\Python Scripts\\hitting.csv')
-df = pd.read_csv('C:\\Users\\Daniel\\Documents\\Rockers\\Master_Hitting.csv')
+df = pd.read_csv('Master_Hitting.csv')
 df['League'].fillna('None', inplace=True)
 df['Team'].fillna('None', inplace=True)
 df.loc[df['Year']==2019, 'den'] = 4
