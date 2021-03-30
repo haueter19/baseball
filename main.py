@@ -19,10 +19,11 @@ df.loc[df['Year']==2016, 'den'] = 1
 for i in ['GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB', 'wRAA', 'den']:
     df[i].fillna(0, inplace=True)
 
+for i in ['H', '1B', '2B', 'K', 'SF', 'SH']:
+    df[i] = df[i].astype(int)
+
 app = FastAPI()
-
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
 templates = Jinja2Templates(directory="templates")
 
 def add_rate_stats(z):
@@ -89,8 +90,10 @@ async def stats_page(request: Request, org: str, team: Optional[str] = None, sor
 
 @app.get("/player/")
 async def player(request: Request):
-    df2 = df['PID'].unique()
-    return templates.TemplateResponse("players.html", {"request": request, 'df':df2})
+    #df2 = df['PID'].unique().tolist()
+    df2 = df.copy()
+    df2 = df2.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index()
+    return templates.TemplateResponse("players.html", {"request": request, 'df':df2, 'fname':'', 'lname':''})
 
 @app.get("/player/{pid}")
 async def player_page(request: Request, pid: int):
@@ -104,7 +107,7 @@ async def player_page(request: Request, pid: int):
     slg = gp.TB.sum()/gp.AB.sum()
     ops = obp + slg
     gp.at[-1] = ['Career', gp.GP.sum(), gp.PA.sum(), gp.AB.sum(), gp.R.sum(), gp.H.sum(), gp['1B'].sum(), gp['2B'].sum(), gp['3B'].sum(), gp.HR.sum(), gp.RBI.sum(), gp.BB.sum(),gp.K.sum(),gp.HBP.sum(),gp.SB.sum(),gp.CS.sum(),gp.SF.sum(),gp.SH.sum(),gp.TB.sum(),gp.wRAA.sum(),gp.RC.sum(), ba,obp,slg,ops]
-    return templates.TemplateResponse("players.html", {"request": request, "df":gp.to_html(index=False), 'fname':df2.First.max(), 'lname':df2.Last.max()})
+    return templates.TemplateResponse("players.html", {"request": request, "df":df.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index(), "df2":gp.to_html(index=False), 'fname':df2.First.max(), 'lname':df2.Last.max()})
 
 @app.get("{org}/teams")
 async def teams_page(request: Request, org: Optional[str] = None, league: Optional[str] = None, year: Optional[int] = None, tm: Optional[str] = None, sort: Optional[str] = None):
@@ -166,8 +169,9 @@ async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort
     add_wRAA(df2, lgwOBA, wOBAscale)
     add_wRC(df2, lgwOBA, wOBAscale, lgR, lgPA)
     add_wRC_plus(df2, lgR, lgPA)
+    df2['wRC+'] = df2['wRC+'].astype(int)
     if sort==None:
         df2 = df2.sort_values(['Last', 'First'], ascending=True)
     else:
         df2 = df2.sort_values(sort, ascending=asc)
-    return templates.TemplateResponse("team_stats.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yr':yr, 'df':df2.to_html(index=False), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
+    return templates.TemplateResponse("team_stats.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yr':yr, 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
