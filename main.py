@@ -42,6 +42,7 @@ def add_team_totals(z):
     dict.update({'OBP':round((z['H'].sum()+z['BB'].sum()+z['HBP'].sum())/(z['AB'].sum()+z['BB'].sum()+z['HBP'].sum()+z['SF'].sum()),3)})
     dict.update({'SLG':round(z['TB'].sum()/z['AB'].sum(),3)})
     dict.update({'OPS':round((z['H'].sum()+z['BB'].sum()+z['HBP'].sum())/(z['AB'].sum()+z['BB'].sum()+z['HBP'].sum()+z['SF'].sum())+(z['TB'].sum()/z['AB'].sum()), 3)})
+    dict.update({'wRAAc':round(z['wRAAc'].sum(), 1)})
     z = z.append(dict, ignore_index = True)
     return z
 
