@@ -16,6 +16,7 @@ df.loc[df['Year']==2019, 'den'] = 4
 df.loc[df['Year']==2018, 'den'] = 3
 df.loc[df['Year']==2017, 'den'] = 2
 df.loc[df['Year']==2016, 'den'] = 1
+common_stat_list = ['GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB', 'wRAA', 'RC']
 for i in ['GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB', 'wRAA', 'den']:
     df[i].fillna(0, inplace=True)
 
@@ -31,6 +32,17 @@ def add_rate_stats(z):
     z['OBP'] = round((z['H']+z['BB']+z['HBP'])/(z['AB']+z['BB']+z['HBP']+z['SF']),3)
     z['SLG'] = round(z['TB']/z['AB'],3)
     z['OPS'] = round(z['SLG'] + z['OBP'],3)
+    return z
+
+def add_team_totals(z):
+    dict = {'First':'Team', 'Last': 'Totals'}
+    for i in common_stat_list:
+        dict.update({i: round(z[i].sum(),1)})
+    dict.update({'BA':round(z['H'].sum()/z['AB'].sum(),3)})
+    dict.update({'OBP':round((z['H'].sum()+z['BB'].sum()+z['HBP'].sum())/(z['AB'].sum()+z['BB'].sum()+z['HBP'].sum()+z['SF'].sum()),3)})
+    dict.update({'SLG':round(z['TB'].sum()/z['AB'].sum(),3)})
+    dict.update({'OPS':round((z['H'].sum()+z['BB'].sum()+z['HBP'].sum())/(z['AB'].sum()+z['BB'].sum()+z['HBP'].sum()+z['SF'].sum())+(z['TB'].sum()/z['AB'].sum()), 3)})
+    z = z.append(dict, ignore_index = True)
     return z
 
 def add_runs_created(z):
@@ -180,9 +192,11 @@ async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort
     add_wRC(df2, lgwOBA, wOBAscale, lgR, lgPA)
     add_wRC_plus(df2, lgR, lgPA)
     df2['wRC+'] = df2['wRC+'].astype(int)
+    #df2.append({'Team Totals', df2['GP'].sum(), df2['PA'].sum(), df2['AB'].sum(), df2['R'].sum(), df2['H'].sum(), df2['1B'].sum(), df2['2B'].sum(), df2['3B'].sum(), df2['HR'].sum(), df2['RBI'].sum(), df2['BB'].sum(), df2['K'].sum(), df2['HBP'].sum(), df2['SB'].sum(), df2['CS'].sum(), df2['SF'].sum(), df2['SH'].sum(), df2['TB'].sum(), df2['wRAA'].sum(), df2['RC'].sum(), round(df2['H'].sum()/df2['AB'].sum(),3), '-', '-', '-', '-', '-', '-', '-', '-']
     if sort==None:
         df2 = df2.sort_values(['Last', 'First'], ascending=True)
     else:
         df2 = df2.sort_values(sort, ascending=asc)
+    df2 = add_team_totals(df2)
     return templates.TemplateResponse("team_stats.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yr':yr, 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
 
