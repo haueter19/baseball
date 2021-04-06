@@ -140,6 +140,16 @@ async def org(request: Request, org: str):
     lgs = df2['League'].sort_values().unique()
     return templates.TemplateResponse("org.html", {"request": request, 'org':org, 'lgs':lgs})
 
+@app.get("/{org}/{lg}/champions")
+async def standings(request: Request, org: str, lg: str):
+    standings = pd.read_csv('mabl_standings.csv')
+    post_winners = standings[(standings['Org']==org.upper()) & (standings['League']==lg) & (standings['Postseason']==1)][['Year', 'Team']].sort_values('Year', ascending=False)
+    post_winners.columns=['Year', 'Playoffs']
+    season_winners = standings[(standings['Org']==org.upper()) & (standings['League']==lg) & (standings['Season']==1)][['Year', 'Team']].sort_values('Year', ascending=False)
+    season_winners.columns=['Year', 'Season']
+    champs = post_winners.merge(season_winners, on='Year', how='outer')
+    return templates.TemplateResponse("champions.html", {'request': request, 'org': org, 'lg': lg, "champs": champs})
+
 @app.get("/{org}/{lg}")
 async def league(request: Request, org: str, lg: str):
     df2 = df[(df['Org']==org.upper()) & (df['League']==lg)]
@@ -175,3 +185,4 @@ async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort
     else:
         df2 = df2.sort_values(sort, ascending=asc)
     return templates.TemplateResponse("team_stats.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yr':yr, 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
+

@@ -1,0 +1,16 @@
+{% extends "header.html" %}
+{% block title %}Clubhouse{% endblock %}
+{% block logo %}"/static/images/mabl-logo.png"{% endblock %}
+{% block lg %}"/stats/mabl"{% endblock %}
+{% block sched %}"schedule/mabl"{% endblock %}
+{% block content %}
+<br />
+<h3>Playoff And Regular Season Champions</h3>
+<table>
+{% for key, val in champs.iterrows() %}
+<tr><td>{{ val['Year'] }}</td><td>{{ val['Playoffs'] }}</td><td>{{ val['Season'] }}</td><td><img src="/static/images/team_logos/athletics.jpg" height="75" width="75"></td></tr>
+{% endfor %}
+</table>
+
+{% endblock %}
+
