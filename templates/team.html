@@ -3,7 +3,8 @@
 
 {% block lg_stats %}"/{{ org }}/{{ lg }}/league/2019"{% endblock %}
 {% block content %}
-<br />
+<a href="../../{{ org }}">{{ org }}</a> > <a href="../../{{ org }}/{{ lg }}">{{ lg }}</a> > {{ tm }}
+<br /><br />
 Teams<br>
 {% for yr in yrs %}
 <a href="/{{ org }}/{{ lg }}/{{ tm }}/{{ yr }}">{{ yr }}</a><br>
