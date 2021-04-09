@@ -192,9 +192,12 @@ async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Op
     add_wRAA(df2, lgwOBA, wOBAscale)
     add_wRC(df2, lgwOBA, wOBAscale, lgR, lgPA)
     add_wRC_plus(df2, lgR, lgPA)
+    df2['wRC+'].fillna(0,inplace=True)
     df2['wRC+'] = df2['wRC+'].astype(int)
+    if asc==None:
+        asc=False
     if sort==None:
-        df2 = df2.sort_values('wRAAc', ascending=True)
+        df2 = df2.sort_values('wRAAc', ascending=asc)
     else:
         df2 = df2.sort_values(sort, ascending=asc)
     return templates.TemplateResponse('league_stats.html', {"request": request, 'org':org, 'lg':lg, 'yr':yr, 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
@@ -217,10 +220,13 @@ async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort
     add_wRAA(df2, lgwOBA, wOBAscale)
     add_wRC(df2, lgwOBA, wOBAscale, lgR, lgPA)
     add_wRC_plus(df2, lgR, lgPA)
+    df2['wRC+'].fillna(0,inplace=True)
     df2['wRC+'] = df2['wRC+'].astype(int)
     #df2.append({'Team Totals', df2['GP'].sum(), df2['PA'].sum(), df2['AB'].sum(), df2['R'].sum(), df2['H'].sum(), df2['1B'].sum(), df2['2B'].sum(), df2['3B'].sum(), df2['HR'].sum(), df2['RBI'].sum(), df2['BB'].sum(), df2['K'].sum(), df2['HBP'].sum(), df2['SB'].sum(), df2['CS'].sum(), df2['SF'].sum(), df2['SH'].sum(), df2['TB'].sum(), df2['wRAA'].sum(), df2['RC'].sum(), round(df2['H'].sum()/df2['AB'].sum(),3), '-', '-', '-', '-', '-', '-', '-', '-']
+    if asc==None:
+        asc=False
     if sort==None:
-        df2 = df2.sort_values(['Last', 'First'], ascending=True)
+        df2 = df2.sort_values('wRAAc', ascending=False)
     else:
         df2 = df2.sort_values(sort, ascending=asc)
     df2 = add_team_totals(df2)
