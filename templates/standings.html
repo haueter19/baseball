@@ -1,0 +1,65 @@
+{% extends "header.html" %}
+{% block title %}Clubhouse{% endblock %}
+{% block lg_stats %}"/{{ org }}/{{ lg }}/league/{{ yr }}"{% endblock %}
+{% block content %}
+
+<a href="../../../{{ org }}">{{ org }}</a> > <a href="../../../{{ org }}/{{ lg }}/">{{ lg }}</a> > <a href="../../../{{ org }}/{{ lg }}/league/{{ yr }} ">League</a> > {{ yr }}
+<br /><br />
+<form id="form" action="/standings/{{ org }}/{{ lg }}/{{ yr }}?">
+    <label for="sort_list">Sort by:</label>
+    <select name="sort" id="sort_list">
+        {% for col in st %}
+        <option value="{{ col }}">{{ col }}</option>
+        {% endfor %}
+    </select>
+    <input type="radio" id="sort_asc" name="asc" value=True>
+    <label for="asc">Ascending</label>
+    <input type="radio" id="sort_desc" name="asc" value=False>
+    <label for="asc">Descending</label>
+    <br><input type="submit" value="Submit">
+</form>
+<br>
+<table class='dataframe' id='df_table'>
+    <col><col><col><col><col><col><col><col><col><col>
+    <tr>
+        <th>Team</th>
+        <th>W</th>
+        <th>L</th>
+        <th>T</th>
+        <th>Pct</th>
+        <th>GB</th>
+        <th>RF</th>
+        <th>RA</th>
+        <th>Pyth</th>
+        <th>Champs</th>
+    </tr>
+        {% for key,val in st.iterrows() %}
+        <tr>
+            <td><a href="../../../{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ yr }}">{{ val['Team'] }}</a></td>
+            <td>{{ val['W'] }}</td>
+            <td>{{ val['L'] }}</td>
+            <td>{{ val['T'] }}</td>
+            <td>{{ val['Pct'] }}</td>
+            <td>{{ val['GB'] }}</td>
+            <td>{{ val['RF'] }}</td>
+            <td>{{ val['RA'] }}</td>
+            <td>{{ val['Season'] }}</td>
+            <td>{{ val['Postseason'] }}</td>
+        </tr>
+        {% endfor %}
+</table>
+<br>
+<script>
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    var c = url.searchParams.get("sort");
+    $('#sort_list').val(c);
+    var c = url.searchParams.get("asc");
+
+    if (c==True){
+        //$("#sort_asc").prop("checked", true);
+        $('#sort_asc').prop('checked',true);
+    }    
+</script>
+
+{% endblock %}

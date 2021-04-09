@@ -87,6 +87,40 @@
             <td>{{ val['wRC+'] }}</td>
         </tr>
         {% endfor %}
+        {% for key, val in lg_stats.iterrows() %}
+        <tr>
+            <td>League Averages</td>
+            <td>{{ val['GP'] }}</td>
+            <td>{{ val['PA'] }}</td>
+            <td>{{ val['AB'] }}</td>
+            <td>{{ val['R'] }}</td>
+            <td>{{ val['H'] }}</td>
+            <td>{{ val['1B'] }}</td>
+            <td>{{ val['2B'] }}</td>
+            <td>{{ val['3B'] }}</td>
+            <td>{{ val['HR'] }}</td>
+            <td>{{ val['RBI'] }}</td>
+            <td>{{ val['BB'] }}</td>
+            <td>{{ val['K'] }}</td>
+            <td>{{ val['HBP'] }}</td>
+            <td>{{ val['SB'] }}</td>
+            <td>{{ val['CS'] }}</td>
+            <td>{{ val['SF'] }}</td>
+            <td>{{ val['SH'] }}</td>
+            <td>{{ val['TB'] }}</td>
+            <td>{{ 0.0 }}</td>
+            <td>{{ val['RC'] }}</td>
+            <td>{{ val['BA'] }}</td>
+            <td>{{ val['OBP'] }}</td>
+            <td>{{ val['SLG'] }}</td>
+            <td>{{ val['OPS'] }}</td>
+            <td>{{ 100 }}</td>
+            <td>{{ val['wOBA'] }}</td>
+            <td>{{ 0.0 }}</td>
+            <td>{{ val['wRC'] }}</td>
+            <td>{{ 100 }}</td>
+        </tr>
+        {% endfor %}
 </table>
 <br>
 <script>

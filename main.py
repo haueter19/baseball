@@ -12,6 +12,8 @@ df = pd.read_csv('Master_Hitting.csv')
 df['League'].fillna('None', inplace=True)
 df['Team'].fillna('None', inplace=True)
 
+maxYear = df['Year'].max()
+
 df.loc[df['Year']==2019, 'den'] = 4
 df.loc[df['Year']==2018, 'den'] = 3
 df.loc[df['Year']==2017, 'den'] = 2
@@ -23,9 +25,13 @@ for i in ['GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 
 for i in ['PID', 'H', '1B', '2B', 'K', 'SF', 'SH']:
     df[i] = df[i].astype(int)
 
-app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+def make_lg_avg(df):
+    stats = ['GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB']
+    df = df.groupby(['Org', 'League', 'Year']).agg({'GP':'mean', 'PA':'mean', 'AB':'mean', 'R':'mean', 'H':'mean', '1B':'mean', '2B':'mean', '3B':'mean', 'HR':'mean', 'RBI':'mean', 'BB':'mean', 'K':'mean', 'HBP':'mean', 'SB':'mean', 'CS':'mean', 'SF':'mean', 'SH':'mean', 'TB':'mean'}).reset_index()
+    for i in stats:
+        df[i] = round(df[i],1)
+    add_rate_stats(df)
+    return df
 
 def add_rate_stats(z):
     z['BA'] = round(z['H']/z['AB'],3)
@@ -33,6 +39,8 @@ def add_rate_stats(z):
     z['SLG'] = round(z['TB']/z['AB'],3)
     z['OPS'] = round(z['SLG'] + z['OBP'],3)
     return z
+
+h_lg_avg = make_lg_avg(df)
 
 def add_team_totals(z):
     dict = {'First':'Team', 'Last': 'Totals'}
@@ -78,6 +86,10 @@ def add_wRC_plus(z, lgR, lgPA):
     #wRC+ = (((wRAA/PA + League R/PA) + (League R/PA – Park Factor* League R/PA))/ (AL or NL wRC/PA excluding pitchers))*100
     z['wRC+'] = round(((z['wRAAc']/z['PA'] + lgR/lgPA)  / (lgR/lgPA)) * 100, 0)
     return z
+
+app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
 @app.get("/{org}/stats", response_class=HTMLResponse)
 async def stats_page(request: Request, org: str, team: Optional[str] = None, sort: Optional[str] = None, year: Optional[str] = None, league: Optional[str] = None, asc: Optional[bool] = False):
@@ -139,6 +151,12 @@ async def home(request: Request):
     orgs = df['Org'].sort_values().unique()
     return templates.TemplateResponse("home.html", {"request": request, 'orgs':orgs})
 
+@app.get("/standings/{org}/{lg}/{yr}")
+async def standings(request: Request, org: str, lg: str, yr: int):
+    st = pd.read_csv('standings.csv')
+    st = st[(st['Org']==org) & (st['League']==lg) & (st['Year']==yr)].sort_values('Pct', ascending=False)
+    return templates.TemplateResponse("standings.html", {'request': request, 'st':st, 'org':org, 'lg':lg, 'yr':yr})
+
 @app.get("/{org}/{lg}/{tm}/projections")
 async def league(request: Request, org: str, lg: str, tm: str):
     df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm) & (df['Year'].isin([2019, 2018, 2017, 2016]))]
@@ -167,7 +185,8 @@ async def standings(request: Request, org: str, lg: str):
 async def league(request: Request, org: str, lg: str):
     df2 = df[(df['Org']==org.upper()) & (df['League']==lg)]
     tms = df2['Team'].sort_values().unique()
-    return templates.TemplateResponse("league.html", {"request": request, 'org':org, 'lg':lg, 'tms':tms})
+    maxYear = df2.Year.max()
+    return templates.TemplateResponse("league.html", {"request": request, 'org':org, 'lg':lg, 'tms':tms, 'maxYear':maxYear})
 
 @app.get("/{org}/{lg}/{tm}")
 async def orglgtm(request: Request, org: str, lg: str, tm: str):
@@ -230,4 +249,5 @@ async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort
     else:
         df2 = df2.sort_values(sort, ascending=asc)
     df2 = add_team_totals(df2)
-    return templates.TemplateResponse("team_stats.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yr':yr, 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
+    lg_stats = h_lg_avg[(h_lg_avg['Org']==org) & (h_lg_avg['League']==lg) & (h_lg_avg['Year']==yr)]
+    return templates.TemplateResponse("team_stats.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yr':yr, 'df2':df2, 'lg_stats':lg_stats, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
