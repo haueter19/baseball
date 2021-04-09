@@ -1,6 +1,6 @@
 #main {
 	background-color: #ffffff; 
-	width: 1100px; 
+	width: 1300px; 
 	margin: auto;
 }
 table.dataframe {
@@ -12,7 +12,7 @@ col:nth-child(2n+3) {background: #CCC}
 
 #df_table {
 	width:100%;
-	overflow-x: auto;
+	overflow-x: scroll;
 }
 th {
 	min-width: 25px;

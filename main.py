@@ -175,6 +175,31 @@ async def orglgtm(request: Request, org: str, lg: str, tm: str):
     yrs = df2['Year'].sort_values().unique()
     return templates.TemplateResponse("team.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yrs':yrs})
 
+
+@app.get("/{org}/{lg}/league/{yr}")
+async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Optional[str] = None, asc: Optional[bool] = False):
+    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
+    add_rate_stats(df2)
+    add_runs_created(df2)
+    lgtot = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Year']==yr)]
+    lgSLG = lgtot['TB'].sum()/lgtot['AB'].sum()
+    lgOBP = (lgtot['H'].sum()+lgtot['BB'].sum()+lgtot['HBP'].sum())/(lgtot['AB'].sum()+lgtot['BB'].sum()+lgtot['HBP'].sum()+lgtot['SF'].sum())
+    lgwOBA = round(((0.691*lgtot['BB'].sum()) + (0.722*lgtot['HBP'].sum()) + (0.884*lgtot['1B'].sum()) + (1.257*lgtot['2B'].sum()) + (1.593*lgtot['3B'].sum()) + (2.058*lgtot['HR'].sum())) / (lgtot['AB'].sum() + lgtot['BB'].sum() + lgtot['HBP'].sum() + lgtot['SF'].sum()),3)
+    lgR = lgtot['R'].sum()
+    lgPA = lgtot['PA'].sum()
+    wOBAscale = lgOBP/lgwOBA
+    add_ops_plus(df2, lgOBP, lgSLG)
+    add_woba(df2)
+    add_wRAA(df2, lgwOBA, wOBAscale)
+    add_wRC(df2, lgwOBA, wOBAscale, lgR, lgPA)
+    add_wRC_plus(df2, lgR, lgPA)
+    df2['wRC+'] = df2['wRC+'].astype(int)
+    if sort==None:
+        df2 = df2.sort_values('wRAAc', ascending=True)
+    else:
+        df2 = df2.sort_values(sort, ascending=asc)
+    return templates.TemplateResponse('league_stats.html', {"request": request, 'org':org, 'lg':lg, 'yr':yr, 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
+
 @app.get("/{org}/{lg}/{tm}/{yr}")
 async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort: Optional[str] = None, asc: Optional[bool] = False):
     df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm) & (df['Year']==yr)][['PID', 'First', 'Last', 'GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB', 'wRAA']]
@@ -200,4 +225,3 @@ async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort
         df2 = df2.sort_values(sort, ascending=asc)
     df2 = add_team_totals(df2)
     return templates.TemplateResponse("team_stats.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yr':yr, 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
-
