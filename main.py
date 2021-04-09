@@ -20,7 +20,7 @@ common_stat_list = ['GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', '
 for i in ['GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB', 'wRAA', 'den']:
     df[i].fillna(0, inplace=True)
 
-for i in ['H', '1B', '2B', 'K', 'SF', 'SH']:
+for i in ['PID', 'H', '1B', '2B', 'K', 'SF', 'SH']:
     df[i] = df[i].astype(int)
 
 app = FastAPI()
@@ -175,7 +175,6 @@ async def orglgtm(request: Request, org: str, lg: str, tm: str):
     yrs = df2['Year'].sort_values().unique()
     return templates.TemplateResponse("team.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yrs':yrs})
 
-
 @app.get("/{org}/{lg}/league/{yr}")
 async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Optional[str] = None, asc: Optional[bool] = False):
     df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
@@ -203,6 +202,7 @@ async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Op
 @app.get("/{org}/{lg}/{tm}/{yr}")
 async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort: Optional[str] = None, asc: Optional[bool] = False):
     df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm) & (df['Year']==yr)][['PID', 'First', 'Last', 'GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB', 'wRAA']]
+    df2['PID'] = df2['PID'].astype(int)
     add_rate_stats(df2)
     add_runs_created(df2)
     lgtot = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Year']==yr)]
