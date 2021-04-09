@@ -31,6 +31,7 @@
         <th>RF</th>
         <th>RA</th>
         <th>Pyth</th>
+        <th>xWins</th>
         <th>Champs</th>
     </tr>
         {% for key,val in st.iterrows() %}
@@ -43,7 +44,8 @@
             <td>{{ val['GB'] }}</td>
             <td>{{ val['RF'] }}</td>
             <td>{{ val['RA'] }}</td>
-            <td>{{ val['Season'] }}</td>
+            <td>{{ val['Pyth'] }}</td>
+            <td>{{ val['xW'] }}</td>
             <td>{{ val['Postseason'] }}</td>
         </tr>
         {% endfor %}
