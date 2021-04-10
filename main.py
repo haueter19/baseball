@@ -168,8 +168,9 @@ async def season_records(request: Request, org: str, lg: str, stat: Optional[str
 
 @app.get("/records/career/{org}/{lg}")
 async def career_records(request: Request, org: str, lg: str, stat: Optional[str] = 'H'):
-    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['PA']>100)].groupby('PID').agg({'First':'last', 'Last':'last', 'Team':'last', stat:'sum'}).sort_values(stat, ascending=False).head(20).reset_index()
-    df2.columns=['PID', 'First', 'Last', 'Team', 'stat']
+    df2 = df[(df['Org']==org) & (df['League']==lg)].groupby('PID').agg({'First':'last', 'Last':'last', 'Team':'last', 'PA':'sum', stat:'sum'}).sort_values(stat, ascending=False).head(20).reset_index()
+    df2.columns=['PID', 'First', 'Last', 'Team', 'PA', 'stat']
+    df2 = df2[df2['PA']>100]
     return templates.TemplateResponse("career_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat})
 
 @app.get("/{org}/{lg}/{tm}/projections")
