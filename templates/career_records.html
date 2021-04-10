@@ -1,0 +1,50 @@
+{% extends "header.html" %}
+{% block title %}Clubhouse{% endblock %}
+{% block lg_stats %}"/{{ org }}/{{ lg }}/league/2019"{% endblock %}
+{% block content %}
+
+<br />
+<form id="form" action="/{{ org }}/{{ lg }}/league/{{ yr }}?">
+    <label for="sort_list">Sort by:</label>
+    <select name="sort" id="sort_list">
+        {% for col in df2 %}
+        <option value="{{ col }}">{{ col }}</option>
+        {% endfor %}
+    </select>
+    <input type="radio" id="sort_asc" name="asc" value=True>
+    <label for="asc">Ascending</label>
+    <input type="radio" id="sort_desc" name="asc" value=False>
+    <label for="asc">Descending</label>
+    <br><input type="submit" value="Submit">
+</form>
+<br>
+<table class='dataframe' id='df_table'>
+    <col><col><col><col>
+    <tr>
+        <th>Player</th>
+        <th>Team</th>
+        <th>{{ stat }}</th>
+    </tr>
+        {% for key,val in df2.iterrows() %}
+        <tr>
+            <td><a href="../../../player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
+            <td><a href="/{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ val['Year'] }}">{{ val['Team'] }}</a></td>
+            <td>{{ val['stat'] }}</td>
+        </tr>
+        {% endfor %}
+</table>
+<br>
+<script>
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    var c = url.searchParams.get("sort");
+    $('#sort_list').val(c);
+    var c = url.searchParams.get("asc");
+
+    if (c==True){
+        //$("#sort_asc").prop("checked", true);
+        $('#sort_asc').prop('checked',true);
+    }    
+</script>
+
+{% endblock %}

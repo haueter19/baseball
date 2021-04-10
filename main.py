@@ -160,6 +160,18 @@ async def standings(request: Request, org: str, lg: str, yr: int):
     st['xW'] = round(st['Pyth']*st['GP'],1)
     return templates.TemplateResponse("standings.html", {'request': request, 'st':st, 'org':org, 'lg':lg, 'yr':yr})
 
+@app.get("/records/season/{org}/{lg}")
+async def season_records(request: Request, org: str, lg: str, stat: Optional[str] = 'H'):
+    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['PA']>25)].sort_values(stat, ascending=False)[['First', 'Last', 'Team','Year', stat]].head(20)
+    df2.columns=['First', 'Last', 'Team', 'Year', 'stat']
+    return templates.TemplateResponse("season_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat})
+
+@app.get("/records/career/{org}/{lg}")
+async def career_records(request: Request, org: str, lg: str, stat: Optional[str] = 'H'):
+    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['PA']>100)].groupby('PID').agg({'First':'last', 'Last':'last', 'Team':'last', stat:'sum'}).sort_values(stat, ascending=False).head(20).reset_index()
+    df2.columns=['PID', 'First', 'Last', 'Team', 'stat']
+    return templates.TemplateResponse("career_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat})
+
 @app.get("/{org}/{lg}/{tm}/projections")
 async def league(request: Request, org: str, lg: str, tm: str):
     df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm) & (df['Year'].isin([2019, 2018, 2017, 2016]))]
