@@ -3,6 +3,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 import pandas as pd
 import numpy as np
 #mabl = pd.read_csv('C:\\Users\\Daniel\\Documents\\Python Scripts\\MABL_Hitting.csv')
@@ -145,6 +146,10 @@ async def teams_page(request: Request, org: Optional[str] = None, league: Option
     tms = df3.Team.unique().tolist()
     yrs = df[(df['Org']==org) & (df['League']==league)].Year.unique().tolist()
     return templates.TemplateResponse("teams.html", {"request": request, 'df':df2.to_html(index=False), 'tms':tms, 'yrs':yrs})
+
+@app.get('/')
+async def slash():
+    return RedirectResponse("/home")
 
 @app.get("/home")
 async def home(request: Request):
