@@ -26,14 +26,6 @@ for i in ['GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 
 for i in ['PID', 'H', '1B', '2B', 'K', 'SF', 'SH']:
     df[i] = df[i].astype(int)
 
-def make_lg_avg(df):
-    stats = ['GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB']
-    df = df.groupby(['Org', 'League', 'Year']).agg({'GP':'mean', 'PA':'mean', 'AB':'mean', 'R':'mean', 'H':'mean', '1B':'mean', '2B':'mean', '3B':'mean', 'HR':'mean', 'RBI':'mean', 'BB':'mean', 'K':'mean', 'HBP':'mean', 'SB':'mean', 'CS':'mean', 'SF':'mean', 'SH':'mean', 'TB':'mean'}).reset_index()
-    for i in stats:
-        df[i] = round(df[i],1)
-    add_rate_stats(df)
-    return df
-
 def add_rate_stats(z):
     z['BA'] = round(z['H']/z['AB'],3)
     z['OBP'] = round((z['H']+z['BB']+z['HBP'])/(z['AB']+z['BB']+z['HBP']+z['SF']),3)
@@ -41,7 +33,71 @@ def add_rate_stats(z):
     z['OPS'] = round(z['SLG'] + z['OBP'],3)
     return z
 
+def add_runs_created(z):
+    z['RC'] = round(((((2.4*(z['AB']+z['BB']+z['HBP']+z['SH']+z['SF']))+(z['H']+z['BB']-z['CS']+z['HBP']))*((3*(z['AB']+z['BB']+z['HBP']+z['SH']+z['SF']))+((1.25*(z['H']-z['2B']-z['3B']-z['HR']))+(1.69*z['2B'])+(3.02*z['3B'])+(3.73*z['HR'])+(.29*(z['BB']+z['HBP']))+(.492*(z['SH']+z['SF']+z['SB']))-(.4*z['K']))))/(9*(z['AB']+z['BB']+z['HBP']+z['SH']+z['SF'])))-(.9*(z['AB']+z['BB']+z['HBP']+z['SH']+z['SF'])),2)
+    return z
+
+def add_lg_woba(z):
+    z['wOBA'] = round(((0.691*z['BB']) + (0.722*z['HBP']) + (0.884*z['1B']) + (1.257*z['2B']) + (1.593*z['3B']) + (2.058*z['HR'])) / (z['AB'] + z['BB'] + z['HBP'] + z['SF']),3)
+    return z
+
+def make_lg_avg(z):
+    stats = ['GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB']
+    #lgR = z.groupby(['Org', 'League', 'Year'])['R'].sum().reset_index(name='lgR')['lgR']
+    #lgPA = z.groupby(['Org', 'League', 'Year'])['PA'].sum().reset_index(name='lgPA')['lgPA']
+    z = z.groupby(['Org', 'League', 'Year']).agg({'GP':'mean', 'PA':'mean', 'AB':'mean', 'R':'mean', 'H':'mean', '1B':'mean', '2B':'mean', '3B':'mean', 'HR':'mean', 'RBI':'mean', 'BB':'mean', 'K':'mean', 'HBP':'mean', 'SB':'mean', 'CS':'mean', 'SF':'mean', 'SH':'mean', 'TB':'mean'}).reset_index()
+    z['lgR'] = z.groupby(['Org', 'League', 'Year'])['R'].sum().reset_index(name='lgR')['lgR']
+    z['lgPA'] = z.groupby(['Org', 'League', 'Year'])['PA'].sum().reset_index(name='lgPA')['lgPA']
+    #z = z.merge(lgR, on=[['Org', 'League', 'Year']], how='inner')
+    for i in stats:
+        z[i] = round(z[i],1)
+    add_rate_stats(z)
+    add_lg_woba(z)
+    z['wOBAscale'] = z['OBP']/z['wOBA']
+    return z
+
+def add_ops_plus(z, avg):
+    #(OBP / lgOBP + SLG / lgSLG - 1) * 100
+    z = z.merge(avg[['Org', 'League', 'Year', 'lgR', 'lgPA', 'BA', 'OBP', 'SLG', 'OPS', 'wOBA', 'wOBAscale']], on=['Org', 'League', 'Year'], suffixes=['', '_lg'], how='outer')
+    z['OPS+'] = round((z['OBP']/z['OBP_lg'] + z['SLG']/z['SLG_lg'] -1)*100,0)
+    return z
+
+def add_woba(z):
+    #(0.691×uBB + 0.722×HBP + 0.884×1B + 1.257×2B + 1.593×3B + 2.058×HR) / (AB + BB – IBB + SF + HBP)
+    z['wOBA'] = round(((0.691*z['BB']) + (0.722*z['HBP']) + (0.884*z['1B']) + (1.257*z['2B']) + (1.593*z['3B']) + (2.058*z['HR'])) / (z['AB'] + z['BB'] + z['HBP'] + z['SF']),3)
+    return z
+
+def add_wRAA(z, avg):
+    #wRAA formula = ((wOBA-lgwOBA)/wOBAScale)*PA;
+    #z = z.merge(avg[['Org', 'League', 'Year', 'wOBA', 'wOBAscale']], on=['Org', 'League', 'Year'], suffixes=['', '_lg'], how='outer')
+    z['wRAAc'] = round(((z['wOBA'] - z['wOBA_lg']) / z['wOBAscale'])*z['PA'],2)
+    return z
+
+def add_wRC(z, avg):
+    #wRC = (((wOBA-League wOBA)/wOBA Scale)+(League R/PA))*PA
+    #z = z.merge(avg[['Org', 'League', 'Year', 'wOBA']], on=['Org', 'League', 'Year'], suffixes=['', '_lg'], how='outer')
+    z['wRC'] = round((((z['wOBA'] - z['wOBA_lg']) / z['wOBAscale']) + (z['lgR'] / z['lgPA'])) * z['PA'],1)
+    return z
+
+def add_wRC_plus(z, avg):
+    #wRC+ = (((wRAA/PA + League R/PA) + (League R/PA – Park Factor* League R/PA))/ (AL or NL wRC/PA excluding pitchers))*100
+    z['wRC+'] = round(((z['wRAAc']/z['PA'] + z['lgR']/z['lgPA'])  / (z['lgR']/z['lgPA'])) * 100, 0)
+    return z
+
+df = add_rate_stats(df)
+df['OBP'].fillna(0, inplace=True)
+df['SLG'].fillna(0, inplace=True)
+df['OPS'].fillna(0, inplace=True)
+df = add_woba(df)
 h_lg_avg = make_lg_avg(df)
+df = add_ops_plus(df, h_lg_avg)
+df = add_wRAA(df, h_lg_avg)
+df = add_wRC(df, h_lg_avg)
+df = add_wRC_plus(df, h_lg_avg)
+df['wRC+'].fillna(0, inplace=True)
+df['wRC+'] = df['wRC+'].astype(int)
+
+#add_rate_stats(h_lg_avg)
 
 def add_team_totals(z):
     dict = {'First':'Team', 'Last': 'Totals'}
@@ -53,39 +109,6 @@ def add_team_totals(z):
     dict.update({'OPS':round((z['H'].sum()+z['BB'].sum()+z['HBP'].sum())/(z['AB'].sum()+z['BB'].sum()+z['HBP'].sum()+z['SF'].sum())+(z['TB'].sum()/z['AB'].sum()), 3)})
     dict.update({'wRAAc':round(z['wRAAc'].sum(), 1)})
     z = z.append(dict, ignore_index = True)
-    return z
-
-def add_runs_created(z):
-    #A = (z['H']+z['BB']-z['CS']+z['HBP'])
-    #B = ((1.25*(z['H']-z['2B']-z['3B']-z['HR']))+(1.69*z['2B'])+(3.02*z['3B)']+(3.73*z['HR'])+(.29*(z['BB']+z['HBP']))+(.492*(z['SH']+z['SF']+z['SB']))-(.4*z['K']))
-    #C = (z['AB']+z['BB']+z['HBP']+z['SH']+z['SF'])
-    #D = (((2.4*(z['AB']+z['BB']+z['HBP']+z['SH']+z['SF']))+(z['H']+z['BB']-z['CS']+z['HBP']))*((3*(z['AB']+z['BB']+z['HBP']+z['SH']+z['SF']))+((1.25*(z['H']-z['2B']-z['3B']-z['HR']))+(1.69*z['2B'])+(3.02*z['3B'])+(3.73*z['HR'])+(.29*(z['BB']+z['HBP']))+(.492*(z['SH']+z['SF']+z['SB']))-(.4*z['K']))))
-    z['RC'] = round(((((2.4*(z['AB']+z['BB']+z['HBP']+z['SH']+z['SF']))+(z['H']+z['BB']-z['CS']+z['HBP']))*((3*(z['AB']+z['BB']+z['HBP']+z['SH']+z['SF']))+((1.25*(z['H']-z['2B']-z['3B']-z['HR']))+(1.69*z['2B'])+(3.02*z['3B'])+(3.73*z['HR'])+(.29*(z['BB']+z['HBP']))+(.492*(z['SH']+z['SF']+z['SB']))-(.4*z['K']))))/(9*(z['AB']+z['BB']+z['HBP']+z['SH']+z['SF'])))-(.9*(z['AB']+z['BB']+z['HBP']+z['SH']+z['SF'])),2)
-    return z
-
-def add_ops_plus(z, lgOBP, lgSLG):
-    #(OBP / lgOBP + SLG / lgSLG - 1) * 100
-    z['OPS+'] = round((z['OBP']/lgOBP + z['SLG']/lgSLG -1)*100,0)
-    return z
-
-def add_woba(z):
-    #(0.691×uBB + 0.722×HBP + 0.884×1B + 1.257×2B + 1.593×3B + 2.058×HR) / (AB + BB – IBB + SF + HBP)
-    z['wOBA'] = round(((0.691*z['BB']) + (0.722*z['HBP']) + (0.884*z['1B']) + (1.257*z['2B']) + (1.593*z['3B']) + (2.058*z['HR'])) / (z['AB'] + z['BB'] + z['HBP'] + z['SF']),3)
-    return z
-
-def add_wRAA(z, lgwOBA, wOBAscale):
-    #wRAA formula = ((wOBA-lgwOBA)/wOBAScale)*PA;
-    z['wRAAc'] = round(((z['wOBA'] - lgwOBA) / wOBAscale)*z['PA'],2)
-    return z
-
-def add_wRC(z, lgwOBA, wOBAscale, lgR, lgPA):
-    #wRC = (((wOBA-League wOBA)/wOBA Scale)+(League R/PA))*PA
-    z['wRC'] = round((((z['wOBA'] - lgwOBA) / wOBAscale) + (lgR / lgPA)) * z['PA'],1)
-    return z
-
-def add_wRC_plus(z, lgR, lgPA):
-    #wRC+ = (((wRAA/PA + League R/PA) + (League R/PA – Park Factor* League R/PA))/ (AL or NL wRC/PA excluding pitchers))*100
-    z['wRC+'] = round(((z['wRAAc']/z['PA'] + lgR/lgPA)  / (lgR/lgPA)) * 100, 0)
     return z
 
 app = FastAPI()
@@ -125,14 +148,14 @@ async def player(request: Request):
 async def player_page(request: Request, pid: int):
     df2 = df[df['PID']==pid]
     df2 = df2.sort_values(['Year', 'Org'], ascending=True)
-    gp = df2.groupby('Year').agg({'GP':'sum', 'PA':'sum', 'AB':'sum', 'R':'sum', 'H':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'RBI':'sum', 'BB':'sum', 'K':'sum', 'HBP':'sum', 'SB':'sum', 'CS':'sum', 'SF':'sum', 'SH':'sum', 'TB':'sum', 'wRAA':'sum'}).reset_index()
+    gp = df2.groupby('Year').agg({'GP':'sum', 'PA':'sum', 'AB':'sum', 'R':'sum', 'H':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'RBI':'sum', 'BB':'sum', 'K':'sum', 'HBP':'sum', 'SB':'sum', 'CS':'sum', 'SF':'sum', 'SH':'sum', 'TB':'sum', 'wRAA':'sum', 'wRAAc':'sum'}).reset_index()
     add_runs_created(gp)
     add_rate_stats(gp)
     ba = gp.H.sum()/gp.AB.sum()
     obp = (gp.H.sum()+gp.BB.sum()+gp.HBP.sum())/(gp.AB.sum()+gp.BB.sum()+gp.HBP.sum()+gp.SF.sum())
     slg = gp.TB.sum()/gp.AB.sum()
     ops = obp + slg
-    gp.at[-1] = ['Career', gp.GP.sum(), gp.PA.sum(), gp.AB.sum(), gp.R.sum(), gp.H.sum(), gp['1B'].sum(), gp['2B'].sum(), gp['3B'].sum(), gp.HR.sum(), gp.RBI.sum(), gp.BB.sum(),gp.K.sum(),gp.HBP.sum(),gp.SB.sum(),gp.CS.sum(),gp.SF.sum(),gp.SH.sum(),gp.TB.sum(),gp.wRAA.sum(),gp.RC.sum(), ba,obp,slg,ops]
+    gp.at[-1] = ['Career', gp.GP.sum(), gp.PA.sum(), gp.AB.sum(), gp.R.sum(), gp.H.sum(), gp['1B'].sum(), gp['2B'].sum(), gp['3B'].sum(), gp.HR.sum(), gp.RBI.sum(), gp.BB.sum(),gp.K.sum(),gp.HBP.sum(),gp.SB.sum(),gp.CS.sum(),gp.SF.sum(),gp.SH.sum(),gp.TB.sum(),gp.wRAA.sum(),gp.wRAAc.sum(),gp.RC.sum(), ba,obp,slg,ops]
     return templates.TemplateResponse("players.html", {"request": request, "df":df.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index(), "df2":gp.to_html(index=False), 'fname':df2.First.max(), 'lname':df2.Last.max()})
 
 @app.get("{org}/teams")
@@ -251,7 +274,7 @@ async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Op
 
 @app.get("/{org}/{lg}/{tm}/{yr}")
 async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort: Optional[str] = None, asc: Optional[bool] = False):
-    df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm) & (df['Year']==yr)][['PID', 'First', 'Last', 'GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB', 'wRAA']]
+    df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm) & (df['Year']==yr)][['PID', 'First', 'Last', 'GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB', 'wRAA', 'BA', 'OBP', 'SLG', 'OPS', 'OPS+', 'wRAAc', 'wOBA', 'wRC', 'wRC+']]
     df2['PID'] = df2['PID'].astype(int)
     add_rate_stats(df2)
     add_runs_created(df2)
@@ -262,13 +285,13 @@ async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort
     lgR = lgtot['R'].sum()
     lgPA = lgtot['PA'].sum()
     wOBAscale = lgOBP/lgwOBA
-    add_ops_plus(df2, lgOBP, lgSLG)
+    #add_ops_plus(df2, lgOBP, lgSLG)
     add_woba(df2)
-    add_wRAA(df2, lgwOBA, wOBAscale)
-    add_wRC(df2, lgwOBA, wOBAscale, lgR, lgPA)
-    add_wRC_plus(df2, lgR, lgPA)
-    df2['wRC+'].fillna(0,inplace=True)
-    df2['wRC+'] = df2['wRC+'].astype(int)
+    #add_wRAA(df2, lgwOBA, wOBAscale)
+    #add_wRC(df2, lgwOBA, wOBAscale, lgR, lgPA)
+    #add_wRC_plus(df2, lgR, lgPA)
+    #df2['wRC+'].fillna(0,inplace=True)
+    #df2['wRC+'] = df2['wRC+'].astype(int)
     #df2.append({'Team Totals', df2['GP'].sum(), df2['PA'].sum(), df2['AB'].sum(), df2['R'].sum(), df2['H'].sum(), df2['1B'].sum(), df2['2B'].sum(), df2['3B'].sum(), df2['HR'].sum(), df2['RBI'].sum(), df2['BB'].sum(), df2['K'].sum(), df2['HBP'].sum(), df2['SB'].sum(), df2['CS'].sum(), df2['SF'].sum(), df2['SH'].sum(), df2['TB'].sum(), df2['wRAA'].sum(), df2['RC'].sum(), round(df2['H'].sum()/df2['AB'].sum(),3), '-', '-', '-', '-', '-', '-', '-', '-']
     if asc==None:
         asc=False
