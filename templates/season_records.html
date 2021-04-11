@@ -4,17 +4,13 @@
 {% block content %}
 
 <br />
-<form id="form" action="/{{ org }}/{{ lg }}/league/{{ yr }}?">
-    <label for="sort_list">Sort by:</label>
-    <select name="sort" id="sort_list">
+<form id="form" action="/records/season/{{ org }}/{{ lg }}?">
+    <label for="sort_list">Choose stat:</label>
+    <select name="stat" id="sort_list">
         {% for col in df2 %}
         <option value="{{ col }}">{{ col }}</option>
         {% endfor %}
     </select>
-    <input type="radio" id="sort_asc" name="asc" value=True>
-    <label for="asc">Ascending</label>
-    <input type="radio" id="sort_desc" name="asc" value=False>
-    <label for="asc">Descending</label>
     <br><input type="submit" value="Submit">
 </form>
 <br>
@@ -25,6 +21,7 @@
         <th>Team</th>
         <th>Year</th>
         <th>{{ stat }}</th>
+        <th>PA</th>
     </tr>
         {% for key,val in df2.iterrows() %}
         <tr>
@@ -32,6 +29,7 @@
             <td><a href="/{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ val['Year'] }}">{{ val['Team'] }}</a></td>
             <td>{{ val['Year'] }}</td>
             <td>{{ val['stat'] }}</td>
+            <td>{{ val['PA']}}</td>
         </tr>
         {% endfor %}
 </table>

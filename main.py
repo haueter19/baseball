@@ -162,15 +162,22 @@ async def standings(request: Request, org: str, lg: str, yr: int):
 
 @app.get("/records/season/{org}/{lg}")
 async def season_records(request: Request, org: str, lg: str, stat: Optional[str] = 'H'):
-    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['PA']>25)].sort_values(stat, ascending=False)[['First', 'Last', 'Team','Year', stat]].head(20)
-    df2.columns=['First', 'Last', 'Team', 'Year', 'stat']
+    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['PA']>25)].sort_values(stat, ascending=False)[['First', 'Last', 'Team','Year', 'PA', stat]].head(20)
+    df2.columns=['First', 'Last', 'Team', 'Year', 'PA', 'stat']
     return templates.TemplateResponse("season_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat})
 
 @app.get("/records/career/{org}/{lg}")
 async def career_records(request: Request, org: str, lg: str, stat: Optional[str] = 'H'):
-    df2 = df[(df['Org']==org) & (df['League']==lg)].groupby('PID').agg({'First':'last', 'Last':'last', 'Team':'last', 'PA':'sum', stat:'sum'}).sort_values(stat, ascending=False).head(20).reset_index()
-    df2.columns=['PID', 'First', 'Last', 'Team', 'PA', 'stat']
-    df2 = df2[df2['PA']>100]
+    if stat in ['BA', 'OBP', 'SLG', 'OPS']:
+        df2 = df[(df['Org']==org) & (df['League']==lg)].groupby('PID').agg({'First':'last', 'Last':'last', 'Team':'last', 'PA':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'AB':'sum', 'TB':'sum', 'SF':'sum'})
+        df2 = add_rate_stats(df2)
+        df2 = df2.query('PA>=100').sort_values(stat, ascending=False).head(20).reset_index()
+        df2['stat'] = df2[stat]
+        df2.columns=['PID', 'First', 'Last', 'Team', 'PA', 'H', 'BB', 'HBP', 'AB', 'TB', 'SF', 'BA', 'OBP', 'SLG','OPS', 'stat']
+    else:
+        df2 = df[(df['Org']==org) & (df['League']==lg)].groupby('PID').agg({'First':'last', 'Last':'last', 'Team':'last', 'PA':'sum', stat:'sum'}).sort_values(stat, ascending=False).head(20).reset_index()
+        df2.columns=['PID', 'First', 'Last', 'Team', 'PA', 'stat']
+        df2 = df2[df2['PA']>=100]
     return templates.TemplateResponse("career_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat})
 
 @app.get("/{org}/{lg}/{tm}/projections")
