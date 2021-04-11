@@ -1,0 +1,103 @@
+{% extends "header.html" %}
+{% block title %}Clubhouse{% endblock %}
+{% block lg_stats %}"/{{ org }}/{{ lg }}/league/{{ yr }}"{% endblock %}
+{% block content %}
+
+<a href="../../../{{ org }}">{{ org }}</a> > <a href="../../../{{ org }}/{{ lg }}/">{{ lg }}</a> > {{ yr }}
+<br /><br />
+<form id="form" action="stats/team/{{ org }}/{{ lg }}/{{ yr }}?">
+    <label for="sort_list">Sort by:</label>
+    <select name="sort" id="sort_list">
+        {% for col in df2 %}
+        <option value="{{ col }}">{{ col }}</option>
+        {% endfor %}
+    </select>
+    <input type="radio" id="sort_asc" name="asc" value=True>
+    <label for="asc">Ascending</label>
+    <input type="radio" id="sort_desc" name="asc" value=False>
+    <label for="asc">Descending</label>
+    <br><input type="submit" value="Submit">
+</form>
+<br>
+<table class='dataframe' id='df_table'>
+    <col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col>
+    <tr>
+        <th>Team</th>
+        <th>GP</th>
+        <th>PA</th>
+        <th>AB</th>
+        <th>R</th>
+        <th>H</th>
+        <th>1B</th>
+        <th>2B</th>
+        <th>3B</th>
+        <th>HR</th>
+        <th>RBI</th>
+        <th>BB</th>
+        <th>K</th>
+        <th>HBP</th>
+        <th>SB</th>
+        <th>CS</th>
+        <th>SF</th>
+        <th>SH</th>
+        <th>TB</th>
+        <th>BA</th>
+        <th>OBP</th>
+        <th>SLG</th>
+        <th>OPS</th>
+        <th>OPS+</th>
+        <th>wOBA</th>
+        <th>wRAAc</th>
+        <th>wRC</th>
+        <th>wRC+</th>
+        <th>Wins</th>
+    </tr>
+        {% for key,val in df2.iterrows() %}
+        <tr>
+            <td><a href="/{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ yr }}">{{ val['Team'] }}</a></td>
+            <td>{{ val['GP'] }}</td>
+            <td>{{ val['PA'] }}</td>
+            <td>{{ val['AB'] }}</td>
+            <td>{{ val['R'] }}</td>
+            <td>{{ val['H'] }}</td>
+            <td>{{ val['1B'] }}</td>
+            <td>{{ val['2B'] }}</td>
+            <td>{{ val['3B'] }}</td>
+            <td>{{ val['HR'] }}</td>
+            <td>{{ val['RBI'] }}</td>
+            <td>{{ val['BB'] }}</td>
+            <td>{{ val['K'] }}</td>
+            <td>{{ val['HBP'] }}</td>
+            <td>{{ val['SB'] }}</td>
+            <td>{{ val['CS'] }}</td>
+            <td>{{ val['SF'] }}</td>
+            <td>{{ val['SH'] }}</td>
+            <td>{{ val['TB'] }}</td>
+            <td>{{ val['BA'] }}</td>
+            <td>{{ val['OBP'] }}</td>
+            <td>{{ val['SLG'] }}</td>
+            <td>{{ val['OPS'] }}</td>
+            <td>{{ val['OPS+'] }}</td>
+            <td>{{ val['wOBA'] }}</td>
+            <td>{{ val['wRAAc'] }}</td>
+            <td>{{ val['wRC'] }}</td>
+            <td>{{ val['wRC+'] }}</td>
+            <td>{{ val['W'] }}</td>
+        </tr>
+        {% endfor %}
+</table>
+<br>
+<script>
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    var c = url.searchParams.get("sort");
+    $('#sort_list').val(c);
+    var c = url.searchParams.get("asc");
+
+    if (c==True){
+        //$("#sort_asc").prop("checked", true);
+        $('#sort_asc').prop('checked',true);
+    }    
+</script>
+
+{% endblock %}

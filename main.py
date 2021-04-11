@@ -188,6 +188,19 @@ async def standings(request: Request, org: str, lg: str, yr: int):
     st['xW'] = round(st['Pyth']*st['GP'],1)
     return templates.TemplateResponse("standings.html", {'request': request, 'st':st, 'org':org, 'lg':lg, 'yr':yr})
 
+@app.get("/stats/team/{org}/{lg}/{yr}")
+async def team_stats_year(request: Request, org: str, lg: str, yr: int):
+    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
+    df2 = df2.groupby('Team').agg({'PA':'sum', 'K':'sum', 'SB':'sum', 'CS':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'SF':'sum', 'TB':'sum', 'AB':'sum', 'wRAAc':'sum'}).reset_index()
+    add_rate_stats(df2)
+    #add_ops_plus(df2, avg)
+    df2['wRAAc'] = round(df2['wRAAc'],1)
+    df2 = df2.sort_values('wRAAc', ascending=False)
+    st = pd.read_csv('standings.csv')
+    st = st[(st['Org']==org) & (st['League']==lg) & (st['Year']==yr)]
+    df2 = df2.merge(st, on='Team', how='left')
+    return templates.TemplateResponse("stats_team_view.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'yr':yr})
+
 @app.get("/records/season/{org}/{lg}")
 async def season_records(request: Request, org: str, lg: str, stat: Optional[str] = 'H'):
     df2 = df[(df['Org']==org) & (df['League']==lg) & (df['PA']>25)].sort_values(stat, ascending=False)[['First', 'Last', 'Team','Year', 'PA', stat]].head(20)
@@ -257,11 +270,11 @@ async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Op
     lgR = lgtot['R'].sum()
     lgPA = lgtot['PA'].sum()
     wOBAscale = lgOBP/lgwOBA
-    add_ops_plus(df2, lgOBP, lgSLG)
+    #add_ops_plus(df2, lgOBP, lgSLG)
     add_woba(df2)
-    add_wRAA(df2, lgwOBA, wOBAscale)
-    add_wRC(df2, lgwOBA, wOBAscale, lgR, lgPA)
-    add_wRC_plus(df2, lgR, lgPA)
+    #add_wRAA(df2, lgwOBA, wOBAscale)
+    #add_wRC(df2, lgwOBA, wOBAscale, lgR, lgPA)
+    #add_wRC_plus(df2, lgR, lgPA)
     df2['wRC+'].fillna(0,inplace=True)
     df2['wRC+'] = df2['wRC+'].astype(int)
     if asc==None:
