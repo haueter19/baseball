@@ -100,7 +100,7 @@ df['wRC+'] = df['wRC+'].astype(int)
 #add_rate_stats(h_lg_avg)
 
 def add_team_totals(z):
-    dict = {'First':'Team', 'Last': 'Totals'}
+    dict = {'PID':0, 'First':'Team', 'Last': 'Totals'}
     for i in common_stat_list:
         dict.update({i: round(z[i].sum(),1)})
     dict.update({'BA':round(z['H'].sum()/z['AB'].sum(),3)})
