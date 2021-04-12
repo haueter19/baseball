@@ -17,8 +17,22 @@
 						<a href="/RRL">RRL</a>
 						<a href="/MSCR">MSCR</a>
 					</div>
-				<li><a href={% block lg_stats %}{% endblock %}>League Stats</a></li>
-				<li><a href="/player/">Player</a></li>
+				</li>
+				<li class="dropdown">
+					<a href="" class="dropbtn">Stats</a>
+					<div class="dropdown-content">
+						<a href="/player/">Players</a>
+						<a href="/stats/team/MABL/18+/2019">Team</a>
+						<a href={% block lg_stats %}{% endblock %}>League</a>
+					</div>
+				</li>
+				<li class='dropdown'>
+					<a href="" class="dropbtn">Records</a>
+					<div class="dropdown-content">
+						<a href="/records/season/MABL/18+/">Season</a>
+						<a href="/records/career/MABL/18+/">Career</a>
+					</div>
+				</li>
 			</ul>
 		
 		{% block content %}{% endblock %}

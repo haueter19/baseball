@@ -12,9 +12,7 @@ import numpy as np
 df = pd.read_csv('Master_Hitting.csv')
 df['League'].fillna('None', inplace=True)
 df['Team'].fillna('None', inplace=True)
-
 maxYear = df['Year'].max()
-
 df.loc[df['Year']==2019, 'den'] = 4
 df.loc[df['Year']==2018, 'den'] = 3
 df.loc[df['Year']==2017, 'den'] = 2
@@ -25,6 +23,10 @@ for i in ['GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 
 
 for i in ['PID', 'H', '1B', '2B', 'K', 'SF', 'SH']:
     df[i] = df[i].astype(int)
+
+pit = pd.read_csv('Master_Pitching.csv')
+pit['League'].fillna('None', inplace=True)
+pit['Team'].fillna('None', inplace=True)
 
 def add_rate_stats(z):
     z['BA'] = round(z['H']/z['AB'],3)
@@ -191,7 +193,7 @@ async def standings(request: Request, org: str, lg: str, yr: int):
 @app.get("/stats/team/{org}/{lg}/{yr}")
 async def team_stats_year(request: Request, org: str, lg: str, yr: int):
     df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
-    df2 = df2.groupby('Team').agg({'PA':'sum', 'K':'sum', 'SB':'sum', 'CS':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'SF':'sum', 'TB':'sum', 'AB':'sum', 'wRAAc':'sum'}).reset_index()
+    df2 = df2.groupby('Team').agg({'PA':'sum', 'K':'sum', 'SB':'sum', 'CS':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'SF':'sum', 'TB':'sum', 'AB':'sum', 'SH':'sum', 'wRAAc':'sum'}).reset_index()
     add_rate_stats(df2)
     #add_ops_plus(df2, avg)
     df2['wRAAc'] = round(df2['wRAAc'],1)
