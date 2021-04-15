@@ -60,7 +60,7 @@ def make_lg_avg(z):
 
 def add_ops_plus(z, avg):
     #(OBP / lgOBP + SLG / lgSLG - 1) * 100
-    z = z.merge(avg[['Org', 'League', 'Year', 'lgR', 'lgPA', 'BA', 'OBP', 'SLG', 'OPS', 'wOBA', 'wOBAscale']], on=['Org', 'League', 'Year'], suffixes=['', '_lg'], how='outer')
+    z = z.merge(avg[['Org', 'League', 'Year', 'lgR', 'lgPA', 'BA', 'OBP', 'SLG', 'OPS', 'wOBA', 'wOBAscale']], on=['Org', 'League', 'Year'], suffixes=['', '_lg'], how='inner')
     z['OPS+'] = round((z['OBP']/z['OBP_lg'] + z['SLG']/z['SLG_lg'] -1)*100,0)
     return z
 
@@ -193,15 +193,19 @@ async def standings(request: Request, org: str, lg: str, yr: int):
 @app.get("/stats/team/{org}/{lg}/{yr}")
 async def team_stats_year(request: Request, org: str, lg: str, yr: int):
     df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
-    df2 = df2.groupby('Team').agg({'PA':'sum', 'K':'sum', 'SB':'sum', 'CS':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'SF':'sum', 'TB':'sum', 'AB':'sum', 'SH':'sum', 'wRAAc':'sum'}).reset_index()
+    df2 = df2.groupby('Team').agg({'Org':'first', 'League':'first', 'Year':'first', 'GP':'sum', 'PA':'sum', 'K':'sum', 'SB':'sum', 'CS':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'SF':'sum', 'TB':'sum', 'AB':'sum', 'SH':'sum', 'wRAAc':'sum'}).reset_index()
     add_rate_stats(df2)
-    #add_ops_plus(df2, avg)
+    add_woba(df2)
+    df2 = add_ops_plus(df2, h_lg_avg)
+    add_wRC(df2, h_lg_avg)
+    add_wRC_plus(df2, h_lg_avg)
     df2['wRAAc'] = round(df2['wRAAc'],1)
     df2 = df2.sort_values('wRAAc', ascending=False)
+    df2.drop(columns=['Org', 'League', 'Year'],inplace=True)
     st = pd.read_csv('standings.csv')
     st = st[(st['Org']==org) & (st['League']==lg) & (st['Year']==yr)]
     df2 = df2.merge(st, on='Team', how='left')
-    maxYear = df2.Year.max()
+    maxYear = 2019#df2.Year.max()
     return templates.TemplateResponse("stats_team_view.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'yr':yr, 'maxYear':maxYear})
 
 @app.get("/records/season/{org}/{lg}")
