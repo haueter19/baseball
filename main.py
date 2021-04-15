@@ -201,7 +201,8 @@ async def team_stats_year(request: Request, org: str, lg: str, yr: int):
     st = pd.read_csv('standings.csv')
     st = st[(st['Org']==org) & (st['League']==lg) & (st['Year']==yr)]
     df2 = df2.merge(st, on='Team', how='left')
-    return templates.TemplateResponse("stats_team_view.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'yr':yr})
+    maxYear = df2.Year.max()
+    return templates.TemplateResponse("stats_team_view.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'yr':yr, 'maxYear':maxYear})
 
 @app.get("/records/season/{org}/{lg}")
 async def season_records(request: Request, org: str, lg: str, stat: Optional[str] = 'H'):
@@ -239,7 +240,7 @@ async def org(request: Request, org: str):
 
 @app.get("/{org}/{lg}/champions")
 async def standings(request: Request, org: str, lg: str):
-    standings = pd.read_csv('mabl_standings.csv')
+    standings = pd.read_csv('standings.csv')
     post_winners = standings[(standings['Org']==org.upper()) & (standings['League']==lg) & (standings['Postseason']==1)][['Year', 'Team']].sort_values('Year', ascending=False)
     post_winners.columns=['Year', 'Playoffs']
     season_winners = standings[(standings['Org']==org.upper()) & (standings['League']==lg) & (standings['Season']==1)][['Year', 'Team']].sort_values('Year', ascending=False)
@@ -250,9 +251,12 @@ async def standings(request: Request, org: str, lg: str):
 @app.get("/{org}/{lg}")
 async def league(request: Request, org: str, lg: str):
     df2 = df[(df['Org']==org.upper()) & (df['League']==lg)]
+    _list = df[(df['Org']==org.upper()) & (df['League']==lg)].sort_values('Year').groupby('Team')['Year'].unique()#.reset_index()
+    #names_list = _list.Team
+    #year_list = _list.Year
     tms = df2['Team'].sort_values().unique()
     maxYear = df2.Year.max()
-    return templates.TemplateResponse("league.html", {"request": request, 'org':org, 'lg':lg, 'tms':tms, 'maxYear':maxYear})
+    return templates.TemplateResponse("league.html", {"request": request, 'org':org, 'lg':lg, 'tms':tms, 'maxYear':maxYear, 'yr_list': _list.to_dict()})
 
 @app.get("/{org}/{lg}/{tm}")
 async def orglgtm(request: Request, org: str, lg: str, tm: str):

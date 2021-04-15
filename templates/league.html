@@ -1,24 +1,23 @@
 {% extends "header.html" %}
 {% block title %}Clubhouse{% endblock %}
-
-{% block lg_stats %}"/{{ org }}/{{ lg }}/league/2019"{% endblock %}
+{% block standings %}"/standings/{{ org }}/{{ lg }}/{{ maxYear }}"{% endblock %}
+{% block champions %}"/{{ org }}/{{ lg }}/champions"{% endblock %}
+{% block lg_stats %}"../stats/team/{{ org }}/{{ lg }}/{{ maxYear }}"{% endblock %}
 {% block content %}
 <a href="../{{ org }}">{{ org }}</a> > {{ lg }}
 <br /><br />
-<a href="/{{ org }}/{{ lg }}/champions/">List of Champions</a>
-<br /><br>
+
 Teams<br>
-{% for tm in tms %}
-<a href="/{{ org }}/{{ lg }}/{{ tm }}">{{ tm }}</a><br>
+<p>
+{% for tm, yrs in yr_list.items() %}
+    <a href="/{{ org }}/{{ lg }}/{{ tm }}/projections">{{ tm }}</a> | {% for y in yrs %}<a href="/{{ org }}/{{ lg }}/{{ tm }}/{{ y }}">{{ y }}</a> {% endfor %}
+    <br>
 {% endfor %}
-<br>
-<a href="/{{ org }}/{{ lg }}/league/{{ maxYear }}">League Stats</a>
-<br>
-<a href="/stats/team/{{ org }}/{{ lg }}/{{ maxYear }}">Stats by Team</a>
-<br>
-<a href="/records/season/{{ org }}/{{ lg }}">Single Season Records</a>
-<br>
-<a href="/records/career/{{ org }}/{{ lg }}">Career Records</a>
+</p>
+
+
+<br />
+<a href="/{{ org }}/{{ lg }}/champions/">List of Champions</a>
 <br>
 <a href="/standings/{{ org }}/{{ lg }}/{{ maxYear }}">League Standings</a>
 {% endblock %}

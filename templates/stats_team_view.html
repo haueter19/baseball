@@ -1,6 +1,8 @@
 {% extends "header.html" %}
 {% block title %}Clubhouse{% endblock %}
-{% block lg_stats %}"/{{ org }}/{{ lg }}/league/{{ yr }}"{% endblock %}
+{% block standings %}"/standings/{{ org }}/{{ lg }}/{{ maxYear }}"{% endblock %}
+{% block champions %}"/{{ org }}/{{ lg }}/champions"{% endblock %}
+{% block lg_stats %}"/stats/team/{{ org }}/{{ lg }}/{{ yr }}"{% endblock %}
 {% block content %}
 
 <a href="../../../{{ org }}">{{ org }}</a> > <a href="../../../{{ org }}/{{ lg }}/">{{ lg }}</a> > {{ yr }}

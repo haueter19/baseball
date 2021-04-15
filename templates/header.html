@@ -19,10 +19,17 @@
 					</div>
 				</li>
 				<li class="dropdown">
+					<a class="drobtn">Standings</a>
+					<div class="dropdown-content">
+						<a href={% block standings %}{% endblock %}>Season Standings</a>
+						<a href={% block champions %}{% endblock %}>Champions</a>
+					</div>
+				</li>
+				<li class="dropdown">
 					<a href="" class="dropbtn">Stats</a>
 					<div class="dropdown-content">
 						<a href="/player/">Players</a>
-						<a href="/stats/team/MABL/18+/2019">Team</a>
+						<a href={% block tm_stats %}{% endblock %}>Team</a>
 						<a href={% block lg_stats %}{% endblock %}>League</a>
 					</div>
 				</li>
