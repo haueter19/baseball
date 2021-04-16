@@ -210,8 +210,9 @@ async def team_stats_year(request: Request, org: str, lg: str, yr: int):
 
 @app.get("/records/season/{org}/{lg}")
 async def season_records(request: Request, org: str, lg: str, stat: Optional[str] = 'H'):
-    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['PA']>25)].sort_values(stat, ascending=False)[['First', 'Last', 'Team','Year', 'PA', stat]].head(20)
-    df2.columns=['First', 'Last', 'Team', 'Year', 'PA', 'stat']
+    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['PA']>25)].sort_values(stat, ascending=False).head(20)
+    #df2.columns=['PID', 'First', 'Last', 'Team', 'Year', 'PA', 'stat']
+    df2['stat'] = df2[stat]
     return templates.TemplateResponse("season_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat})
 
 @app.get("/records/career/{org}/{lg}")
@@ -234,6 +235,7 @@ async def league(request: Request, org: str, lg: str, tm: str):
     from projections import make_projections
     pa = 50
     df2 = make_projections(df2, pa)
+    add_woba(df2)
     return templates.TemplateResponse("projections.html", {"request": request, 'org':org, 'lg':lg, 'df':df2.to_html(index=False), 'df2':df2, 'pid':df2['PID']})
 
 @app.get("/{org}")
