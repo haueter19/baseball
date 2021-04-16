@@ -8,7 +8,9 @@
     <label for="sort_list">Choose stat:</label>
     <select name="stat" id="sort_list">
         {% for col in df2 %}
+        {% if col not in ['PID', 'Org', 'League', 'Team', 'Year', 'First', 'Last'] %}
         <option value="{{ col }}">{{ col }}</option>
+        {% endif %}
         {% endfor %}
     </select>
     <br><input type="submit" value="Submit">
