@@ -27,6 +27,13 @@ for i in ['PID', 'H', '1B', '2B', 'K', 'SF', 'SH']:
 pit = pd.read_csv('Master_Pitching.csv')
 pit['League'].fillna('None', inplace=True)
 pit['Team'].fillna('None', inplace=True)
+pit['ABA'] = pit['Outs']+pit['H']
+pit['BAA'] = pit['H']/pit['ABA']
+pit['PAA'] = pit['Outs']+pit['H']+pit['BB']+pit['HBP']
+pit['BB_rate'] = pit['BB']/pit['PAA']
+pit['HBP_rate'] = pit['HBP']/pit['PAA']
+pit['K_rate'] = pit['K']/pit['PAA']
+pit['H_rate'] = pit['H']/pit['PAA']
 
 def add_rate_stats(z):
     z['BA'] = round(z['H']/z['AB'],3)
@@ -159,6 +166,43 @@ async def player_page(request: Request, pid: int):
     ops = obp + slg
     gp.at[-1] = ['Career', gp.GP.sum(), gp.PA.sum(), gp.AB.sum(), gp.R.sum(), gp.H.sum(), gp['1B'].sum(), gp['2B'].sum(), gp['3B'].sum(), gp.HR.sum(), gp.RBI.sum(), gp.BB.sum(),gp.K.sum(),gp.HBP.sum(),gp.SB.sum(),gp.CS.sum(),gp.SF.sum(),gp.SH.sum(),gp.TB.sum(),gp.wRAA.sum(),gp.wRAAc.sum(),gp.RC.sum(), ba,obp,slg,ops]
     return templates.TemplateResponse("players.html", {"request": request, "df":df.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index(), "df2":gp.to_html(index=False), 'fname':df2.First.max(), 'lname':df2.Last.max()})
+
+@app.get("/sim", response_class=HTMLResponse)
+async def run_sims(request: Request, org: Optional[str] = 'MABL', lg: Optional[str] = '35+', innings: Optional[int] = 7, sims: Optional[int] = 100, go: Optional[int] = 0, away_lineup: Optional[str] = '2432+1781+304+876+2019+1125+750+2043+484+376', away_pitcher: Optional[int] = 484, home_lineup: Optional[str] = '579+492+391+825+1632+495+1605+1978+509', home_pitcher: Optional[int] = 825):
+    import urllib.parse
+    away_lineup = urllib.parse.unquote(away_lineup)
+    home_lineup = urllib.parse.unquote(home_lineup)
+    if "+" in lg:
+        pass
+    else:
+        lg = lg+"+"
+    away_lineup = away_lineup.split('+')
+    for i in range(len(away_lineup)):
+        away_lineup[i] = int(away_lineup[i])
+    home_lineup = home_lineup.split('+')
+    for i in range(len(home_lineup)):
+        home_lineup[i] = int(home_lineup[i])
+    from projections import make_projections
+    plyrs = make_projections(df[(df['Org']==org) & (df['League']==lg) & (df['Year']>2015)], 50)
+    plyrs.drop(columns='PID',inplace=True)
+    plyrs = plyrs.reset_index()
+    prj_away = plyrs[plyrs['PID'].isin(away_lineup)].set_index('PID').reindex(away_lineup).reset_index()
+    for i in ['1B', '2B', '3B', 'HR', 'BB', 'HBP', 'K']:
+        prj_away[i+'_per_PA'] = round(prj_away[i]/prj_away['PA'],3)
+    prj_home = plyrs[plyrs['PID'].isin(home_lineup)].set_index('PID').reindex(home_lineup).reset_index()
+    for i in ['1B', '2B', '3B', 'HR', 'BB', 'HBP', 'K']:
+        prj_home[i+'_per_PA'] = round(prj_home[i]/prj_home['PA'],3)    
+    lg_pitchers = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Year']==2019)]
+    home_pitcher_df = pit[(pit['PID']==home_pitcher) & (pit['Org']==org) & (pit['League']==lg) & (pit['Year']==2019)]
+    away_pitcher_df = pit[(pit['PID']==away_pitcher) & (pit['Org']==org) & (pit['League']==lg) & (pit['Year']==2019)]
+    from sim_game import run_sim
+    if go!=0:
+        rpg_away = run_sim(prj_away, home_pitcher_df, innings, sims)
+        rpg_home = run_sim(prj_home, away_pitcher_df, innings, sims)
+        score = str(rpg_away)+' - '+str(rpg_home)
+    else:
+        score = 'No sims run'
+    return templates.TemplateResponse("sim.html", {'request': request, 'org':org, 'lg':lg, 'score':score, 'plyrs':plyrs, 'lg_pitchers':lg_pitchers, 'away_team':away_lineup, "away_pitcher":away_pitcher, "home_team":home_lineup, "home_pitcher":home_pitcher})
 
 @app.get("{org}/teams")
 async def teams_page(request: Request, org: Optional[str] = None, league: Optional[str] = None, year: Optional[int] = None, tm: Optional[str] = None, sort: Optional[str] = None):
