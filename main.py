@@ -169,39 +169,50 @@ async def player_page(request: Request, pid: int):
 
 @app.get("/sim", response_class=HTMLResponse)
 async def run_sims(request: Request, org: Optional[str] = 'MABL', lg: Optional[str] = '35+', innings: Optional[int] = 7, sims: Optional[int] = 100, go: Optional[int] = 0, away_lineup: Optional[str] = '2432+1781+304+876+2019+1125+750+2043+484+376', away_pitcher: Optional[int] = 484, home_lineup: Optional[str] = '579+492+391+825+1632+495+1605+1978+509', home_pitcher: Optional[int] = 825):
-    import urllib.parse
-    away_lineup = urllib.parse.unquote(away_lineup)
-    home_lineup = urllib.parse.unquote(home_lineup)
-    if "+" in lg:
-        pass
-    else:
-        lg = lg+"+"
-    away_lineup = away_lineup.split('+')
-    for i in range(len(away_lineup)):
-        away_lineup[i] = int(away_lineup[i])
-    home_lineup = home_lineup.split('+')
-    for i in range(len(home_lineup)):
-        home_lineup[i] = int(home_lineup[i])
+    if org=='MABL':
+        if "+" in lg:
+            pass
+        else:
+            lg = lg+"+"
     from projections import make_projections
     plyrs = make_projections(df[(df['Org']==org) & (df['League']==lg) & (df['Year']>2015)], 50)
     plyrs.drop(columns='PID',inplace=True)
     plyrs = plyrs.reset_index()
-    prj_away = plyrs[plyrs['PID'].isin(away_lineup)].set_index('PID').reindex(away_lineup).reset_index()
-    for i in ['1B', '2B', '3B', 'HR', 'BB', 'HBP', 'K']:
-        prj_away[i+'_per_PA'] = round(prj_away[i]/prj_away['PA'],3)
-    prj_home = plyrs[plyrs['PID'].isin(home_lineup)].set_index('PID').reindex(home_lineup).reset_index()
-    for i in ['1B', '2B', '3B', 'HR', 'BB', 'HBP', 'K']:
-        prj_home[i+'_per_PA'] = round(prj_home[i]/prj_home['PA'],3)    
     lg_pitchers = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Year']==2019)]
-    home_pitcher_df = pit[(pit['PID']==home_pitcher) & (pit['Org']==org) & (pit['League']==lg) & (pit['Year']==2019)]
-    away_pitcher_df = pit[(pit['PID']==away_pitcher) & (pit['Org']==org) & (pit['League']==lg) & (pit['Year']==2019)]
-    from sim_game import run_sim
-    if go!=0:
+    
+    if go==0:
+        score = 'No sims run'
+        away_lineup = plyrs['PID'][:10].to_list()
+        away_pitcher = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Year']==2019)]['PID'].iloc[0]
+        home_lineup = plyrs['PID'][:10].to_list()
+        home_pitcher = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Year']==2019)]['PID'].iloc[1]
+    else:
+        import urllib.parse
+        away_lineup = urllib.parse.unquote(away_lineup)
+        home_lineup = urllib.parse.unquote(home_lineup)
+        
+        away_lineup = away_lineup.split('+')
+        for i in range(len(away_lineup)):
+            away_lineup[i] = int(away_lineup[i])
+        home_lineup = home_lineup.split('+')
+        for i in range(len(home_lineup)):
+            home_lineup[i] = int(home_lineup[i])
+        
+        prj_away = plyrs[plyrs['PID'].isin(away_lineup)].set_index('PID').reindex(away_lineup).reset_index()
+        for i in ['1B', '2B', '3B', 'HR', 'BB', 'HBP', 'K']:
+            prj_away[i+'_per_PA'] = round(prj_away[i]/prj_away['PA'],3)
+        prj_home = plyrs[plyrs['PID'].isin(home_lineup)].set_index('PID').reindex(home_lineup).reset_index()
+        for i in ['1B', '2B', '3B', 'HR', 'BB', 'HBP', 'K']:
+            prj_home[i+'_per_PA'] = round(prj_home[i]/prj_home['PA'],3)
+        
+        home_pitcher_df = pit[(pit['PID']==home_pitcher) & (pit['Org']==org) & (pit['League']==lg) & (pit['Year']==2019)]
+        away_pitcher_df = pit[(pit['PID']==away_pitcher) & (pit['Org']==org) & (pit['League']==lg) & (pit['Year']==2019)]
+        
+        from sim_game import run_sim
         rpg_away = run_sim(prj_away, home_pitcher_df, innings, sims)
         rpg_home = run_sim(prj_home, away_pitcher_df, innings, sims)
         score = str(rpg_away)+' - '+str(rpg_home)
-    else:
-        score = 'No sims run'
+        
     return templates.TemplateResponse("sim.html", {'request': request, 'org':org, 'lg':lg, 'score':score, 'plyrs':plyrs, 'lg_pitchers':lg_pitchers, 'away_team':away_lineup, "away_pitcher":away_pitcher, "home_team":home_lineup, "home_pitcher":home_pitcher})
 
 @app.get("{org}/teams")
@@ -234,7 +245,7 @@ async def standings(request: Request, org: str, lg: str, yr: int):
     st['xW'] = round(st['Pyth']*st['GP'],1)
     return templates.TemplateResponse("standings.html", {'request': request, 'st':st, 'org':org, 'lg':lg, 'yr':yr})
 
-@app.get("/stats/team/{org}/{lg}/{yr}")
+@app.get("/stats/hitting/team")
 async def team_stats_year(request: Request, org: str, lg: str, yr: int):
     df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
     df2 = df2.groupby('Team').agg({'Org':'first', 'League':'first', 'Year':'first', 'GP':'sum', 'PA':'sum', 'K':'sum', 'SB':'sum', 'CS':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'SF':'sum', 'TB':'sum', 'AB':'sum', 'SH':'sum', 'wRAAc':'sum'}).reset_index()
@@ -274,7 +285,7 @@ async def career_records(request: Request, org: str, lg: str, stat: Optional[str
         df2 = df2[df2['PA']>=100]
     return templates.TemplateResponse("career_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat})
 
-@app.get("/{org}/{lg}/{tm}/projections")
+@app.get("/stats/hitting/{org}/{lg}/{tm}/projections")
 async def league(request: Request, org: str, lg: str, tm: str):
     df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm) & (df['Year'].isin([2019, 2018, 2017, 2016]))]
     from projections import make_projections
@@ -309,12 +320,6 @@ async def league(request: Request, org: str, lg: str):
     maxYear = df2.Year.max()
     return templates.TemplateResponse("league.html", {"request": request, 'org':org, 'lg':lg, 'tms':tms, 'maxYear':maxYear, 'yr_list': _list.to_dict()})
 
-@app.get("/{org}/{lg}/{tm}")
-async def orglgtm(request: Request, org: str, lg: str, tm: str):
-    df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm)]
-    yrs = df2['Year'].sort_values().unique()
-    return templates.TemplateResponse("team.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yrs':yrs})
-
 @app.get("/{org}/{lg}/league/{yr}")
 async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Optional[str] = None, asc: Optional[bool] = False):
     df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
@@ -342,7 +347,7 @@ async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Op
         df2 = df2.sort_values(sort, ascending=asc)
     return templates.TemplateResponse('league_stats.html', {"request": request, 'org':org, 'lg':lg, 'yr':yr, 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
 
-@app.get("/{org}/{lg}/{tm}/{yr}")
+@app.get("/stats/hitting/player/")
 async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort: Optional[str] = None, asc: Optional[bool] = False):
     df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm) & (df['Year']==yr)][['PID', 'First', 'Last', 'GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB', 'wRAA', 'BA', 'OBP', 'SLG', 'OPS', 'OPS+', 'wRAAc', 'wOBA', 'wRC', 'wRC+']]
     df2['PID'] = df2['PID'].astype(int)
@@ -372,3 +377,9 @@ async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort
     df2 = add_team_totals(df2)
     lg_stats = h_lg_avg[(h_lg_avg['Org']==org) & (h_lg_avg['League']==lg) & (h_lg_avg['Year']==yr)]
     return templates.TemplateResponse("team_stats.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yr':yr, 'df2':df2, 'lg_stats':lg_stats, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
+
+@app.get("/{org}/{lg}/{tm}")
+async def orglgtm(request: Request, org: str, lg: str, tm: str):
+    df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm)]
+    yrs = df2['Year'].sort_values().unique()
+    return templates.TemplateResponse("team.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yrs':yrs})

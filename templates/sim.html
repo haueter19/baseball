@@ -7,14 +7,26 @@
 {{ score }}
 <script>
     var form = document.getElementById("myform");
-    function submitForm(){        
+    function submitFormChangeLeague(){        
+        var input = $("<input>")
+                .attr("name", "go").val(0)
+                .attr("action", "/sim");
+                
+        $('#myForm').append(input);
+        $("#myForm").submit()
+    }
+    function submitFormRunSims(){        
         var lineup1 = $("#a1").val().toString()+"+"+$("#a2").val().toString()+"+"+$("#a3").val().toString()+"+"+$("#a4").val().toString()+"+"+$("#a5").val().toString()+"+"+$("#a6").val().toString()+"+"+$("#a7").val().toString()+"+"+$("#a8").val().toString()+"+"+$("#a9").val().toString()+"+"+$("#a10").val().toString();
         var lineup2 = $("#h1").val().toString()+"+"+$("#h2").val().toString()+"+"+$("#h3").val().toString()+"+"+$("#h4").val().toString()+"+"+$("#h5").val().toString()+"+"+$("#h6").val().toString()+"+"+$("#h7").val().toString()+"+"+$("#h8").val().toString()+"+"+$("#h9").val().toString()+"+"+$("#h10").val().toString();
         var input = $("<input>")
-                .attr("name", "away_lineup").val(encodeURIComponent(lineup1))
-                .attr("name", "home_lineup").val(encodeURIComponent(lineup2))
+                .attr("name", "go").val(1)
                 .attr("action", "/sim");
-                
+        $('#myForm').append(input);
+        var input = $("<input>")
+                .attr("name", "away_lineup").val(encodeURIComponent(lineup1))
+        $('#myForm').append(input);
+        var input = $("<input>")
+                .attr("name", "home_lineup").val(encodeURIComponent(lineup2))
         $('#myForm').append(input);
         $("#myForm").submit()
     }
@@ -31,7 +43,7 @@
     <input type="radio" name="lg" value="55" disabled>55+<br>
     <input type="radio" name="lg" value="Southern">Southern
     <input type="radio" name="lg" value="Northern">Northern<br>
-    <label for="range"># of Simulations</label><br><input type="range"name="sims" min="50" max="1000" step="50" value="100"><br>
+    <label for="range"># of Simulations</label><br><input type="range"name="sims" min="1" max="1000" step="50" value="100"><br>
     <label for="innings">Innings:</label>
     <input type="radio" name="innings" value="7" checked>7
     <input type="radio" name="innings" value="9">9
@@ -284,9 +296,9 @@
         </table>
     </div>
 <br>
-<input type="radio" id="go_option1" name="go" value=0>Change League<br>
-<input type="radio" id="go_option2" name="go" value=1 checked>Run Sims<br><br>
-<input type="button" id="submit-button" value='Run Simulations' onclick="submitForm()">
+
+<input type="button" id="submit-button" value='Run Simulations' onclick="submitFormRunSims()">
+<input type="button" id="submit-button" value='Change League' onclick="submitFormChangeLeague()">
 </form>
 
 <script>
