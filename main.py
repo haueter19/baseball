@@ -268,6 +268,24 @@ async def team_stats_year(request: Request, org: str, lg: str, yr: int):
     maxYear = 2019#df2.Year.max()
     return templates.TemplateResponse("stats_team_view.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'yr':yr, 'maxYear':maxYear})
 
+@app.get("/stats/pitching/{org}/{lg}/{tm}/{yr}")
+async def team_stats_year(request: Request, org: str, lg: str, yr: int):
+    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
+    df2 = df2.groupby('Team').agg({'Org':'first', 'League':'first', 'Year':'first', 'GP':'sum', 'PA':'sum', 'K':'sum', 'SB':'sum', 'CS':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'SF':'sum', 'TB':'sum', 'AB':'sum', 'SH':'sum', 'wRAAc':'sum'}).reset_index()
+    add_rate_stats(df2)
+    add_woba(df2)
+    df2 = add_ops_plus(df2, h_lg_avg)
+    add_wRC(df2, h_lg_avg)
+    add_wRC_plus(df2, h_lg_avg)
+    df2['wRAAc'] = round(df2['wRAAc'],1)
+    df2 = df2.sort_values('wRAAc', ascending=False)
+    df2.drop(columns=['Org', 'League', 'Year'],inplace=True)
+    st = pd.read_csv('standings.csv')
+    st = st[(st['Org']==org) & (st['League']==lg) & (st['Year']==yr)]
+    df2 = df2.merge(st, on='Team', how='left')
+    maxYear = 2019#df2.Year.max()
+    return templates.TemplateResponse("stats_team_view.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'yr':yr, 'maxYear':maxYear})
+
 @app.get("/records/season/{org}/{lg}")
 async def season_records(request: Request, org: str, lg: str, stat: Optional[str] = 'H'):
     df2 = df[(df['Org']==org) & (df['League']==lg) & (df['PA']>25)].sort_values(stat, ascending=False).head(20)

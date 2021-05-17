@@ -121,7 +121,7 @@ def sim_game(prj, tp, innings):
             p = 0
             tto += 1
     #print(r,'runs')
-    print(ab_results)
+    #print(ab_results)
     return r, game_log, ab_results
 
 def run_sim(prj, tp, innings, g):
