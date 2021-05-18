@@ -251,6 +251,34 @@ async def standings(request: Request, org: str, lg: str, yr: int, sort: Optional
     st['xW'] = round(st['Pyth']*st['GP'],1)
     return templates.TemplateResponse("standings.html", {'request': request, 'st':st, 'org':org, 'lg':lg, 'yr':yr, 'yrs':yrs})
 
+@app.get("/stats/hitting/{org}/{lg}/league/{yr}")
+async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Optional[str] = None, asc: Optional[bool] = False):
+    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
+    add_rate_stats(df2)
+    add_runs_created(df2)
+    lgtot = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Year']==yr)]
+    lgSLG = lgtot['TB'].sum()/lgtot['AB'].sum()
+    lgOBP = (lgtot['H'].sum()+lgtot['BB'].sum()+lgtot['HBP'].sum())/(lgtot['AB'].sum()+lgtot['BB'].sum()+lgtot['HBP'].sum()+lgtot['SF'].sum())
+    lgwOBA = round(((0.691*lgtot['BB'].sum()) + (0.722*lgtot['HBP'].sum()) + (0.884*lgtot['1B'].sum()) + (1.257*lgtot['2B'].sum()) + (1.593*lgtot['3B'].sum()) + (2.058*lgtot['HR'].sum())) / (lgtot['AB'].sum() + lgtot['BB'].sum() + lgtot['HBP'].sum() + lgtot['SF'].sum()),3)
+    lgR = lgtot['R'].sum()
+    lgPA = lgtot['PA'].sum()
+    wOBAscale = lgOBP/lgwOBA
+    #add_ops_plus(df2, lgOBP, lgSLG)
+    add_woba(df2)
+    #add_wRAA(df2, lgwOBA, wOBAscale)
+    #add_wRC(df2, lgwOBA, wOBAscale, lgR, lgPA)
+    #add_wRC_plus(df2, lgR, lgPA)
+    df2['wRC+'].fillna(0,inplace=True)
+    df2['wRC+'] = df2['wRC+'].astype(int)
+    if asc==None:
+        asc=False
+    if sort==None:
+        df2 = df2.sort_values('wRAAc', ascending=asc)
+    else:
+        df2 = df2.sort_values(sort, ascending=asc)
+    print(df[(df['Org']==org) & (df['League']==lg)]['Year'].unique().tolist())
+    return templates.TemplateResponse('league_stats.html', {"request": request, 'org':org, 'lg':lg, 'yr':yr, 'yrs':df[(df['Org']==org) & (df['League']==lg)]['Year'].unique().tolist(), 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
+
 @app.get("/stats/hitting/{org}/{lg}/{tm}/{yr}")
 async def team_stats_year(request: Request, org: str, lg: str, yr: int):
     df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
@@ -343,33 +371,6 @@ async def league(request: Request, org: str, lg: str):
     tms = df2['Team'].sort_values().unique()
     maxYear = df2.Year.max()
     return templates.TemplateResponse("league.html", {"request": request, 'org':org, 'lg':lg, 'tms':tms, 'maxYear':maxYear, 'yr_list': _list.to_dict()})
-
-@app.get("/stats/hitting/{org}/{lg}/league/{yr}")
-async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Optional[str] = None, asc: Optional[bool] = False):
-    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
-    add_rate_stats(df2)
-    add_runs_created(df2)
-    lgtot = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Year']==yr)]
-    lgSLG = lgtot['TB'].sum()/lgtot['AB'].sum()
-    lgOBP = (lgtot['H'].sum()+lgtot['BB'].sum()+lgtot['HBP'].sum())/(lgtot['AB'].sum()+lgtot['BB'].sum()+lgtot['HBP'].sum()+lgtot['SF'].sum())
-    lgwOBA = round(((0.691*lgtot['BB'].sum()) + (0.722*lgtot['HBP'].sum()) + (0.884*lgtot['1B'].sum()) + (1.257*lgtot['2B'].sum()) + (1.593*lgtot['3B'].sum()) + (2.058*lgtot['HR'].sum())) / (lgtot['AB'].sum() + lgtot['BB'].sum() + lgtot['HBP'].sum() + lgtot['SF'].sum()),3)
-    lgR = lgtot['R'].sum()
-    lgPA = lgtot['PA'].sum()
-    wOBAscale = lgOBP/lgwOBA
-    #add_ops_plus(df2, lgOBP, lgSLG)
-    add_woba(df2)
-    #add_wRAA(df2, lgwOBA, wOBAscale)
-    #add_wRC(df2, lgwOBA, wOBAscale, lgR, lgPA)
-    #add_wRC_plus(df2, lgR, lgPA)
-    df2['wRC+'].fillna(0,inplace=True)
-    df2['wRC+'] = df2['wRC+'].astype(int)
-    if asc==None:
-        asc=False
-    if sort==None:
-        df2 = df2.sort_values('wRAAc', ascending=asc)
-    else:
-        df2 = df2.sort_values(sort, ascending=asc)
-    return templates.TemplateResponse('league_stats.html', {"request": request, 'org':org, 'lg':lg, 'yr':yr, 'yrs':df[(df['Org']==org) & (df['League']==lg)]['Year'].unique().tolist(), 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
 
 @app.get("/stats/hitting/player/")
 async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort: Optional[str] = None, asc: Optional[bool] = False):
