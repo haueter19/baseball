@@ -100,7 +100,10 @@
     if (c==True){
         //$("#sort_asc").prop("checked", true);
         $('#sort_asc').prop('checked',true);
-    }    
+    }
+    url = url.pathname.split("/");
+    url = '/standings/{{ org }}/{{ lg }}/'+url[url.length-1]
+    $('#year_pick').val(url);
 </script>
 
 {% endblock %}

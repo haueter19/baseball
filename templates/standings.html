@@ -2,8 +2,18 @@
 {% block title %}Clubhouse{% endblock %}
 {% block lg_stats %}"/{{ org }}/{{ lg }}/league/{{ yr }}"{% endblock %}
 {% block content %}
+<script>
+    $('#select_location').on('change', function(){
+        window.location = $(this).val();
+    });
+</script>
+<a href="../../../{{ org }}">{{ org }}</a> > <a href="../../../{{ org }}/{{ lg }}/">{{ lg }}</a> > <a href="/stats/hitting/{{ org }}/{{ lg }}/league/{{ yr }} ">League</a> > 
+    <select id="year_pick" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+        {% for y in yrs %}
+            <option value="/standings/{{ org }}/{{ lg }}/{{ y }}">{{ y }}</option>
+        {% endfor %}
+    </select>
 
-<a href="../../../{{ org }}">{{ org }}</a> > <a href="../../../{{ org }}/{{ lg }}/">{{ lg }}</a> > <a href="../../../{{ org }}/{{ lg }}/league/{{ yr }} ">League</a> > {{ yr }}
 <br /><br />
 <form id="form" action="/standings/{{ org }}/{{ lg }}/{{ yr }}?">
     <label for="sort_list">Sort by:</label>
@@ -55,13 +65,20 @@
     var url_string = window.location.href;
     var url = new URL(url_string);
     var c = url.searchParams.get("sort");
-    $('#sort_list').val(c);
+    $('#sort_list').val(c);    
+    url = url.pathname.split("/");
+    url = '/standings/{{ org }}/{{ lg }}/'+url[url.length-1]
+    $('#year_pick').val(url);
     var c = url.searchParams.get("asc");
-
     if (c==True){
         //$("#sort_asc").prop("checked", true);
         $('#sort_asc').prop('checked',true);
-    }    
+    }
+    if (c==False){
+        //$("#sort_asc").prop("checked", true);
+        $('#sort_desc').prop('checked',true);
+    }
+
 </script>
 
 {% endblock %}

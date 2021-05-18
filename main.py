@@ -242,13 +242,14 @@ async def home(request: Request):
     return templates.TemplateResponse("home.html", {"request": request, 'orgs':orgs})
 
 @app.get("/standings/{org}/{lg}/{yr}")
-async def standings(request: Request, org: str, lg: str, yr: int):
+async def standings(request: Request, org: str, lg: str, yr: int, sort: Optional[str] = 'Pct', asc: Optional[bool] = False):
     st = pd.read_csv('standings.csv')
-    st = st[(st['Org']==org) & (st['League']==lg) & (st['Year']==yr)].sort_values('Pct', ascending=False)
+    yrs = st[(st['Org']==org) & (st['League']==lg)].sort_values('Year', ascending=False)['Year'].unique().tolist()
+    st = st[(st['Org']==org) & (st['League']==lg) & (st['Year']==yr)].sort_values(sort, ascending=asc)
     st['GP'] = st['W']+st['L']+st['T']
     st['Pyth'] = round(((st['RF']*st['RF']) / ((st['RF']*st['RF']) + (st['RA']*st['RA']))),3)
     st['xW'] = round(st['Pyth']*st['GP'],1)
-    return templates.TemplateResponse("standings.html", {'request': request, 'st':st, 'org':org, 'lg':lg, 'yr':yr})
+    return templates.TemplateResponse("standings.html", {'request': request, 'st':st, 'org':org, 'lg':lg, 'yr':yr, 'yrs':yrs})
 
 @app.get("/stats/hitting/{org}/{lg}/{tm}/{yr}")
 async def team_stats_year(request: Request, org: str, lg: str, yr: int):
@@ -317,13 +318,13 @@ async def league(request: Request, org: str, lg: str, tm: str):
     add_woba(df2)
     return templates.TemplateResponse("projections.html", {"request": request, 'org':org, 'lg':lg, 'df':df2.to_html(index=False), 'df2':df2, 'pid':df2['PID']})
 
-@app.get("/stats/hitting/{org}")
+@app.get("/{org}")
 async def org(request: Request, org: str):
     df2 = df[df['Org']==org.upper()]
     lgs = df2['League'].sort_values().unique()
     return templates.TemplateResponse("org.html", {"request": request, 'org':org, 'lgs':lgs})
 
-@app.get("/stats/hitting/{org}/{lg}/champions")
+@app.get("/{org}/{lg}/champions")
 async def standings(request: Request, org: str, lg: str):
     standings = pd.read_csv('standings.csv')
     post_winners = standings[(standings['Org']==org.upper()) & (standings['League']==lg) & (standings['Postseason']==1)][['Year', 'Team']].sort_values('Year', ascending=False)
@@ -333,7 +334,7 @@ async def standings(request: Request, org: str, lg: str):
     champs = post_winners.merge(season_winners, on='Year', how='outer')
     return templates.TemplateResponse("champions.html", {'request': request, 'org': org, 'lg': lg, "champs": champs})
 
-@app.get("/stats/hitting/{org}/{lg}")
+@app.get("/{org}/{lg}")
 async def league(request: Request, org: str, lg: str):
     df2 = df[(df['Org']==org.upper()) & (df['League']==lg)]
     _list = df[(df['Org']==org.upper()) & (df['League']==lg)].sort_values('Year').groupby('Team')['Year'].unique()#.reset_index()
@@ -368,7 +369,7 @@ async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Op
         df2 = df2.sort_values('wRAAc', ascending=asc)
     else:
         df2 = df2.sort_values(sort, ascending=asc)
-    return templates.TemplateResponse('league_stats.html', {"request": request, 'org':org, 'lg':lg, 'yr':yr, 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
+    return templates.TemplateResponse('league_stats.html', {"request": request, 'org':org, 'lg':lg, 'yr':yr, 'yrs':df[(df['Org']==org) & (df['League']==lg)]['Year'].unique().tolist(), 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
 
 @app.get("/stats/hitting/player/")
 async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort: Optional[str] = None, asc: Optional[bool] = False):
