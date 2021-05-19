@@ -11,7 +11,7 @@
 Teams<br>
 <p>
 {% for tm, yrs in yr_list.items() %}
-    <a href="/{{ org }}/{{ lg }}/{{ tm }}/projections">{{ tm }}</a> | {% for y in yrs %}<a href="/{{ org }}/{{ lg }}/{{ tm }}/{{ y }}">{{ y }}</a> {% endfor %}
+    <a href="/{{ org }}/{{ lg }}/{{ tm }}/projections">{{ tm }}</a> | {% for y in yrs %}<a href="/stats/hitting//{{ org }}/{{ lg }}/{{ tm }}/{{ y }}">{{ y }}</a> {% endfor %}
     <br>
 {% endfor %}
 </p>
