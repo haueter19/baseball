@@ -152,7 +152,7 @@ async def pid_list():
     return {'PID':df2.PID.tolist(), 'First':df2.First.tolist(), 'Last':df2.Last.tolist()}
 
 @app.get("/sim", response_class=HTMLResponse)
-async def run_sims(request: Request, org: Optional[str] = 'MABL', lg: Optional[str] = '35', innings: Optional[int] = 7, sims: Optional[int] = 1, go: Optional[int] = 1, away_lineup: Optional[str] = '2432+1781+304+876+2019+1125+750+2043+484+376', away_pitcher: Optional[int] = 484, home_lineup: Optional[str] = '579+492+391+825+1632+495+1605+1978+509', home_pitcher: Optional[int] = 825):
+async def run_sims(request: Request, org: Optional[str] = 'MABL', lg: Optional[str] = '35', innings: Optional[int] = 7, sims: Optional[int] = 1, go: Optional[int] = 0, away_lineup: Optional[str] = '2432+1781+304+876+2019+1125+750+2043+484+376', away_pitcher: Optional[int] = 484, home_lineup: Optional[str] = '579+492+391+825+1632+495+1605+1978+509', home_pitcher: Optional[int] = 825):
     if org=='MABL':
         if "+" in lg:
             pass
@@ -173,7 +173,7 @@ async def run_sims(request: Request, org: Optional[str] = 'MABL', lg: Optional[s
         game_log_away = ''
         game_log_home = ''
         ab_results_away = ['']
-        ab_results_home = ''
+        ab_results_home = ['']
         prj_away = ''
         prj_home = ''
     else:
@@ -202,7 +202,7 @@ async def run_sims(request: Request, org: Optional[str] = 'MABL', lg: Optional[s
         rpg_home, game_log_home, ab_results_home = run_sim(prj_home, away_pitcher_df, innings, sims)
         score = str(rpg_away)+' - '+str(rpg_home)
         
-    return templates.TemplateResponse("sim.html", {'request': request, 'org':org, 'lg':lg, 'score':score, 'plyrs':plyrs, 'lg_pitchers':lg_pitchers, 'away_team':away_lineup, "away_pitcher":away_pitcher, "home_team":home_lineup, "home_pitcher":home_pitcher, 'game_log_away':game_log_away, 'game_log_home':game_log_home, 'ab_results_away':ab_results_away, 'away_proj':prj_away, 'home_proj':prj_home})
+    return templates.TemplateResponse("sim.html", {'request': request, 'org':org, 'lg':lg, 'score':score, 'plyrs':plyrs, 'lg_pitchers':lg_pitchers, 'away_team':away_lineup, "away_pitcher":away_pitcher, "home_team":home_lineup, "home_pitcher":home_pitcher, 'game_log_away':game_log_away, 'game_log_home':game_log_home, 'ab_results_away':ab_results_away, 'away_proj':prj_away, 'home_proj':prj_home, 'ab_results_home':ab_results_home})
 
 @app.get("{org}/teams")
 async def teams_page(request: Request, org: Optional[str] = None, league: Optional[str] = None, year: Optional[int] = None, tm: Optional[str] = None, sort: Optional[str] = None):
