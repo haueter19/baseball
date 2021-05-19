@@ -10,11 +10,11 @@
     <tr><th>Hitting</th><th>Pitching</th></tr>
 {% for yr in yrs %}
 <tr>
-    <td><a href="/stats/hitting/player?org={{ org }}&lg={{ lg }}&tm={{ tm }}&yr={{ yr }}">{{ yr }}</a></td>
-    <td><a href="/stats/pitching/player?org={{ org }}&lg={{ lg }}&tm={{ tm }}&yr={{ yr }}">{{ yr }}</a></td>
+    <td><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ tm }}/{{ yr }}">{{ yr }}</a></td>
+    <td><a href="/stats/pitching/{{ org }}/{{ lg }}/{{ tm }}/{{ yr }}">{{ yr }}</a></td>
 {% endfor %}
 </tr>
-<a href="/{{ org }}/{{ lg }}/{{ tm }}/projections">Projections</a><br>
+<a href="/stats/hitting/{{ org }}/{{ lg }}/{{ tm }}/projections">Hitting Projections</a><br>
 <br>
 {% endblock %}
 

@@ -36,7 +36,7 @@
     </tr>
         {% for key,val in df2.iterrows() %}
         <tr>
-            <td><a href="../../../player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
+            <td><a href="/player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
             <td>{{ val['GP'] }}</td>
             <td>{{ val['PA'] }}</td>
             <td>{{ val['AB'] }}</td>
