@@ -46,7 +46,7 @@
     </tr>
         {% for key,val in st.iterrows() %}
         <tr>
-            <td><a href="../../../{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ yr }}">{{ val['Team'] }}</a></td>
+            <td><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ yr }}">{{ val['Team'] }}</a></td>
             <td>{{ val['W'] }}</td>
             <td>{{ val['L'] }}</td>
             <td>{{ val['T'] }}</td>

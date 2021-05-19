@@ -167,6 +167,12 @@ async def player_page(request: Request, pid: int):
     gp.at[-1] = ['Career', gp.GP.sum(), gp.PA.sum(), gp.AB.sum(), gp.R.sum(), gp.H.sum(), gp['1B'].sum(), gp['2B'].sum(), gp['3B'].sum(), gp.HR.sum(), gp.RBI.sum(), gp.BB.sum(),gp.K.sum(),gp.HBP.sum(),gp.SB.sum(),gp.CS.sum(),gp.SF.sum(),gp.SH.sum(),gp.TB.sum(),gp.wRAA.sum(),gp.wRAAc.sum(),gp.RC.sum(), ba,obp,slg,ops]
     return templates.TemplateResponse("players.html", {"request": request, "df":df.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index(), "df2":gp.to_html(index=False), 'fname':df2.First.max(), 'lname':df2.Last.max()})
 
+@app.get("/pid")
+async def pid_list():
+    df2 = df.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index()
+    df2 = df2.dropna()
+    return {'PID':df2.PID.tolist(), 'First':df2.First.tolist(), 'Last':df2.Last.tolist()}
+
 @app.get("/sim", response_class=HTMLResponse)
 async def run_sims(request: Request, org: Optional[str] = 'MABL', lg: Optional[str] = '35', innings: Optional[int] = 7, sims: Optional[int] = 1, go: Optional[int] = 1, away_lineup: Optional[str] = '2432+1781+304+876+2019+1125+750+2043+484+376', away_pitcher: Optional[int] = 484, home_lineup: Optional[str] = '579+492+391+825+1632+495+1605+1978+509', home_pitcher: Optional[int] = 825):
     if org=='MABL':
@@ -251,6 +257,24 @@ async def standings(request: Request, org: str, lg: str, yr: int, sort: Optional
     st['xW'] = round(st['Pyth']*st['GP'],1)
     return templates.TemplateResponse("standings.html", {'request': request, 'st':st, 'org':org, 'lg':lg, 'yr':yr, 'yrs':yrs})
 
+@app.get("/stats/hitting/{org}/{lg}/{tm}/{yr}")
+async def team_stats_year(request: Request, org: str, lg: str, yr: int):
+    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
+    df2 = df2.groupby('Team').agg({'Org':'first', 'League':'first', 'Year':'first', 'GP':'sum', 'PA':'sum', 'K':'sum', 'SB':'sum', 'CS':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'SF':'sum', 'TB':'sum', 'AB':'sum', 'SH':'sum', 'wRAAc':'sum'}).reset_index()
+    add_rate_stats(df2)
+    add_woba(df2)
+    df2 = add_ops_plus(df2, h_lg_avg)
+    add_wRC(df2, h_lg_avg)
+    add_wRC_plus(df2, h_lg_avg)
+    df2['wRAAc'] = round(df2['wRAAc'],1)
+    df2 = df2.sort_values('wRAAc', ascending=False)
+    df2.drop(columns=['Org', 'League', 'Year'],inplace=True)
+    st = pd.read_csv('standings.csv')
+    st = st[(st['Org']==org) & (st['League']==lg) & (st['Year']==yr)]
+    df2 = df2.merge(st, on='Team', how='left')
+    maxYear = 2019#df2.Year.max()
+    return templates.TemplateResponse("stats_team_view.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'yr':yr, 'maxYear':maxYear})
+
 @app.get("/stats/hitting/{org}/{lg}/league/{yr}")
 async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Optional[str] = None, asc: Optional[bool] = False):
     df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
@@ -278,24 +302,6 @@ async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Op
         df2 = df2.sort_values(sort, ascending=asc)
     print(df[(df['Org']==org) & (df['League']==lg)]['Year'].unique().tolist())
     return templates.TemplateResponse('league_stats.html', {"request": request, 'org':org, 'lg':lg, 'yr':yr, 'yrs':df[(df['Org']==org) & (df['League']==lg)]['Year'].unique().tolist(), 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
-
-@app.get("/stats/hitting/{org}/{lg}/{tm}/{yr}")
-async def team_stats_year(request: Request, org: str, lg: str, yr: int):
-    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
-    df2 = df2.groupby('Team').agg({'Org':'first', 'League':'first', 'Year':'first', 'GP':'sum', 'PA':'sum', 'K':'sum', 'SB':'sum', 'CS':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'SF':'sum', 'TB':'sum', 'AB':'sum', 'SH':'sum', 'wRAAc':'sum'}).reset_index()
-    add_rate_stats(df2)
-    add_woba(df2)
-    df2 = add_ops_plus(df2, h_lg_avg)
-    add_wRC(df2, h_lg_avg)
-    add_wRC_plus(df2, h_lg_avg)
-    df2['wRAAc'] = round(df2['wRAAc'],1)
-    df2 = df2.sort_values('wRAAc', ascending=False)
-    df2.drop(columns=['Org', 'League', 'Year'],inplace=True)
-    st = pd.read_csv('standings.csv')
-    st = st[(st['Org']==org) & (st['League']==lg) & (st['Year']==yr)]
-    df2 = df2.merge(st, on='Team', how='left')
-    maxYear = 2019#df2.Year.max()
-    return templates.TemplateResponse("stats_team_view.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'yr':yr, 'maxYear':maxYear})
 
 @app.get("/stats/pitching/{org}/{lg}/{tm}/{yr}")
 async def team_stats_year(request: Request, org: str, lg: str, yr: int):
