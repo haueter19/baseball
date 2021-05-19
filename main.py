@@ -124,28 +124,6 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-@app.get("/{org}/stats", response_class=HTMLResponse)
-async def stats_page(request: Request, org: str, team: Optional[str] = None, sort: Optional[str] = None, year: Optional[str] = None, league: Optional[str] = None, asc: Optional[bool] = False):
-    df2 = df[df["Org"]==org]
-    if team==None:
-        pass
-    else:
-        df2 = df2[df2['Team']==team]
-    if year==None:
-        pass
-    else:
-        df2 = df2[df2['Year']==year]
-    if league==None:
-        pass
-    else:
-        df2 = df2[df2['League']==league]
-    if sort==None:
-        sort = 'PA'
-    
-    team_list = df2['Team'].unique().tolist()
-    df2 = df2.sort_values([sort, "Year"], ascending=asc)
-    return templates.TemplateResponse("index.html", {"request": request, "org":org, "df":df2.to_html(index=False), "league":league, "tm":team, "year":year, "sort":sort, "asc":asc, "teams":team_list})
-
 @app.get("/player/")
 async def player(request: Request):
     #df2 = df['PID'].unique().tolist()
@@ -291,8 +269,8 @@ async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Op
         df2 = df2.sort_values('wRAAc', ascending=asc)
     else:
         df2 = df2.sort_values(sort, ascending=asc)
-    print(df[(df['Org']==org) & (df['League']==lg)]['Year'].unique().tolist())
-    return templates.TemplateResponse('league_stats.html', {"request": request, 'org':org, 'lg':lg, 'yr':yr, 'yrs':df[(df['Org']==org) & (df['League']==lg)]['Year'].unique().tolist(), 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
+    yrs = df[(df['Org']==org) & (df['League']==lg)]['Year'].sort_values(ascending=False).unique().tolist()
+    return templates.TemplateResponse('league_stats.html', {"request": request, 'org':org, 'lg':lg, 'yr':yr, 'yrs':yrs, 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
 
 @app.get("/stats/hitting/{org}/{lg}/{tm}/{yr}")
 async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort: Optional[str] = None, asc: Optional[bool] = False):
@@ -323,10 +301,10 @@ async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort
         df2 = df2.sort_values(sort, ascending=asc)
     df2 = add_team_totals(df2)
     lg_stats = h_lg_avg[(h_lg_avg['Org']==org) & (h_lg_avg['League']==lg) & (h_lg_avg['Year']==yr)]
-    yrs = df[(df['Org']==org) & (df['League']==lg)].sort_values('Year', ascending=False)['Year'].unique().tolist()
+    yrs = df[(df['Org']==org) & (df['League']==lg) & (df['Team']==tm)].sort_values('Year', ascending=False)['Year'].unique().tolist()
     return templates.TemplateResponse("team_stats.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yrs':yrs, 'yr':yr, 'df2':df2, 'lg_stats':lg_stats, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
 
-@app.get("/stats/hitting/{org}/{lg}/{tm}/{yr}")
+@app.get("/stats/hitting/{org}/{lg}/teams/{yr}")
 async def team_stats_year(request: Request, org: str, lg: str, yr: int):
     df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
     df2 = df2.groupby('Team').agg({'Org':'first', 'League':'first', 'Year':'first', 'GP':'sum', 'PA':'sum', 'K':'sum', 'SB':'sum', 'CS':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'SF':'sum', 'TB':'sum', 'AB':'sum', 'SH':'sum', 'wRAAc':'sum'}).reset_index()
@@ -346,21 +324,10 @@ async def team_stats_year(request: Request, org: str, lg: str, yr: int):
 
 @app.get("/stats/pitching/{org}/{lg}/{tm}/{yr}")
 async def team_stats_year(request: Request, org: str, lg: str, yr: int):
-    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
+    df2 = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Year']==yr)]
     df2 = df2.groupby('Team').agg({'Org':'first', 'League':'first', 'Year':'first', 'GP':'sum', 'PA':'sum', 'K':'sum', 'SB':'sum', 'CS':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'SF':'sum', 'TB':'sum', 'AB':'sum', 'SH':'sum', 'wRAAc':'sum'}).reset_index()
-    add_rate_stats(df2)
-    add_woba(df2)
-    df2 = add_ops_plus(df2, h_lg_avg)
-    add_wRC(df2, h_lg_avg)
-    add_wRC_plus(df2, h_lg_avg)
-    df2['wRAAc'] = round(df2['wRAAc'],1)
-    df2 = df2.sort_values('wRAAc', ascending=False)
-    df2.drop(columns=['Org', 'League', 'Year'],inplace=True)
-    st = pd.read_csv('standings.csv')
-    st = st[(st['Org']==org) & (st['League']==lg) & (st['Year']==yr)]
-    df2 = df2.merge(st, on='Team', how='left')
-    maxYear = 2019#df2.Year.max()
-    return templates.TemplateResponse("stats_team_view.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'yr':yr, 'maxYear':maxYear})
+    
+    return templates.TemplateResponse("team_pitching.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'yr':yr})
 
 @app.get("/records/season/{org}/{lg}")
 async def season_records(request: Request, org: str, lg: str, stat: Optional[str] = 'H'):
@@ -404,11 +371,11 @@ async def standings(request: Request, org: str, lg: str):
 async def league(request: Request, org: str, lg: str):
     df2 = df[(df['Org']==org.upper()) & (df['League']==lg)]
     _list = df[(df['Org']==org.upper()) & (df['League']==lg)].sort_values('Year').groupby('Team')['Year'].unique()#.reset_index()
-    #names_list = _list.Team
-    #year_list = _list.Year
+     #| {% for y in yrs %}<a href="/stats/hitting//{{ org }}/{{ lg }}/{{ tm }}/{{ y }}">{{ y }}</a> {% endfor %}
     tms = df2['Team'].sort_values().unique()
     maxYear = df2.Year.max()
-    return templates.TemplateResponse("league.html", {"request": request, 'org':org, 'lg':lg, 'tms':tms, 'maxYear':maxYear, 'yr_list': _list.to_dict()})
+    yrs = df[(df['Org']==org) & (df['League']==lg)]['Year'].sort_values().unique().tolist()
+    return templates.TemplateResponse("league.html", {"request": request, 'org':org, 'lg':lg, 'tms':tms, 'maxYear':maxYear, 'yrs':yrs, 'yr_list': _list.to_dict()})
 
 @app.get("/{org}/{lg}/{tm}")
 async def orglgtm(request: Request, org: str, lg: str, tm: str):

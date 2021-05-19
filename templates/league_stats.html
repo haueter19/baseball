@@ -2,7 +2,12 @@
 {% block title %}Clubhouse{% endblock %}
 {% block lg_stats %}"/{{ org }}/{{ lg }}/league/2019"{% endblock %}
 {% block content %}
-
+<br />
+<select id="year_pick" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+    {% for y in yrs %}
+            <option value="/stats/hitting/{{ org }}/{{ lg }}/league/{{ y }}">{{ y }}</option>
+    {% endfor %}
+</select>
 <br />
 <form id="form" action="/stats/hitting/{{ org }}/{{ lg }}/league/{{ yr }}?">
     <label for="sort_list">Sort by:</label>
@@ -99,10 +104,14 @@
 
     if (c==True){
         //$("#sort_asc").prop("checked", true);
-        $('#sort_asc').prop('checked',true);
+        $('#sort_asc').prop('checked',True);
+    }
+    if (c==False){
+        //$("#sort_asc").prop("checked", true);
+        $('#sort_desc').prop('checked',True);
     }
     url = url.pathname.split("/");
-    url = '/standings/{{ org }}/{{ lg }}/'+url[url.length-1]
+    url = '/stats/hitting/{{ org }}/league/'+url[url.length-1]
     $('#year_pick').val(url);
 </script>
 

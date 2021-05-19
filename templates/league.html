@@ -11,13 +11,17 @@
 Teams<br>
 <p>
 {% for tm, yrs in yr_list.items() %}
-    <a href="/{{ org }}/{{ lg }}/{{ tm }}">{{ tm }}</a> | {% for y in yrs %}<a href="/stats/hitting//{{ org }}/{{ lg }}/{{ tm }}/{{ y }}">{{ y }}</a> {% endfor %}
+    <a href="/{{ org }}/{{ lg }}/{{ tm }}">{{ tm }}</a>
     <br>
 {% endfor %}
 </p>
 
-
+League Hitting Stats
 <br />
+{% for y in yrs %}
+<a href="/stats/hitting/{{ org }}/{{ lg }}/league/{{ y }}">{{ y }}</a> 
+{% endfor %}
+<br /><br />
 <a href="/{{ org }}/{{ lg }}/champions/">List of Champions</a>
 <br>
 <a href="/standings/{{ org }}/{{ lg }}/{{ maxYear }}">League Standings</a>
