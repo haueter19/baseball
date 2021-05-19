@@ -44,8 +44,11 @@
         <th>HLD</th>
         <th>AB</th>
         <th>BAA</th>
-        <th>Outs</th>
-        <th>IBB</th>
+        <th>ERA</th>
+        <th>WHIP</th>
+        <th>K/9</th>
+        <th>BB/9</th>
+        <th>H/9</th>
     </tr>
         {% for key,val in df2.iterrows() %}
         <tr>
@@ -64,10 +67,13 @@
             <td>{{ val['L'] }}</td>
             <td>{{ val['Sv'] }}</td>
             <td>{{ val['HLD'] }}</td>
-            <td>{{ val['AB'] }}</td>
+            <td>{{ val['ABA'] }}</td>
             <td>{{ val['BAA'] }}</td>
-            <td>{{ val['Outs'] }}</td>
-            <td>{{ val['IBB'] }}</td>
+            <td>{{ val['ERA'] }}</td>
+            <td>{{ val['WHIP'] }}</td>
+            <td>{{ val['Kper9'] }}</td>
+            <td>{{ val['BBper9'] }}</td>
+            <td>{{ val['Hper9'] }}</td>
         </tr>
         {% endfor %}
 </table>
