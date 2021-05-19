@@ -3,7 +3,12 @@
 {% block lg_stats %}"/{{ org }}/{{ lg }}/league/{{ yr }}"{% endblock %}
 {% block content %}
 
-<a href="/{{ org }}">{{ org }}</a> > <a href="/{{ org }}/{{ lg }}/">{{ lg }}</a> > <a href="../../../{{ org }}/{{ lg }}/{{ tm }}">{{ tm }}</a> > {{ yr }}
+<a href="/{{ org }}">{{ org }}</a> > <a href="/{{ org }}/{{ lg }}/">{{ lg }}</a> > <a href="/{{ org }}/{{ lg }}/{{ tm }}">{{ tm }}</a> > 
+<select id="year_pick" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+    {% for y in yrs %}
+            <option value="/stats/hitting/{{ org }}/{{ lg }}/{{ tm }}/{{ y }}">{{ y }}</option>
+    {% endfor %}
+</select>
 <br /><br />
 <form id="form" action="/{{ org }}/{{ lg }}/{{ tm }}/{{ yr }}?">
     <label for="sort_list">Sort by:</label>
@@ -55,7 +60,7 @@
     </tr>
         {% for key,val in df2.iterrows() %}
         <tr>
-            <td><a href="../../../player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
+            <td><a href="/player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
             <td>{{ val['GP'] }}</td>
             <td>{{ val['PA'] }}</td>
             <td>{{ val['AB'] }}</td>
@@ -127,13 +132,19 @@
     var url_string = window.location.href;
     var url = new URL(url_string);
     var c = url.searchParams.get("sort");
-    $('#sort_list').val(c);
+    $('#sort_list').val(c);    
+    url = url.pathname.split("/");
+    url = '/stats/hitting/{{ org }}/{{ lg }}/{{ tm }}/'+url[url.length-1]
+    $('#year_pick').val(url);
     var c = url.searchParams.get("asc");
-
     if (c==True){
         //$("#sort_asc").prop("checked", true);
         $('#sort_asc').prop('checked',true);
-    }    
+    }
+    if (c==False){
+        //$("#sort_asc").prop("checked", true);
+        $('#sort_desc').prop('checked',true);
+    }
 </script>
 
 {% endblock %}
