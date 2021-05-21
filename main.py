@@ -174,8 +174,8 @@ async def run_sims(request: Request, org: Optional[str] = 'MABL', lg: Optional[s
         game_log_home = ''
         ab_results_away = ['']
         ab_results_home = ['']
-        prj_away = ''
-        prj_home = ''
+        prj_away = pd.DataFrame()#['']
+        prj_home = pd.DataFrame()#['']
     else:
         import urllib.parse
         away_lineup = urllib.parse.unquote(away_lineup)
