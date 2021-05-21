@@ -4,7 +4,7 @@
 {% block champions %}"/{{ org }}/{{ lg }}/champions"{% endblock %}
 {% block lg_stats %}"/{{ org }}/{{ lg }}/league/2019"{% endblock %}
 {% block content %}
-{{ score }}
+
 <script>
     var form = document.getElementById("myform");
     function submitFormChangeLeague(){        
@@ -42,12 +42,12 @@
         $("#a2").val('1781');
         $("#a3").val('304');
         $("#a4").val('876');
-        $("#a5").val('2019');
-        $("#a6").val('1125');
-        $("#a7").val('750');
-        $("#a8").val('2043');
-        $("#a9").val('484');
-        $("#a10").val('376');
+        $("#a5").val('1063');
+        $("#a6").val('2019');
+        $("#a7").val('1125');
+        $("#a8").val('750');
+        $("#a9").val('2043');
+        $("#a10").val('484');
         $("#a_p").val('484');
         $("#h1").val('579');
         $("#h2").val('492');
@@ -502,7 +502,9 @@
 <P>
     <input type='button' id="As_35" value="A's" onclick="setDefaultAs35()">
 </p>
+<p>{{ score }}</p>
 <div id="game_log_container" style="width: 100%; overflow: hidden;">
+    <br>
     <div id="game_log_away_side" style="width: 50%; float: left;">
         {{ game_log_away|safe }}
     </div>
