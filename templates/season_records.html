@@ -4,7 +4,7 @@
 {% block content %}
 
 <br />
-<form id="form" action="/records/season/{{ org }}/{{ lg }}?">
+<form id="form" action="/records/{{ type }}/season/{{ org }}/{{ lg }}?">
     <label for="sort_list">Choose stat:</label>
     <select name="stat" id="sort_list">
         {% for col in df2 %}
@@ -24,6 +24,7 @@
         <th align='center'>Year</th>
         <th align='center'>{{ stat }}</th>
         <th align='center'>PA</th>
+        <th align='center'>IP</th>
     </tr>
         {% for key,val in df2.iterrows() %}
         <tr>
@@ -32,6 +33,7 @@
             <td align='center'><a href="/{{ org }}/{{ lg }}/league/{{ val['Year'] }}">{{ val['Year'] }}</a></td>
             <td align='center'>{{ val['stat'] }}</td>
             <td align='center'>{{ val['PA']}}</td>
+            <td align='center'>{{ val['IP']}}</td>
         </tr>
         {% endfor %}
 </table>

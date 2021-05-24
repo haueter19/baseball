@@ -338,14 +338,21 @@ async def team_stats_year(request: Request, org: str, lg: str, tm: str, yr: int)
     yrs = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Team']==tm)].sort_values('Year', ascending=False)['Year'].unique().tolist()
     return templates.TemplateResponse("team_pitching.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'tm':tm, 'yr':yr, 'yrs':yrs})
 
-@app.get("/records/season/{org}/{lg}")
+@app.get("/records/hitting/season/{org}/{lg}")
 async def season_records(request: Request, org: str, lg: str, stat: Optional[str] = 'H'):
     df2 = df[(df['Org']==org) & (df['League']==lg) & (df['PA']>25)].sort_values(stat, ascending=False).head(20)
     #df2.columns=['PID', 'First', 'Last', 'Team', 'Year', 'PA', 'stat']
     df2['stat'] = df2[stat]
-    return templates.TemplateResponse("season_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat})
+    return templates.TemplateResponse("season_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat, 'type':'hitting'})
 
-@app.get("/records/career/{org}/{lg}")
+@app.get("/records/pitching/season/{org}/{lg}")
+async def season_records(request: Request, org: str, lg: str, stat: Optional[str] = 'H'):
+    df2 = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Outs']>63)].sort_values(stat, ascending=False).head(20)
+    #df2.columns=['PID', 'First', 'Last', 'Team', 'Year', 'PA', 'stat']
+    df2['stat'] = df2[stat]
+    return templates.TemplateResponse("season_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat, 'type':'pitching'})
+
+@app.get("/records/hitting/career/{org}/{lg}")
 async def career_records(request: Request, org: str, lg: str, stat: Optional[str] = 'H'):
     if stat in ['BA', 'OBP', 'SLG', 'OPS']:
         df2 = df[(df['Org']==org) & (df['League']==lg)].groupby('PID').agg({'First':'last', 'Last':'last', 'Team':'last', 'PA':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'AB':'sum', 'TB':'sum', 'SF':'sum'})
@@ -358,7 +365,21 @@ async def career_records(request: Request, org: str, lg: str, stat: Optional[str
         df2['stat'] = df2[stat]
         df2 = add_rate_stats(df2)
         df2 = df2[df2['PA']>=100]
-    return templates.TemplateResponse("career_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat})
+    return templates.TemplateResponse("career_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat, 'type':'hitting'})
+
+@app.get("/records/pitching/career/{org}/{lg}")
+async def career_records(request: Request, org: str, lg: str, stat: Optional[str] = 'H'):
+    if stat in ['ERA', 'WHIP', 'Kper9', 'BBper9', 'Hper9', 'BAA']:
+        df2 = pit[(pit['Org']==org) & (pit['League']==lg)].groupby('PID').agg({'First':'last', 'Last':'last', 'Team':'last', 'Outs':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'ABA':'sum', 'K':'sum'})
+        df2 = add_rate_stats(df2)
+        df2 = df2.query('Outs>=150').sort_values(stat, ascending=False).head(20).reset_index()
+        df2['stat'] = df2[stat]
+        #df2.columns=['PID', 'First', 'Last', 'Team', 'PA', 'H', 'BB', 'HBP', 'AB', 'TB', 'SF', 'BA', 'OBP', 'SLG','OPS', 'stat']
+    else:
+        df2 = pit[(pit['Org']==org) & (pit['League']==lg)].groupby('PID').agg({'First':'last', 'Last':'last', 'Team':'last', 'Outs':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'ABA':'sum', 'K':'sum'}).sort_values(stat, ascending=False).head(20).reset_index()
+        df2['stat'] = df2[stat]
+        df2 = df2[df2['Outs']>=150]
+    return templates.TemplateResponse("career_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat, 'type':'pitching'})
 
 @app.get("/{org}")
 async def org(request: Request, org: str):
