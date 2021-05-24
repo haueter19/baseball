@@ -16,10 +16,14 @@ Teams<br>
 {% endfor %}
 </p>
 
-League Hitting Stats
-<br />
+League Hitting Stats |
 {% for y in yrs %}
 <a href="/stats/hitting/{{ org }}/{{ lg }}/league/{{ y }}">{{ y }}</a> 
+{% endfor %}
+<br />
+League Pitching Stats |
+{% for y in yrs %}
+<a href="/stats/pitching/{{ org }}/{{ lg }}/league/{{ y }}">{{ y }}</a> 
 {% endfor %}
 <br /><br />
 <a href="/{{ org }}/{{ lg }}/champions/">List of Champions</a>

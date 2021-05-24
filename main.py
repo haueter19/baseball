@@ -1,3 +1,4 @@
+import math
 from typing import Optional
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
@@ -323,11 +324,16 @@ async def team_stats_year(request: Request, org: str, lg: str, yr: int):
     yrs = df[(df['Org']==org) & (df['League']==lg)].sort_values('Year', ascending=False)['Year'].unique().tolist()
     return templates.TemplateResponse("stats_team_view.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'yr':yr, 'yrs':yrs, 'maxYear':maxYear})
 
+@app.get("/stats/pitching/{org}/{lg}/league/{yr}")
+async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Optional[str] = 'Outs', asc: Optional[bool] = False):
+    df2 = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Year']==yr)].sort_values(sort, ascending=asc)
+    df2['IP'] = df2['Outs'].apply(lambda x: str(math.floor(x/3))+"."+str(x % 3))
+    return templates.TemplateResponse('league_stats_pitching.html', {"request": request, 'org':org, 'lg':lg, 'yr':yr, 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
+
 @app.get("/stats/pitching/{org}/{lg}/{tm}/{yr}")
 async def team_stats_year(request: Request, org: str, lg: str, tm: str, yr: int):
     df2 = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Team']==tm) & (pit['Year']==yr)]
     #df2 = df2.groupby('Team').agg({'Org':'first', 'League':'first', 'Year':'first', 'First':'first', 'Last':'first', 'GP':'sum', 'IP':'sum', 'Outs':'sum', 'R':'sum', 'ER':'sum', 'H':'sum', 'BB':'sum', 'K':'sum', 'HBP':'sum', 'CG':'sum', 'W':'sum', 'L':'sum', 'Sv':'sum', 'HR':'sum', 'IBB':'sum', 'AB':'sum', 'BAA':'sum', 'HLD':'sum'}).reset_index()
-    import math
     df2['IP'] = df2['Outs'].apply(lambda x: str(math.floor(x/3))+"."+str(x % 3))
     yrs = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Team']==tm)].sort_values('Year', ascending=False)['Year'].unique().tolist()
     return templates.TemplateResponse("team_pitching.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'tm':tm, 'yr':yr, 'yrs':yrs})
