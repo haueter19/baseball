@@ -126,14 +126,14 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/player/")
-async def player(request: Request):
+async def player(request: Request, org: Optional[str] = 'MABL', lg: Optional[str] = '18+'):
     #df2 = df['PID'].unique().tolist()
     df2 = df.copy()
     df2 = df2.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index()
-    return templates.TemplateResponse("players.html", {"request": request, 'df':df2, 'fname':'', 'lname':''})
+    return templates.TemplateResponse("players.html", {"request": request, 'df':df2, 'org':org, 'lg':lg, 'fname':'', 'lname':''})
 
 @app.get("/player/{pid}")
-async def player_page(request: Request, pid: int):
+async def player_page(request: Request, pid: int, org: Optional[str] = 'MABL', lg: Optional[str] = '18+'):
     df2 = df[df['PID']==pid]
     df2 = df2.sort_values(['Year', 'Org'], ascending=True)
     gp = df2.groupby('Year').agg({'GP':'sum', 'PA':'sum', 'AB':'sum', 'R':'sum', 'H':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'RBI':'sum', 'BB':'sum', 'K':'sum', 'HBP':'sum', 'SB':'sum', 'CS':'sum', 'SF':'sum', 'SH':'sum', 'TB':'sum', 'wRAA':'sum', 'wRAAc':'sum'}).reset_index()
@@ -144,7 +144,7 @@ async def player_page(request: Request, pid: int):
     slg = gp.TB.sum()/gp.AB.sum()
     ops = obp + slg
     gp.at[-1] = ['Career', gp.GP.sum(), gp.PA.sum(), gp.AB.sum(), gp.R.sum(), gp.H.sum(), gp['1B'].sum(), gp['2B'].sum(), gp['3B'].sum(), gp.HR.sum(), gp.RBI.sum(), gp.BB.sum(),gp.K.sum(),gp.HBP.sum(),gp.SB.sum(),gp.CS.sum(),gp.SF.sum(),gp.SH.sum(),gp.TB.sum(),gp.wRAA.sum(),gp.wRAAc.sum(),gp.RC.sum(), ba,obp,slg,ops]
-    return templates.TemplateResponse("players.html", {"request": request, "df":df.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index(), "df2":gp.to_html(index=False), 'fname':df2.First.max(), 'lname':df2.Last.max()})
+    return templates.TemplateResponse("players.html", {"request": request, "df":df.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index(), "df2":gp.to_html(index=False), 'fname':df2.First.max(), 'lname':df2.Last.max(), 'org':org, 'lg':lg})
 
 @app.get("/pid")
 async def pid_list():
@@ -385,7 +385,15 @@ async def career_records(request: Request, org: str, lg: str, stat: Optional[str
 async def org(request: Request, org: str):
     df2 = df[df['Org']==org.upper()]
     lgs = df2['League'].sort_values().unique()
-    return templates.TemplateResponse("org.html", {"request": request, 'org':org, 'lgs':lgs})
+    if org=='MABL':
+        lg = '18+'
+    elif org=='RRL':
+        lg = 'Southern'
+    elif org=='MSCR':
+        lg = 'Pacific'
+    else:
+        lg = df2['League'].iloc[0]
+    return templates.TemplateResponse("org.html", {"request": request, 'org':org, 'lgs':lgs, 'lg': lg, 'max_yr':df2.Year.max()})
 
 @app.get("/{org}/{lg}/champions")
 async def standings(request: Request, org: str, lg: str):

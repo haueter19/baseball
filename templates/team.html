@@ -2,7 +2,12 @@
 {% block title %}Clubhouse{% endblock %}
 {% block standings %}"/standings/{{ org }}/{{ lg }}/2019"{% endblock %}
 {% block champions %}"/{{ org }}/{{ lg }}/champions"{% endblock %}
-{% block lg_stats %}"/{{ org }}/{{ lg }}/league/2019"{% endblock %}
+{% block hitting_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}}
+{% block pitching_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}}
+{% block h_records_season %}{{ org }}/{{ lg }}{% endblock %}
+{% block h_records_career %}{{ org }}/{{ lg }}{% endblock %}
+{% block p_records_season %}{{ org }}/{{ lg }}{% endblock %}
+{% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block content %}
 <a href="../../{{ org }}">{{ org }}</a> > <a href="../../{{ org }}/{{ lg }}">{{ lg }}</a> > {{ tm }}
 <br /><br />

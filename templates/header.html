@@ -9,9 +9,8 @@
 	<div id="main">
 		<img id="header-logo" src={% block logo %}{% endblock %}>
 		<ul>
-				<li class="dropdown"><a href="/home">Home</a></li>
 				<li class="dropdown">
-					<a href="javascript:void(0)" class="dropbtn">Organization</a>
+					<a class="dropbtn">Organization</a>
 					<div class="dropdown-content">
 						<a href="/MABL">MABL</a>
 						<a href="/RRL">RRL</a>
@@ -26,18 +25,20 @@
 					</div>
 				</li>
 				<li class="dropdown">
-					<a href="" class="dropbtn">Stats</a>
+					<a class="dropbtn">Stats</a>
 					<div class="dropdown-content">
 						<a href="/player/">Players</a>
-						<a href={% block tm_stats %}{% endblock %}>Team</a>
-						<a href={% block lg_stats %}{% endblock %}>League</a>
+						<a href="/stats/hitting/{% block hitting_stats %}{% endblock %}">Hitting</a>
+						<a href="/stats/pitching/{% block pitching_stats %}{% endblock %}">Pitching</a>
 					</div>
 				</li>
 				<li class='dropdown'>
-					<a href="" class="dropbtn">Records</a>
+					<a class="dropbtn">Records</a>
 					<div class="dropdown-content">
-						<a href="/records/hitting/season/MABL/18+/">Season</a>
-						<a href="/records/hitting/career/MABL/18+/">Career</a>
+						<a href="/records/hitting/season/{% block h_records_season %}{% endblock %}">Hitting (Season)</a>
+						<a href="/records/hitting/career/{% block h_records_career %}{% endblock %}">Hitting (Career)</a>
+						<a href="/records/pitching/season/{% block p_records_season %}{% endblock %}">Pitching (Season)</a>
+						<a href="/records/pitching/career/{% block p_records_career %}{% endblock %}">Pitching (Career)</a>
 					</div>
 				</li>
 			</ul>

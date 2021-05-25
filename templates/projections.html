@@ -1,6 +1,11 @@
 {% extends "header.html" %}
 {% block title %}Clubhouse{% endblock %}
-{% block lg %}"/stats/mabl"{% endblock %}
+{% block hitting_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}}
+{% block pitching_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}}
+{% block h_records_season %}{{ org }}/{{ lg }}{% endblock %}
+{% block h_records_career %}{{ org }}/{{ lg }}{% endblock %}
+{% block p_records_season %}{{ org }}/{{ lg }}{% endblock %}
+{% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block sched %}"schedule/mabl"{% endblock %}
 {% block content %}
 

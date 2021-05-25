@@ -2,8 +2,13 @@
 {% block title %}Clubhouse{% endblock %}
 {% block standings %}"/standings/{{ org }}/{{ lg }}/{{ maxYear }}"{% endblock %}
 {% block champions %}"/{{ org }}/{{ lg }}/champions"{% endblock %}
-{% block tm_stats %}"/{{ org }}/{{ lg }}/Athletics/{{ maxYear }}"{% endblock %}
-{% block lg_stats %}"../stats/hitting/team/{{ org }}/{{ lg }}/{{ maxYear }}"{% endblock %}
+{% block hitting_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}}
+{% block pitching_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}}
+{% block h_records_season %}{{ org }}/{{ lg }}{% endblock %}
+{% block h_records_career %}{{ org }}/{{ lg }}{% endblock %}
+{% block p_records_season %}{{ org }}/{{ lg }}{% endblock %}
+{% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
+
 {% block content %}
 <a href="../{{ org }}">{{ org }}</a> > {{ lg }}
 <br /><br />
