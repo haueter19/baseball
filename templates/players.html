@@ -2,8 +2,8 @@
 {% block title %}Clubhouse{% endblock %}
 {% block standings %}"/standings/{{ org }}/{{ lg }}/2019"{% endblock %}
 {% block champions %}"/{{ org }}/{{ lg }}/champions"{% endblock %}
-{% block hitting_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}}
-{% block pitching_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}}
+{% block hitting_stats %}MABL/18+/league/2021{% endblock %}}
+{% block pitching_stats %}MABL/18+/league/2021{% endblock %}}
 {% block h_records_season %}{{ org }}/{{ lg }}{% endblock %}
 {% block h_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block p_records_season %}{{ org }}/{{ lg }}{% endblock %}
@@ -12,11 +12,6 @@
 <script type="text/javascript">
 function goToPage(){
     var v = document.querySelector('#player').value;
-    //var e = document.getElementById("players"); //set subcategory as id of select box
-    //var v = e.value;
-    console.log(v);
-    //var value_1 = $('#value_1').val();
-    //var value_2 =  $('#value_2').val();
     window.location = '/player/'+v;
     return false;
 }

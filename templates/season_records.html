@@ -10,52 +10,47 @@
 {% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block content %}
 
-<br />
-<form id="form" action="/records/{{ type }}/season/{{ org }}/{{ lg }}?">
-    <label for="sort_list">Choose stat:</label>
-    <select name="stat" id="sort_list">
-        {% for col in df2 %}
-        {% if col not in ['PID', 'Org', 'League', 'Team', 'Year', 'First', 'Last'] %}
-        <option value="{{ col }}">{{ col }}</option>
-        {% endif %}
-        {% endfor %}
-    </select>
-    <br><input type="submit" value="Submit">
-</form>
-<br>
-<table class='dataframe' id='df_table' style="width:450px;">
-    <col><col><col><col><col>
-    <tr>
-        <th align='left'>Player</th>
-        <th align='left'>Team</th>
-        <th align='center'>Year</th>
-        <th align='center'>{{ stat }}</th>
-        <th align='center'>PA</th>
-        <th align='center'>IP</th>
-    </tr>
-        {% for key,val in df2.iterrows() %}
-        <tr>
-            <td><a href="../../../player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
-            <td><a href="/{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ val['Year'] }}">{{ val['Team'] }}</a></td>
-            <td align='center'><a href="/{{ org }}/{{ lg }}/league/{{ val['Year'] }}">{{ val['Year'] }}</a></td>
-            <td align='center'>{{ val['stat'] }}</td>
-            <td align='center'>{{ val['PA']}}</td>
-            <td align='center'>{{ val['IP']}}</td>
-        </tr>
-        {% endfor %}
-</table>
-<br>
-<script>
-    var url_string = window.location.href;
-    var url = new URL(url_string);
-    var c = url.searchParams.get("sort");
-    $('#sort_list').val(c);
-    var c = url.searchParams.get("asc");
-
-    if (c==True){
-        //$("#sort_asc").prop("checked", true);
-        $('#sort_asc').prop('checked',true);
-    }    
-</script>
+<div style="display:flex;">
+    <div style="flex:20%">
+        <label for="sort_list">Choose stat:</label>
+        <select name="stat" id="sort_list" onchange="window.location = '/records/{{ type }}/season/{{ org }}/{{ lg }}?stat='+this.options[this.selectedIndex].value;">
+            {% for col in df2 %}
+            {% if col not in ['PID', 'Org', 'League', 'Team', 'Year', 'First', 'Last'] %}
+            <option value="{{ col }}">{{ col }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    <div style="flex:80%;">
+        <table class='dataframe' id='df_table' style="width:450px;cursor:default;">
+            <tr>
+                <th>Rank</th>
+                <th align='left'>Player</th>
+                <th align='left'>Team</th>
+                <th align='center'>Year</th>
+                <th align='center'>{{ stat }}</th>
+                <th align='center'>PA</th>
+                <th align='center'>IP</th>
+            </tr>
+                {% for key,val in df2.iterrows() %}
+                <tr>
+                    <td align='center'>{{ loop.index }}</td>
+                    <td><a href="../../../player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
+                    <td><a href="/{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ val['Year'] }}">{{ val['Team'] }}</a></td>
+                    <td align='center'><a href="/{{ org }}/{{ lg }}/league/{{ val['Year'] }}">{{ val['Year'] }}</a></td>
+                    <td align='center'>{{ val['stat'] }}</td>
+                    <td align='center'>{{ val['PA']}}</td>
+                    <td align='center'>{{ val['IP']}}</td>
+                </tr>
+                {% endfor %}
+        </table>
+    </div>
+    <script>
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+        var c = url.searchParams.get("stat");
+        $('#sort_list').val(c);
+    </script>
+</div>
 
 {% endblock %}

@@ -9,13 +9,19 @@ table.dataframe {
 }
 col:first-child {background: #CCC}
 col:nth-child(2n+3) {background: #CCC}
-
+#myTable {
+	width: 100%;
+	overflow-x: scroll;
+}
 #df_table {
 	width:100%;
 	overflow-x: scroll;
 }
 th {
 	min-width: 25px;
+}
+tr:nth-child(odd) {
+	background-color: #c9c9c9;
 }
 ul {
 	list-style-type: none;
@@ -24,49 +30,41 @@ ul {
 	overflow: hidden;
 	background-color: #333;
   }
-  
-  li {
+li {
 	float: left;
-  }
-  
-  li a, .dropbtn {
+}
+li a, .dropbtn {
 	display: inline-block;
 	color: white;
 	text-align: center;
 	padding: 14px 16px;
 	text-decoration: none;
-  }
-  
-  li a:hover, .dropdown:hover .dropbtn {
+}  
+li a:hover, .dropdown:hover .dropbtn {
 	background-color: red;
-  }
-  
-  li.dropdown {
+}  
+li.dropdown {
 	display: inline-block;
-  }
-  
-  .dropdown-content {
+}
+.dropdown-content {
 	display: none;
 	position: absolute;
 	background-color: #f9f9f9;
 	min-width: 160px;
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 	z-index: 1;
-  }
-  
-  .dropdown-content a {
+}  
+.dropdown-content a {
 	color: black;
 	padding: 12px 16px;
 	text-decoration: none;
 	display: block;
 	text-align: left;
-  }
-  
-  .dropdown-content a:hover {background-color: #f1f1f1;}
-  
-  .dropdown:hover .dropdown-content {
+}
+.dropdown-content a:hover {background-color: #f1f1f1;}
+.dropdown:hover .dropdown-content {
 	display: block;
-  }
+}
 body {
 	background-color: gray
 	/*
@@ -74,7 +72,6 @@ body {
 	BACKGROUND-REPEAT: repeat;
 	*/
 }
-
 .dataframe tr:hover {
                 background-color: yellow;
 				color: black;
@@ -82,4 +79,34 @@ body {
 .dataframe th {
 	color: white;
 	background-color: black;
+	cursor: pointer;
+}
+ul.breadcrumb {
+	padding: 0px 10px;
+	list-style: none;
+	background-color: #eee;
+}
+ul.breadcrumb li {
+	display: inline;
+	font-size: 16px;
+	color: #0275d8;
+	text-decoration: none;
+	vertical-align: middle;
+}
+ul.breadcrumb li+li:before {
+	padding: 8px;
+	color: black;
+	content: "/\00a0";
+}
+ul.breadcrumb li a {
+	color: #0275d8;
+	text-decoration: none;
+}
+ul.breadcrumb li a:hover {
+	color: #01447e;
+	text-decoration: underline;
+}
+li a:hover, .dropdown:hover .breadcrumb {
+	background-color: #eee;
+	vertical-align: middle;
 }

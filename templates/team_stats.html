@@ -10,64 +10,59 @@
 {% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block content %}
 
-<a href="/{{ org }}">{{ org }}</a> > <a href="/{{ org }}/{{ lg }}/">{{ lg }}</a> > <a href="/{{ org }}/{{ lg }}/{{ tm }}">{{ tm }}</a> > 
-<select id="year_pick" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
-    {% for y in yrs %}
-            <option value="/stats/hitting/{{ org }}/{{ lg }}/{{ tm }}/{{ y }}">{{ y }}</option>
-    {% endfor %}
-</select>
+<ul class="breadcrumb">
+    <li><a href="/{{ org }}">{{ org }}</a></li>
+    <li><a href="/{{ org }}/{{ lg }}/">{{ lg }}</a></li>
+    <li><a href="/{{ org }}/{{ lg }}/{{ tm }}">{{ tm }}</a></li>
+    <li>
+        <select id="year_pick" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+            {% for y in yrs %}
+                    <option value="/stats/hitting/{{ org }}/{{ lg }}/{{ tm }}/{{ y }}">{{ y }}</option>
+            {% endfor %}
+        </select>
+    </li>
+</ul> 
+  
+ 
+
 <br /><br />
-<form id="form" action="/stats/hitting/{{ org }}/{{ lg }}/{{ tm }}/{{ yr }}?">
-    <label for="sort_list">Sort by:</label>
-    <select name="sort" id="sort_list">
-        {% for col in df2 %}
-        <option value="{{ col }}">{{ col }}</option>
-        {% endfor %}
-    </select>
-    <input type="radio" id="sort_asc" name="asc" value=True>
-    <label for="asc">Ascending</label>
-    <input type="radio" id="sort_desc" name="asc" value=False>
-    <label for="asc">Descending</label>
-    <br><input type="submit" value="Submit">
-</form>
-<br>
-<table class='dataframe' id='df_table'>
-    <col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col>
+<table class='dataframe' id='myTable'>
+    
     <tr>
-        <th>Player</th>
-        <th>GP</th>
-        <th>PA</th>
-        <th>AB</th>
-        <th>R</th>
-        <th>H</th>
-        <th>1B</th>
-        <th>2B</th>
-        <th>3B</th>
-        <th>HR</th>
-        <th>RBI</th>
-        <th>BB</th>
-        <th>K</th>
-        <th>HBP</th>
-        <th>SB</th>
-        <th>CS</th>
-        <th>SF</th>
-        <th>SH</th>
-        <th>TB</th>
-        <th>wRAA</th>
-        <th>RC</th>
-        <th>BA</th>
-        <th>OBP</th>
-        <th>SLG</th>
-        <th>OPS</th>
-        <th>OPS+</th>
-        <th>wOBA</th>
-        <th>wRAAc</th>
-        <th>wRC</th>
-        <th>wRC+</th>
+        <th align='left' onclick="sortTable_alpha(0)">Player</th>
+        <th onclick="sortTable(1)">GP</th>
+        <th onclick="sortTable(2)">PA</th>
+        <th onclick="sortTable(3)">AB</th>
+        <th onclick="sortTable(4)">R</th>
+        <th onclick="sortTable(5)">H</th>
+        <th onclick="sortTable(6)">1B</th>
+        <th onclick="sortTable(7)">2B</th>
+        <th onclick="sortTable(8)">3B</th>
+        <th onclick="sortTable(9)">HR</th>
+        <th onclick="sortTable(10)">RBI</th>
+        <th onclick="sortTable(11)">BB</th>
+        <th onclick="sortTable(12)">K</th>
+        <th onclick="sortTable(13)">HBP</th>
+        <th onclick="sortTable(14)">SB</th>
+        <th onclick="sortTable(15)">CS</th>
+        <th onclick="sortTable(16)">SF</th>
+        <th onclick="sortTable(17)">SH</th>
+        <th onclick="sortTable(18)">TB</th>
+        <th onclick="sortTable(19)">wRAA</th>
+        <th onclick="sortTable(20)">RC</th>
+        <th onclick="sortTable(21)">BA</th>
+        <th onclick="sortTable(22)">OBP</th>
+        <th onclick="sortTable(23)">SLG</th>
+        <th onclick="sortTable(24)">OPS</th>
+        <th onclick="sortTable(25)">OPS+</th>
+        <th onclick="sortTable(26)">wOBA</th>
+        <th onclick="sortTable(27)">wRAAc</th>
+        <th onclick="sortTable(28)">wRC</th>
+        <th onclick="sortTable(29)">wRC+</th>
     </tr>
         {% for key,val in df2.iterrows() %}
-        <tr>
-            <td><a href="/player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
+        <tr align='center'>
+            <td align='left'><a href="/player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
             <td>{{ val['GP'] }}</td>
             <td>{{ val['PA'] }}</td>
             <td>{{ val['AB'] }}</td>
@@ -99,6 +94,7 @@
             <td>{{ val['wRC+'] }}</td>
         </tr>
         {% endfor %}
+
         {% for key, val in lg_stats.iterrows() %}
         <tr>
             <td>League Averages</td>
@@ -134,24 +130,13 @@
         </tr>
         {% endfor %}
 </table>
-<br>
 <script>
     var url_string = window.location.href;
     var url = new URL(url_string);
-    var c = url.searchParams.get("sort");
-    $('#sort_list').val(c);    
     url = url.pathname.split("/");
     url = '/stats/hitting/{{ org }}/{{ lg }}/{{ tm }}/'+url[url.length-1]
     $('#year_pick').val(url);
-    var c = url.searchParams.get("asc");
-    if (c==True){
-        //$("#sort_asc").prop("checked", true);
-        $('#sort_asc').prop('checked',true);
-    }
-    if (c==False){
-        //$("#sort_asc").prop("checked", true);
-        $('#sort_desc').prop('checked',true);
-    }
+    
 </script>
 
 {% endblock %}

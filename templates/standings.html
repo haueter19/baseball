@@ -9,51 +9,38 @@
 {% block p_records_season %}{{ org }}/{{ lg }}{% endblock %}
 {% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block content %}
-<script>
-    $('#select_location').on('change', function(){
-        window.location = $(this).val();
-    });
-</script>
-<a href="../../../{{ org }}">{{ org }}</a> > <a href="../../../{{ org }}/{{ lg }}/">{{ lg }}</a> > <a href="/stats/hitting/{{ org }}/{{ lg }}/league/{{ yr }} ">League</a> > 
-    <select id="year_pick" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
-        {% for y in yrs %}
-            <option value="/standings/{{ org }}/{{ lg }}/{{ y }}">{{ y }}</option>
-        {% endfor %}
-    </select>
 
-<br /><br />
-<form id="form" action="/standings/{{ org }}/{{ lg }}/{{ yr }}?">
-    <label for="sort_list">Sort by:</label>
-    <select name="sort" id="sort_list">
-        {% for col in st %}
-        <option value="{{ col }}">{{ col }}</option>
-        {% endfor %}
-    </select>
-    <input type="radio" id="sort_asc" name="asc" value=True>
-    <label for="asc">Ascending</label>
-    <input type="radio" id="sort_desc" name="asc" value=False>
-    <label for="asc">Descending</label>
-    <br><input type="submit" value="Submit">
-</form>
+<ul class="breadcrumb">
+    <li><a href="/{{ org }}">{{ org }}</a></li>
+    <li><a href="/{{ org }}/{{ lg }}/">{{ lg }}</a></li>
+    <li><a href="/stats/hitting/{{ org }}/{{ lg }}/league/{{ yr }}">League</a></li>
+    <li>
+        <select id="year_pick" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+            {% for y in yrs %}
+                    <option value="/standings/{{ org }}/{{ lg }}/{{ y }}">{{ y }}</option>
+            {% endfor %}
+        </select>
+    </li>
+</ul> 
+
 <br>
-<table class='dataframe' id='df_table'>
-    <col><col><col><col><col><col><col><col><col><col>
+<table class='dataframe' id='myTable'>
     <tr>
-        <th>Team</th>
-        <th>W</th>
-        <th>L</th>
-        <th>T</th>
-        <th>Pct</th>
-        <th>GB</th>
-        <th>RF</th>
-        <th>RA</th>
-        <th>Pyth</th>
-        <th>xWins</th>
-        <th>Champs</th>
+        <th onclick="sortTable_alpha(0)" align='left'>Team</th>
+        <th onclick="sortTable(1)">W</th>
+        <th onclick="sortTable(2)">L</th>
+        <th onclick="sortTable(3)">T</th>
+        <th onclick="sortTable(4)">Pct</th>
+        <th onclick="sortTable(5)">GB</th>
+        <th onclick="sortTable(6)">RF</th>
+        <th onclick="sortTable(7)">RA</th>
+        <th onclick="sortTable(8)">Pyth</th>
+        <th onclick="sortTable(9)">xWins</th>
+        <th onclick="sortTable(10)">Champs</th>
     </tr>
         {% for key,val in st.iterrows() %}
-        <tr>
-            <td><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ yr }}">{{ val['Team'] }}</a></td>
+        <tr align="center">
+            <td align='left'><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ yr }}">{{ val['Team'] }}</a></td>
             <td>{{ val['W'] }}</td>
             <td>{{ val['L'] }}</td>
             <td>{{ val['T'] }}</td>
@@ -67,24 +54,13 @@
         </tr>
         {% endfor %}
 </table>
-<br>
 <script>
     var url_string = window.location.href;
     var url = new URL(url_string);
-    var c = url.searchParams.get("sort");
-    $('#sort_list').val(c);    
+     
     url = url.pathname.split("/");
     url = '/standings/{{ org }}/{{ lg }}/'+url[url.length-1]
     $('#year_pick').val(url);
-    var c = url.searchParams.get("asc");
-    if (c==True){
-        //$("#sort_asc").prop("checked", true);
-        $('#sort_asc').prop('checked',true);
-    }
-    if (c==False){
-        //$("#sort_asc").prop("checked", true);
-        $('#sort_desc').prop('checked',true);
-    }
 
 </script>
 

@@ -10,7 +10,7 @@
 <body>
 	<div id="main">
 		<img id="header-logo" src={% block logo %}{% endblock %}>
-		<ul>
+		<ul id="header_list">
 				<li class="dropdown">
 					<a class="dropbtn">Organization</a>
 					<div class="dropdown-content">
@@ -20,7 +20,7 @@
 					</div>
 				</li>
 				<li class="dropdown">
-					<a class="drobtn">Standings</a>
+					<a class="dropbtn">Standings</a>
 					<div class="dropdown-content">
 						<a href={% block standings %}{% endblock %}>Season Standings</a>
 						<a href={% block champions %}{% endblock %}>Champions</a>

@@ -8,41 +8,42 @@
 {% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block sched %}"schedule/mabl"{% endblock %}
 {% block content %}
-
+<ul class="breadcrumb">
+    <li><a href="/{{ org }}">{{ org }}</a></li>
+    <li><a href="/{{ org }}/{{ lg }}/">{{ lg }}</a></li>
+    <li><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ tm }}/{{ max_yr }}">{{ tm }}</a></li>
+</ul> 
 
 <br>
-<table class='dataframe' id='df_table'>
-    <col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col><col>
+<table class='dataframe' id='myTable'>
     <tr>
-        <th>Player</th>
-        <th>GP</th>
-        <th>PA</th>
-        <th>AB</th>
-        <th>R</th>
-        <th>H</th>
-        <th>1B</th>
-        <th>2B</th>
-        <th>3B</th>
-        <th>HR</th>
-        <th>RBI</th>
-        <th>BB</th>
-        <th>K</th>
-        <th>HBP</th>
-        <th>SB</th>
-        <th>CS</th>
-        <th>SF</th>
-        <th>SH</th>
-        <th>TB</th>
-        <th>BA</th>
-        <th>OBP</th>
-        <th>SLG</th>
-        <th>OPS</th>
-        <th>wOBA</th>
+        <th align='left'>Player</th>
+        <th onclick="sortTable(1)">PA</th>
+        <th onclick="sortTable(2)">AB</th>
+        <th onclick="sortTable(3)">R</th>
+        <th onclick="sortTable(4)">H</th>
+        <th onclick="sortTable(5)">1B</th>
+        <th onclick="sortTable(6)">2B</th>
+        <th onclick="sortTable(7)">3B</th>
+        <th onclick="sortTable(8)">HR</th>
+        <th onclick="sortTable(9)">RBI</th>
+        <th onclick="sortTable(10)">BB</th>
+        <th onclick="sortTable(11)">K</th>
+        <th onclick="sortTable(12)">HBP</th>
+        <th onclick="sortTable(13)">SB</th>
+        <th onclick="sortTable(14)">CS</th>
+        <th onclick="sortTable(15)">SF</th>
+        <th onclick="sortTable(16)">SH</th>
+        <th onclick="sortTable(17)">TB</th>
+        <th onclick="sortTable(18)">BA</th>
+        <th onclick="sortTable(19)">OBP</th>
+        <th onclick="sortTable(20)">SLG</th>
+        <th onclick="sortTable(21)">OPS</th>
+        <th onclick="sortTable(22)">wOBA</th>
     </tr>
         {% for key,val in df2.iterrows() %}
-        <tr>
-            <td><a href="/player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
-            <td>{{ val['GP'] }}</td>
+        <tr align='center'>
+            <td align='left'><a href="/player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
             <td>{{ val['PA'] }}</td>
             <td>{{ val['AB'] }}</td>
             <td>{{ val['R'] }}</td>
@@ -68,17 +69,4 @@
         </tr>
         {% endfor %}
 </table>
-<br>
-<script>
-    var url_string = window.location.href;
-    var url = new URL(url_string);
-    //var c = url.searchParams.get("sort");
-    //$('#sort_list').val(c);
-    //var c = url.searchParams.get("asc");
-    //if (c==True){
-        //$("#sort_asc").prop("checked", true);
-        //$('#sort_asc').prop('checked',true);
-    //}    
-</script>
-
 {% endblock %}
