@@ -9,7 +9,11 @@
 {% block p_records_season %}{{ org }}/{{ lg }}{% endblock %}
 {% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block content %}
-<a href="../../{{ org }}">{{ org }}</a> > <a href="../../{{ org }}/{{ lg }}">{{ lg }}</a> > {{ tm }}
+
+<ul class="breadcrumb">
+    <li><a href="/{{ org }}">{{ org }}</a></li>
+    <li><a href="/{{ org }}/{{ lg }}/">{{ lg }}</a></li>
+</ul> 
 <br /><br />
 <table>
     <tr><th>Hitting</th><th>Pitching</th></tr>
