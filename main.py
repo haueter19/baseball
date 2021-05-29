@@ -7,6 +7,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 import pandas as pd
 import numpy as np
+import json
 #mabl = pd.read_csv('C:\\Users\\Daniel\\Documents\\Python Scripts\\MABL_Hitting.csv')
 #rrl = pd.read_csv('C:\\Users\\Daniel\\Documents\\Python Scripts\\RRL_Hitting.csv')
 #mscr = pd.read_csv('C:\\Users\\Daniel\\Documents\\Python Scripts\\hitting.csv')
@@ -271,8 +272,27 @@ async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Op
     else:
         df2 = df2.sort_values(sort, ascending=asc)
     yrs = df[(df['Org']==org) & (df['League']==lg)]['Year'].sort_values(ascending=False).unique().tolist()
-    return templates.TemplateResponse('league_stats.html', {"request": request, 'org':org, 'lg':lg, 'yr':yr, 'yrs':yrs, 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
+    return templates.TemplateResponse('league_stats.html', {"request": request, 'org':org, 'lg':lg, 'yr':yr, 'yrs':yrs, 'df':df2[['Last', 'wRAAc']].to_dict(orient="records"), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
 
+@app.get("/stats/hitting/{org}/{lg}/teams/{yr}")
+async def team_stats_year(request: Request, org: str, lg: str, yr: int):
+    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
+    df2 = df2.groupby('Team').agg({'Org':'first', 'League':'first', 'Year':'first', 'GP':'sum', 'PA':'sum', 'K':'sum', 'SB':'sum', 'CS':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'SF':'sum', 'TB':'sum', 'AB':'sum', 'SH':'sum', 'wRAAc':'sum'}).reset_index()
+    add_rate_stats(df2)
+    add_woba(df2)
+    df2 = add_ops_plus(df2, h_lg_avg)
+    add_wRC(df2, h_lg_avg)
+    add_wRC_plus(df2, h_lg_avg)
+    df2['wRAAc'] = round(df2['wRAAc'],1)
+    df2 = df2.sort_values('wRAAc', ascending=False)
+    df2.drop(columns=['Org', 'League', 'Year'],inplace=True)
+    st = pd.read_csv('standings.csv')
+    st = st[(st['Org']==org) & (st['League']==lg) & (st['Year']==yr)]
+    df2 = df2.merge(st, on='Team', how='left')
+    maxYear = 2021#df2.Year.max()
+    yrs = df[(df['Org']==org) & (df['League']==lg)].sort_values('Year', ascending=False)['Year'].unique().tolist()
+    return templates.TemplateResponse("stats_team_view.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'yr':yr, 'yrs':yrs, 'maxYear':maxYear})
+    
 @app.get("/stats/hitting/{org}/{lg}/{tm}/{yr}")
 async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort: Optional[str] = None, asc: Optional[bool] = False):
     df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm) & (df['Year']==yr)][['PID', 'First', 'Last', 'GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB', 'wRAA', 'BA', 'OBP', 'SLG', 'OPS', 'OPS+', 'wRAAc', 'wOBA', 'wRC', 'wRC+']]
@@ -303,26 +323,7 @@ async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort
     df2 = add_team_totals(df2)
     lg_stats = h_lg_avg[(h_lg_avg['Org']==org) & (h_lg_avg['League']==lg) & (h_lg_avg['Year']==yr)]
     yrs = df[(df['Org']==org) & (df['League']==lg) & (df['Team']==tm)].sort_values('Year', ascending=False)['Year'].unique().tolist()
-    return templates.TemplateResponse("team_stats.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yrs':yrs, 'yr':yr, 'df2':df2, 'lg_stats':lg_stats, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
-
-@app.get("/stats/hitting/{org}/{lg}/teams/{yr}")
-async def team_stats_year(request: Request, org: str, lg: str, yr: int):
-    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
-    df2 = df2.groupby('Team').agg({'Org':'first', 'League':'first', 'Year':'first', 'GP':'sum', 'PA':'sum', 'K':'sum', 'SB':'sum', 'CS':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'SF':'sum', 'TB':'sum', 'AB':'sum', 'SH':'sum', 'wRAAc':'sum'}).reset_index()
-    add_rate_stats(df2)
-    add_woba(df2)
-    df2 = add_ops_plus(df2, h_lg_avg)
-    add_wRC(df2, h_lg_avg)
-    add_wRC_plus(df2, h_lg_avg)
-    df2['wRAAc'] = round(df2['wRAAc'],1)
-    df2 = df2.sort_values('wRAAc', ascending=False)
-    df2.drop(columns=['Org', 'League', 'Year'],inplace=True)
-    st = pd.read_csv('standings.csv')
-    st = st[(st['Org']==org) & (st['League']==lg) & (st['Year']==yr)]
-    df2 = df2.merge(st, on='Team', how='left')
-    maxYear = 2019#df2.Year.max()
-    yrs = df[(df['Org']==org) & (df['League']==lg)].sort_values('Year', ascending=False)['Year'].unique().tolist()
-    return templates.TemplateResponse("stats_team_view.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'yr':yr, 'yrs':yrs, 'maxYear':maxYear})
+    return templates.TemplateResponse("team_stats.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yrs':yrs, 'yr':yr, 'df':df2[['Last', 'wRAAc']].to_dict(orient='records'), 'df2':df2, 'lg_stats':lg_stats, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
 
 @app.get("/stats/pitching/{org}/{lg}/league/{yr}")
 async def stats_by_league(request: Request, org: str, lg: str, yr: int):
@@ -367,6 +368,7 @@ async def career_records(request: Request, org: str, lg: str, stat: Optional[str
         df2 = df[(df['Org']==org) & (df['League']==lg)].groupby('PID').agg({'First':'last', 'Last':'last', 'Team':'last', 'PA':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'BB':'sum', 'HBP':'sum', 'AB':'sum', 'SB':'sum', 'CS':'sum', 'TB':'sum', 'SF':'sum'}).sort_values(stat, ascending=False).head(50).reset_index()
         df2['stat'] = df2[stat]
         df2 = add_rate_stats(df2)
+        df2 = add_wRAA(df2)
         df2 = df2[df2['PA']>=min]
     return templates.TemplateResponse("career_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat, 'type':'hitting'})
 

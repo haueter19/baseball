@@ -16,11 +16,12 @@ col:nth-child(2n+3) {background: #CCC}
 #df_table {
 	width:100%;
 	overflow-x: scroll;
+	cursor: pointer;
 }
 th {
 	min-width: 25px;
 }
-tr:nth-child(odd) {
+tr:nth-child(odd) #myTable {
 	background-color: #c9c9c9;
 }
 ul {

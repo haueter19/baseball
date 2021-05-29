@@ -9,7 +9,23 @@
 {% block p_records_season %}{{ org }}/{{ lg }}{% endblock %}
 {% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block content %}
-
+<script>
+    var d = {{ df|safe }};
+    //d = JSON.parse(d);
+    let x = [];
+    let y = [];
+    d.forEach(val => y.push(val['Last']));
+    d.forEach(val => x.push(val['wRAAc']));
+    //Object.values(d).forEach(val => x.push(val));
+    var data = [
+        {
+            y: x.slice(0,-1),
+            x: y.slice(0,-1),
+            type: 'bar',
+            orientation:'v'
+        }
+    ];
+</script>
 <ul class="breadcrumb">
     <li><a href="/{{ org }}">{{ org }}</a></li>
     <li><a href="/{{ org }}/{{ lg }}/">{{ lg }}</a></li>
@@ -48,17 +64,16 @@
         <th onclick="sortTable(16)">SF</th>
         <th onclick="sortTable(17)">SH</th>
         <th onclick="sortTable(18)">TB</th>
-        <th onclick="sortTable(19)">wRAA</th>
-        <th onclick="sortTable(20)">RC</th>
-        <th onclick="sortTable(21)">BA</th>
-        <th onclick="sortTable(22)">OBP</th>
-        <th onclick="sortTable(23)">SLG</th>
-        <th onclick="sortTable(24)">OPS</th>
-        <th onclick="sortTable(25)">OPS+</th>
-        <th onclick="sortTable(26)">wOBA</th>
-        <th onclick="sortTable(27)">wRAAc</th>
-        <th onclick="sortTable(28)">wRC</th>
-        <th onclick="sortTable(29)">wRC+</th>
+        <th onclick="sortTable(19)">RC</th>
+        <th onclick="sortTable(20)">BA</th>
+        <th onclick="sortTable(21)">OBP</th>
+        <th onclick="sortTable(22)">SLG</th>
+        <th onclick="sortTable(23)">OPS</th>
+        <th onclick="sortTable(24)">OPS+</th>
+        <th onclick="sortTable(25)">wOBA</th>
+        <th onclick="sortTable(26)">wRAA</th>
+        <th onclick="sortTable(27)">wRC</th>
+        <th onclick="sortTable(28)">wRC+</th>
     </tr>
         {% for key,val in df2.iterrows() %}
         <tr align='center'>
@@ -81,7 +96,6 @@
             <td>{{ val['SF'] }}</td>
             <td>{{ val['SH'] }}</td>
             <td>{{ val['TB'] }}</td>
-            <td>{{ val['wRAA'] }}</td>
             <td>{{ val['RC'] }}</td>
             <td>{{ val['BA'] }}</td>
             <td>{{ val['OBP'] }}</td>
@@ -97,7 +111,7 @@
 
         {% for key, val in lg_stats.iterrows() %}
         <tr>
-            <td>League Averages</td>
+            <td><a href="/stats/hitting/{{ org }}/{{ lg }}/league/{{ yr }}">League Averages</a></td>
             <td>{{ val['GP'] }}</td>
             <td>{{ val['PA'] }}</td>
             <td>{{ val['AB'] }}</td>
@@ -130,7 +144,10 @@
         </tr>
         {% endfor %}
 </table>
+<br>
+<div id='myDiv'></div>
 <script>
+    Plotly.newPlot('myDiv', data);
     var url_string = window.location.href;
     var url = new URL(url_string);
     url = url.pathname.split("/");
