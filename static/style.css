@@ -7,11 +7,25 @@ table.dataframe {
 	border-collapse: collapse;
 	border: 1px solid black;
 }
+.dataframe tr:hover {
+	background-color: yellow;
+	color: black;
+}
+.dataframe th {
+	color: white;
+	background-color: black;
+	cursor: pointer;
+}
+.dataframe a {
+	color: blue;
+	text-decoration: none;
+}
 col:first-child {background: #CCC}
 col:nth-child(2n+3) {background: #CCC}
 #myTable {
 	width: 100%;
 	overflow-x: scroll;
+	cursor: pointer;
 }
 #df_table {
 	width:100%;
@@ -21,8 +35,17 @@ col:nth-child(2n+3) {background: #CCC}
 th {
 	min-width: 25px;
 }
-tr:nth-child(odd) #myTable {
-	background-color: #c9c9c9;
+tr:nth-child(odd) {
+	background-color: #d1d1d1;
+}
+.no_stripes th {
+	background-color: lightgray;
+}
+.no_stripes tr {
+	background-color: white;
+}
+.no_stripes a {
+	color: black;
 }
 ul {
 	list-style-type: none;
@@ -72,15 +95,6 @@ body {
 	BACKGROUND-IMAGE: url('/static/images/rockerslogo-header.jpg');
 	BACKGROUND-REPEAT: repeat;
 	*/
-}
-.dataframe tr:hover {
-                background-color: yellow;
-				color: black;
-        }
-.dataframe th {
-	color: white;
-	background-color: black;
-	cursor: pointer;
 }
 ul.breadcrumb {
 	padding: 0px 10px;

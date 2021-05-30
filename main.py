@@ -235,7 +235,8 @@ async def standings(request: Request, org: str, lg: str, yr: int, sort: Optional
     st['GP'] = st['W']+st['L']+st['T']
     st['Pyth'] = round(((st['RF']*st['RF']) / ((st['RF']*st['RF']) + (st['RA']*st['RA']))),3)
     st['xW'] = round(st['Pyth']*st['GP'],1)
-    return templates.TemplateResponse("standings.html", {'request': request, 'st':st, 'org':org, 'lg':lg, 'yr':yr, 'yrs':yrs})
+    #df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
+    return templates.TemplateResponse("standings.html", {'request': request, 'st':st, 'org':org, 'lg':lg, 'yr':yr, 'yrs':yrs, 'df':st.fillna('').to_dict(orient='records'),})
 
 @app.get("/stats/hitting/{org}/{lg}/{tm}/projections")
 async def league(request: Request, org: str, lg: str, tm: str):
@@ -323,7 +324,8 @@ async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort
     df2 = add_team_totals(df2)
     lg_stats = h_lg_avg[(h_lg_avg['Org']==org) & (h_lg_avg['League']==lg) & (h_lg_avg['Year']==yr)]
     yrs = df[(df['Org']==org) & (df['League']==lg) & (df['Team']==tm)].sort_values('Year', ascending=False)['Year'].unique().tolist()
-    return templates.TemplateResponse("team_stats.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yrs':yrs, 'yr':yr, 'df':df2[['Last', 'wRAAc']].to_dict(orient='records'), 'df2':df2, 'lg_stats':lg_stats, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
+    df2['Name'] = df2['First']+' '+df2['Last']
+    return templates.TemplateResponse("team_stats.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yrs':yrs, 'yr':yr, 'df':df2.fillna('').to_dict(orient='records'), 'df2':df2, 'lg_stats':lg_stats, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
 
 @app.get("/stats/pitching/{org}/{lg}/league/{yr}")
 async def stats_by_league(request: Request, org: str, lg: str, yr: int):
@@ -368,7 +370,7 @@ async def career_records(request: Request, org: str, lg: str, stat: Optional[str
         df2 = df[(df['Org']==org) & (df['League']==lg)].groupby('PID').agg({'First':'last', 'Last':'last', 'Team':'last', 'PA':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'BB':'sum', 'HBP':'sum', 'AB':'sum', 'SB':'sum', 'CS':'sum', 'TB':'sum', 'SF':'sum'}).sort_values(stat, ascending=False).head(50).reset_index()
         df2['stat'] = df2[stat]
         df2 = add_rate_stats(df2)
-        df2 = add_wRAA(df2)
+        #df2 = add_wRAA(df2)
         df2 = df2[df2['PA']>=min]
     return templates.TemplateResponse("career_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat, 'type':'hitting'})
 

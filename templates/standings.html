@@ -9,7 +9,41 @@
 {% block p_records_season %}{{ org }}/{{ lg }}{% endblock %}
 {% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block content %}
-
+<script>
+    var d = {{ df|safe }};
+    //d = JSON.parse(d);
+    let x = [];
+    let y = [];
+    let z = [];
+    let t = [];
+    d.forEach(val => x.push(val['RF']));
+    d.forEach(val => y.push(val['RA']));
+    d.forEach(val => z.push(val['W']));
+    d.forEach(val => t.push(val['Team']));
+    //Object.values(d).forEach(val => x.push(val));
+    var data = [
+        {
+            y: x,
+            x: y,
+            mode: 'markers',
+            type: 'scatter',
+            name: 'Team',
+            text: t,
+            hoverinfo:'text',
+            hovertempalte: "Team: %{text}",
+            textposition: 'bottom center',
+            marker: { size: z, sizemin: 3, sizeref: .2, 
+                line: { color: "black", width: 3 }}
+        }
+    ];
+    var layout = {
+        title: "Wins by RF and RA",
+        xaxis: {
+            title: 'RA'
+        },
+        yaxis: { title: 'RF' },
+    }
+</script>
 <ul class="breadcrumb">
     <li><a href="/{{ org }}">{{ org }}</a></li>
     <li><a href="/{{ org }}/{{ lg }}/">{{ lg }}</a></li>
@@ -54,7 +88,10 @@
         </tr>
         {% endfor %}
 </table>
+<br>
+<div id='myDiv'></div>
 <script>
+    Plotly.newPlot('myDiv', data, layout);
     var url_string = window.location.href;
     var url = new URL(url_string);
      

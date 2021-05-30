@@ -14,11 +14,11 @@
     <li><a href="/{{ org }}">{{ org }}</a></li>
     <li><a href="/{{ org }}/{{ lg }}/">{{ lg }}</a></li>
 </ul> 
-<br /><br />
-<table>
-    <tr><th>Hitting</th><th>Pitching</th></tr>
+<br />
+<table class="no_stripes">
+    <tr align="center"><th>Hitting</th><th>Pitching</th></tr>
 {% for yr in yrs %}
-<tr>
+<tr align="center">
     <td><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ tm }}/{{ yr }}">{{ yr }}</a></td>
     <td><a href="/stats/pitching/{{ org }}/{{ lg }}/{{ tm }}/{{ yr }}">{{ yr }}</a></td>
 {% endfor %}

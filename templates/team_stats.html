@@ -14,7 +14,7 @@
     //d = JSON.parse(d);
     let x = [];
     let y = [];
-    d.forEach(val => y.push(val['Last']));
+    d.forEach(val => y.push(val['Name']));
     d.forEach(val => x.push(val['wRAAc']));
     //Object.values(d).forEach(val => x.push(val));
     var data = [
@@ -110,8 +110,8 @@
         {% endfor %}
 
         {% for key, val in lg_stats.iterrows() %}
-        <tr>
-            <td><a href="/stats/hitting/{{ org }}/{{ lg }}/league/{{ yr }}">League Averages</a></td>
+        <tr align="center">
+            <td align="left"><a href="/stats/hitting/{{ org }}/{{ lg }}/league/{{ yr }}">League Averages</a></td>
             <td>{{ val['GP'] }}</td>
             <td>{{ val['PA'] }}</td>
             <td>{{ val['AB'] }}</td>
@@ -130,7 +130,6 @@
             <td>{{ val['SF'] }}</td>
             <td>{{ val['SH'] }}</td>
             <td>{{ val['TB'] }}</td>
-            <td>{{ 0.0 }}</td>
             <td>{{ val['RC'] }}</td>
             <td>{{ val['BA'] }}</td>
             <td>{{ val['OBP'] }}</td>
