@@ -16,13 +16,20 @@
 </ul> 
 <br />
 <table class="no_stripes">
-    <tr align="center"><th>Hitting</th><th>Pitching</th></tr>
-{% for yr in yrs %}
-<tr align="center">
-    <td><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ tm }}/{{ yr }}">{{ yr }}</a></td>
-    <td><a href="/stats/pitching/{{ org }}/{{ lg }}/{{ tm }}/{{ yr }}">{{ yr }}</a></td>
-{% endfor %}
-</tr>
+    <tr align="center">
+        <th>Schedule</th>
+        <th>Hitting</th>
+        <th>Pitching</th>
+    </tr>
+    {% for yr in yrs %}
+    <tr align="center">
+        <td><a href="/schedule/list/{{ org }}/{{ lg }}/{{ tm }}/{{ yr }}">{{ yr }}</a></td>
+        <td><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ tm }}/{{ yr }}">{{ yr }}</a></td>
+        <td><a href="/stats/pitching/{{ org }}/{{ lg }}/{{ tm }}/{{ yr }}">{{ yr }}</a></td>
+    {% endfor %}
+    </tr>
+</table>
+<br>
 <a href="/stats/hitting/{{ org }}/{{ lg }}/{{ tm }}/projections">Hitting Projections</a><br>
 <br>
 {% endblock %}

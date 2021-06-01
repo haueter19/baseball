@@ -238,6 +238,17 @@ async def standings(request: Request, org: str, lg: str, yr: int, sort: Optional
     #df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
     return templates.TemplateResponse("standings.html", {'request': request, 'st':st, 'org':org, 'lg':lg, 'yr':yr, 'yrs':yrs, 'df':st.fillna('').to_dict(orient='records'),})
 
+@app.get("/schedule/list/{org}/{lg}/{tm}/{yr}")
+async def schedule(request: Request, org: str, lg: str, tm: str, yr: int):
+    st = pd.read_csv('standings.csv')
+    yrs = st[(st['Org']==org) & (st['League']==lg) & (st['Team']==tm)].sort_values('Year', ascending=False)['Year'].unique().tolist()
+    return templates.TemplateResponse('schedule.html', {'request':request, 'org':org, 'lg':lg, 'tm':tm, 'yr':yr, 'yrs':yrs})
+
+@app.get("/schedule/box/{game_num}")
+async def schedule(request: Request, game_num: int):
+    
+    return templates.TemplateResponse('box.html', {'request':request, 'gmae_num':game_num})
+
 @app.get("/stats/hitting/{org}/{lg}/{tm}/projections")
 async def league(request: Request, org: str, lg: str, tm: str):
     df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm) & (df['Year'].isin([2019, 2018, 2017, 2016]))]

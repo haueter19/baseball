@@ -1,0 +1,53 @@
+{% extends "header.html" %}
+{% block title %}Clubhouse{% endblock %}
+{% block standings %}"/standings/{{ org }}/{{ lg }}/2019"{% endblock %}
+{% block champions %}"/{{ org }}/{{ lg }}/champions"{% endblock %}
+{% block hitting_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}}
+{% block pitching_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}}
+{% block h_records_season %}{{ org }}/{{ lg }}{% endblock %}
+{% block h_records_career %}{{ org }}/{{ lg }}{% endblock %}
+{% block p_records_season %}{{ org }}/{{ lg }}{% endblock %}
+{% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
+{% block content %}
+
+<ul class="breadcrumb">
+    <li><a href="/{{ org }}">{{ org }}</a></li>
+    <li><a href="/{{ org }}/{{ lg }}/">{{ lg }}</a></li>
+    <li>
+        <select id="year_pick" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+            {% for y in yrs %}
+                    <option value="/schedule/{{ org }}/{{ lg }}/{{ tm }}/{{ y }}">{{ y }}</option>
+            {% endfor %}
+        </select>
+    </li>
+</ul> 
+
+<table id="sched_table">
+    <tr>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Location</th>
+        <th>Home Team</th>
+        <th>Away Team</th>
+        <th>Result</th>
+    </tr>
+    <tr>
+        <td>7/31/2016</td>
+        <td>1:30 PM</td>
+        <td>Neosho</td>
+        <td>Neosho</td>
+        <td>Rockers</td>
+        <td><a href="/schedule/box/1">2 - 8</a></td>
+    </tr>
+</table>
+<br>
+<script>
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    url = url.pathname.split("/");
+    url = '/schedule/{{ org }}/{{ lg }}/{{ tm }}/'+url[url.length-1]
+    $('#year_pick').val(url);
+    
+</script>
+{% endblock %}
+

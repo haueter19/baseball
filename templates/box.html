@@ -1,0 +1,478 @@
+{% extends "header.html" %}
+{% block title %}Clubhouse{% endblock %}
+{% block standings %}"/standings/{{ org }}/{{ lg }}/2019"{% endblock %}
+{% block champions %}"/{{ org }}/{{ lg }}/champions"{% endblock %}
+{% block hitting_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}}
+{% block pitching_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}}
+{% block h_records_season %}{{ org }}/{{ lg }}{% endblock %}
+{% block h_records_career %}{{ org }}/{{ lg }}{% endblock %}
+{% block p_records_season %}{{ org }}/{{ lg }}{% endblock %}
+{% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
+{% block content %}
+
+<table id="box_line_score">
+    <tr>
+        <th>Team</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+        <th>5</th>
+        <th>6</th>
+        <th>7</th>
+        <th>8</th>
+        <th>9</th>
+        <th>R</th>
+        <th>H</th>
+        <th>E</th>
+    </tr>
+    <tr align='center'>
+        <td>Rockers</td>
+        <td>1</td>
+        <td>0</td>
+        <td>2</td>
+        <td>0</td>
+        <td>1</td>
+        <td>2</td>
+        <td>0</td>
+        <td>0</td>
+        <td>2</td>
+        <td>8</td>
+        <td>12</td>
+        <td>2</td>
+    </tr>
+    <tr align='center'>
+        <td>Neosho</td>
+        <td>2</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>2</td>
+        <td>9</td>
+        <td>4</td>
+    </tr>
+</table>
+<br>
+<table class="player_hitting" id="box_away_team">
+    <tr>
+        <td colspan=16>Rockers Hitting</td>
+    </tr>
+    <tr>
+        <th>Player</th>
+        <th>AB</th>
+        <th>R</th>
+        <th>H</th>
+        <th>2B</th>
+        <th>3B</th>
+        <th>HR</th>
+        <th>RBI</th>
+        <th>BB</th>
+        <th>K</th>
+        <th>SB</th>
+        <th>BA</th>
+        <th>OBP</th>
+        <th>SLG</th>
+        <th>OPS</th>
+    </tr>
+    <tr>
+        <td>Rock Cates</td>
+        <td>5</td>
+        <td>1</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>.289</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Alex Brown</td>
+        <td>4</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>1</td>
+        <td>1</td>
+        <td>1</td>
+        <td>.348</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+        <td>Paul Mutch</td>
+        <td>4</td>
+        <td>2</td>
+        <td>3</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>1</td>
+        <td>0</td>
+        <td>.577</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+        <td>Nick Newburg</td>
+        <td>4</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>.362</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+        <td>Brian Kushava</td>
+        <td>5</td>
+        <td>1</td>
+        <td>2</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>.373</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+        <td>Jake Gasser</td>
+        <td>5</td>
+        <td>1</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>.250</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+        <td>Dan Haueter</td>
+        <td>5</td>
+        <td>1</td>
+        <td>3</td>
+        <td>2</td>
+        <td>0</td>
+        <td>0</td>
+        <td>2</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>.426</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+        <td>Robby Proehl</td>
+        <td>4</td>
+        <td>1</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>2</td>
+        <td>0</td>
+        <td>0</td>
+        <td>.283</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr><tr>
+        <td>Brent Perzentka</td>
+        <td>2</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>2</td>
+        <td>1</td>
+        <td>0</td>
+        <td>.162</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Totals</td>
+        <td>38</td>
+        <td>8</td>
+        <td>12</td>
+        <td>3</td>
+        <td>0</td>
+        <td>0</td>
+        <td>7</td>
+        <td>5</td>
+        <td>7</td>
+        <td>1</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+<table class="player_pitching" id="box_away_team">
+    <tr>
+        <td colspan=9>Rockers Pitching</td>
+    </tr>
+    <tr>
+        <th>Pitcher</th>
+        <th>IP</th>
+        <th>H</th>
+        <th>R</th>
+        <th>ER</th>
+        <th>BB</th>
+        <th>K</th>
+        <th>ERA</th>
+        <th>WHIP</th>
+    </tr>
+    <tr>
+        <td>Tyler Dierke</td>
+        <td>6.1</td>
+        <td>6</td>
+        <td>2</td>
+        <td>0</td>
+        <td>0</td>
+        <td>2</td>
+        <td>1.49</td>
+        <td>1.11</td>
+    </tr>
+    <tr>
+        <td>Ben Kennedy</td>
+        <td>2.2</td>
+        <td>3</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>3</td>
+        <td>0.92</td>
+        <td>0.95</td>
+    </tr>
+</table>
+<table class="player_hitting" id="box_home_hitting">
+    <tr>
+        <td colspan=10>Neosho Hitting</td>
+    </tr>
+    <tr>
+        <th>Player</th>
+        <th>AB</th>
+        <th>R</th>
+        <th>H</th>
+        <th>RBI</th>
+        <th>HR</th>
+        <th>BB</th>
+        <th>K</th>
+        <th>SB</th>
+        <th>BA</th>
+    </tr>
+    <tr>
+        <td>Brandon Egnarski</td>
+        <td>4</td>
+        <td>1</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>.426</td>
+    </tr>
+    <tr>
+        <td>Zach Lauersdorf</td>
+        <td>5</td>
+        <td>0</td>
+        <td>2</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>.339</td>
+    </tr>
+    <tr>
+        <td>Matt Beyer</td>
+        <td>5</td>
+        <td>1</td>
+        <td>3</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>.377</td>
+    </tr><tr>
+        <td>Ray Lauersdorf</td>
+        <td>4</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>.411</td>
+    </tr><tr>
+        <td>Dusty Jacobson</td>
+        <td>3</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>2</td>
+        <td>0</td>
+        <td>.439</td>
+    </tr><tr>
+        <td>Brent Young</td>
+        <td>3</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>.271</td>
+    </tr><tr>
+        <td>Alex Lawrence</td>
+        <td>4</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>.275</td>
+    </tr><tr>
+        <td>Ryan Leavitt</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>.077</td>
+    </tr><tr>
+        <td>--Chase Scroeder</td>
+        <td>2</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>.308</td>
+    </tr><tr>
+        <td>Brad Kaul</td>
+        <td>3</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>.077</td>
+    </tr>
+    <tr>
+        <td>--Matt O'Rourke</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>.194</td>
+    </tr>
+    <tr>
+        <td>Totals</td>
+        <td>35</td>
+        <td>2</td>
+        <td>9</td>
+        <td>1</td>
+        <td>0</td>
+        <td>1</td>
+        <td>5</td>
+        <td>0</td>
+        <td></td>
+    </tr>
+</table>
+<table class="player_pitching" id="box_home_pitching">
+    <tr>
+        <td colspan=9>Neosho Pitching</td>
+    </tr>
+    <tr>
+        <th>Pitcher</th>
+        <th>IP</th>
+        <th>H</th>
+        <th>R</th>
+        <th>ER</th>
+        <th>BB</th>
+        <th>K</th>
+        <th>ERA</th>
+        <th>WHIP</th>
+    </tr>
+    <tr>
+        <td>Shaun Panetti</td>
+        <td>6.0</td>
+        <td>9</td>
+        <td>6</td>
+        <td>5</td>
+        <td>3</td>
+        <td>3</td>
+        <td>2.56</td>
+        <td>1.04</td>
+    </tr>
+    <tr>
+        <td>Zach Lauersdorf</td>
+        <td>3.0</td>
+        <td>3</td>
+        <td>2</td>
+        <td>2</td>
+        <td>2</td>
+        <td>4</td>
+        <td>4.09</td>
+        <td>1.45</td>
+    </tr>
+</table>
+
+{% endblock %}
+
