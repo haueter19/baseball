@@ -149,7 +149,10 @@ async def player_page(request: Request, pid: int, org: Optional[str] = 'MABL', l
 
 @app.get("/pid")
 async def pid_list():
-    df2 = df.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index()
+    h = df[['PID', 'First', 'Last']]
+    p = pit[['PID', 'First', 'Last']]
+    df2 = h.append(p)
+    df2 = df2.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index()
     df2 = df2.dropna()
     return {'PID':df2.PID.tolist(), 'First':df2.First.tolist(), 'Last':df2.Last.tolist()}
 
