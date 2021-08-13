@@ -263,6 +263,7 @@ async def league(request: Request, org: str, lg: str, tm: str):
 
 @app.get("/stats/hitting/{org}/{lg}/league/{yr}")
 async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Optional[str] = None, asc: Optional[bool] = False):
+    import plotly
     df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
     add_rate_stats(df2)
     add_runs_created(df2)
@@ -287,7 +288,10 @@ async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Op
     else:
         df2 = df2.sort_values(sort, ascending=asc)
     yrs = df[(df['Org']==org) & (df['League']==lg)]['Year'].sort_values(ascending=False).unique().tolist()
-    return templates.TemplateResponse('league_stats.html', {"request": request, 'org':org, 'lg':lg, 'yr':yr, 'yrs':yrs, 'df':df2[['Last', 'wRAAc']].to_dict(orient="records"), 'df2':df2, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
+    trace1 = { 'x':df2['wRAAc'], 'y':df2['Team'], 'mode':'markers', 'text': df2['First']+' '+df2['Last']}
+    plot_data = [trace1]
+    scatter = json.dumps(plot_data, cls=plotly.utils.PlotlyJSONEncoder)
+    return templates.TemplateResponse('league_stats.html', {"request": request, 'org':org, 'lg':lg, 'yr':yr, 'yrs':yrs, 'df':df2[['Last', 'wRAAc']].to_dict(orient="records"), 'df2':df2, 'scatter':scatter, 'pid':df2['PID'], 'sort': sort, 'asc': asc})
 
 @app.get("/stats/hitting/{org}/{lg}/teams/{yr}")
 async def team_stats_year(request: Request, org: str, lg: str, yr: int):
