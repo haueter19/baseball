@@ -10,6 +10,20 @@
 {% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block content %}
 <script>
+    $(document).ready(function(){
+        $("#show_plot1").click(function(){
+            $("#plot1").fadeIn();
+            $("#show_plot1").hide();
+            $("#hide_plot1").show();
+        })
+    })
+    $(document).ready(function(){
+        $("#hide_plot1").click(function(){
+            $("#plot1").fadeOut();
+            $("#hide_plot1").hide();
+            $("#show_plot1").show();
+        })
+    })
     var d = {{ df|safe }};
     //d = JSON.parse(d);
     let x = [];
@@ -33,6 +47,9 @@
             <option value="/stats/hitting/{{ org }}/{{ lg }}/league/{{ y }}">{{ y }}</option>
     {% endfor %}
 </select>
+<button id="show_plot1">Show</button>
+<button id="hide_plot1" style="display: none;">Hide</button>
+<div id='plot1' style="display: none;"></div>
 <br><br>
 <table class='dataframe' id='myTable' style="cursor:pointer;">
     <tr>
@@ -104,8 +121,13 @@
 </table>
 <br>
 <br>
+
 <div id='myDiv'></div>
 <script>
+    var scatter = {{ scatter|safe }};
+    console.log(scatter);
+    Plotly.newPlot('plot1', scatter);
+
     Plotly.newPlot('myDiv', data);
     var url_string = window.location.href;
     var url = new URL(url_string);
