@@ -8,9 +8,7 @@ from fastapi.responses import RedirectResponse
 import pandas as pd
 import numpy as np
 import json
-#mabl = pd.read_csv('C:\\Users\\Daniel\\Documents\\Python Scripts\\MABL_Hitting.csv')
-#rrl = pd.read_csv('C:\\Users\\Daniel\\Documents\\Python Scripts\\RRL_Hitting.csv')
-#mscr = pd.read_csv('C:\\Users\\Daniel\\Documents\\Python Scripts\\hitting.csv')
+
 df = pd.read_csv('Master_Hitting.csv')
 df['League'].fillna('None', inplace=True)
 df['Team'].fillna('None', inplace=True)
@@ -27,8 +25,12 @@ for i in ['PID', 'H', '1B', '2B', 'K', 'SF', 'SH']:
     df[i] = df[i].astype(int)
 
 pit = pd.read_csv('Master_Pitching.csv')
-pit['League'].fillna('None', inplace=True)
-pit['Team'].fillna('None', inplace=True)
+pit.fillna(0,inplace=True)
+for i in ['R', 'H', 'ER', 'BB', 'K', 'HBP', 'Outs']:
+    pit[i] = pit[i].astype(int)
+
+#pit['League'].fillna('None', inplace=True)
+#pit['Team'].fillna('None', inplace=True)
 pit['ABA'] = pit['Outs']+pit['H']
 pit['BAA'] = pit['H']/pit['ABA']
 pit['PAA'] = pit['Outs']+pit['H']+pit['BB']+pit['HBP']
@@ -155,10 +157,6 @@ async def pid_list():
     df2 = df2.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index()
     df2 = df2.dropna()
     return {'PID':df2.PID.tolist(), 'First':df2.First.tolist(), 'Last':df2.Last.tolist()}
-
-@app.get('/blog', response_class=HTMLResponse)
-async def blog_post(request: Request):
-    return templates.TemplateResponse('blog.html', {'request':request})
 
 @app.get("/sim", response_class=HTMLResponse)
 async def run_sims(request: Request, org: Optional[str] = 'MABL', lg: Optional[str] = '35', innings: Optional[int] = 7, sims: Optional[int] = 1, go: Optional[int] = 0, away_lineup: Optional[str] = '2432+1781+304+876+2019+1125+750+2043+484+376', away_pitcher: Optional[int] = 484, home_lineup: Optional[str] = '579+492+391+825+1632+495+1605+1978+509', home_pitcher: Optional[int] = 825):
