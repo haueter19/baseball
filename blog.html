@@ -1,0 +1,148 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Seattle AirBnB Data Analysis</title>
+  
+  <style>
+    h1 {
+        text-align: center;
+    }
+    #main { 
+        width: 850px;
+        margin: auto;
+        background-color: rgb(255, 255, 255);
+        border: 1px solid black;
+        padding: 10px;
+    }
+    #inner {
+        width: 850px;
+        margin: auto;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    p {
+        font-size: large;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+  </style>
+
+</head>
+
+<body bgcolor="#e1e1e1">
+  <div id='main'><img src="images/rainbow-crop.jpg" width="850" style="margin-left: auto; display: block; margin-right: auto;">
+        <h1>What Can Be Learned from the Seattle AirBnB Dataset?</h1>
+        <hr>
+        <p><b>I spent some time exploring the Seattle AirBnB <a href="https://www.kaggle.com/airbnb/seattle?select=listings.csv">dataset</a> on Kaggle. If you want to follow along with 
+            my work more closely, you can visit my GitHub repo <a href="https://github.com/haueter19/Seattle_AirBnB_Data_Exploration">here</a>.</b>
+        </p>
+        <br>
+        <h3>Q1. What can be learned about the availability of listings?</h3>
+        <img src="images/fig1.jpeg" style="margin-left: auto; display: block; margin-right: auto;">
+        <p>Well, this is not what I was expecting. It looks like total accommodations increases very quickly in the early part of the year, slows down in spring, drops off a table in early 
+            April and again in July, before slowly climbing throughout the rest of the year, and one more major drop. What’s happening here?
+        </p>
+        <img src="images/fig2.jpeg" style="margin-left: auto; display: block; margin-right: auto;">
+        <p>
+            This is a histogram of the availability_365 field which measures how often a listing is available in the previous 365 days. It looks like most listings are available for the 
+            majority of the year. Those that are not have a mostly even distribution. I suspect that when a new listing appears during the year, let’s say in August, that the days before 
+            the listing existed are considered to be unavailable. This would explain why the total accommodations generally increase as the year goes on.
+        </p>
+        <br>
+
+        <h3>Q2. How does the asking price change?</h3>
+        <p>My intuition tells me that listing prices will increase on weekends and holidays. Is that true? Let’s find out!</p>
+        <p>This chart shows the median price by month. Looks like the price follows the temperature with a deviation in December. </p>
+        <p>chart</p>
+        <img src="images/fig3.jpeg" style="margin-left: auto; display: block; margin-right: auto;">
+        <p>Here we see that the price does, in fact, rise on Fridays and Saturdays. However, the average change in price is fairly small with an increase of only $8. That’s probably not 
+            too much to dissuade you from a weekend in Seattle!</p>
+        <p>chart</p>
+        <img src="images/fig4.jpeg" style="margin-left: auto; display: block; margin-right: auto;">
+        <p>For holidays, I chose 12 dates associated with federal holidays or holiday eves. The median price was the same for both holiday and non-holiday. </p>
+        <br>
+
+        <h3>Q3. What are common features of super hosts?</h3>
+        <img src="images/superman.PNG" style="float:right;">
+        <p>What makes a host super? What special powers do they possess? Must they wear capes? These are difficult questions to answer and I will actually only attempt to answer the first 
+            one (because obviously what is the point of being a superhost if you can’t wear a cape?). </p>
+        <p>In order to divine these super traits, I took a look at the review scores for various metrics that hosts receive. In each category, the superhosts’ scores were higher than regular hosts. </p>
+        <table width=575>
+            <thead align="left">
+                <th>Host Type</th>
+                <th>Rating</th>
+                <th>Accuracy</th>
+                <th>Check-in</th>
+                <th>Communication</th>
+                <th>Location</th>
+                <th>Value</th>
+            </thead>
+            <tr>
+                <td>Regular</td>
+                <td>93.65</td>
+                <td>9.55</td>
+                <td>9.73</td>
+                <td>9.76</td>
+                <td>9.57</td>
+                <td>9.35</td>
+            </tr>
+            <tr>
+                <td>Superhost</td>
+                <td>97.40</td>
+                <td>9.91</td>
+                <td>9.96</td>
+                <td>9.97</td>
+                <td>9.75</td>
+                <td>9.74</td>
+            </tr>
+        </table>
+        <p>That’s not surprising at all. Super literally means “above.” If you look at the response time of all hosts, you’ll find that superhosts are more likely to respond within an hour (62.8%) 
+            than regular hosts (40.0%). That’s faster than a speeding bullet!</p>
+        <p>Okay, so superhosts are super responsive and super highly reviewed, they must command a pretty penny then, right? Well, no, not exactly. On average, they cost less than $3 more. </p>
+        <br>
+
+        <h3>Q4. What factors contribute the most to price?</h3>
+        <p>
+            To find out, I compiled a bunch of columns of data and ran a few regressions. The below table shows the score and the top 5 most important features for each. Features in bold
+            were in the top 5 for each.
+        </p>
+        <table>
+            <thead>
+                <th>Regression</th>
+                <th>R squared</th>
+                <th>Top 5 Inputs</th>
+            </thead>
+            <tr>
+                <td>Linear</td>
+                <td>.46</td>
+                <td>Doorman, <b>Accommodates</b>, <b>Bathrooms</b>, Elevator in Building, Hot Tub</td>
+            </tr>
+            <tr>
+                <td>SVM</td>
+                <td>.45</td>
+                <td>Entire Home/Apt, <b>Accommodates</b>, <b>Bathrooms</b>, Shared Room, Doorman</td>
+            </tr>
+            <tr>
+                <td>Random Forest</td>
+                <td>.49</td>
+                <td><b>Accommodates</b>, <b>Bathrooms</b>, Entire Home/Apt, Private Room</td>
+            </tr>
+        </table>
+        <br>
+        <p>
+            The best performing model was a Random Forest. However, the improved performance is very slight. The most important features in this model 
+            were the number accommodated, bathrooms, beds, and room types of entire home/apt or private room. Bathrooms and Accommodates appear as a 
+            top 5 feature in each model. 
+        </p>
+        <img src="images/fig5.jpeg" style="margin-left: auto; display: block; margin-right: auto;">
+        <p>
+
+        </p>
+
+  </div>
+</body>
+</html>
