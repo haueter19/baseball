@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {% extends "header.html" %}
 {% block title %}Clubhouse{% endblock %}
 {% block standings %}"/standings/{{ org }}/{{ lg }}/{{ yr }}"{% endblock %}
@@ -136,4 +137,261 @@
     $('#year_pick').val(url);
 </script>
 
+||||||| constructed merge base
+{% extends "header.html" %}
+{% block title %}Clubhouse{% endblock %}
+{% block standings %}"/standings/{{ org }}/{{ lg }}/{{ yr }}"{% endblock %}
+{% block champions %}"/{{ org }}/{{ lg }}/champions"{% endblock %}
+{% block hitting_stats %}{{ org }}/{{ lg }}/league/{{ yr }}{% endblock %}}
+{% block pitching_stats %}{{ org }}/{{ lg }}/league/{{ yr }}{% endblock %}}
+{% block h_records_season %}{{ org }}/{{ lg }}{% endblock %}
+{% block h_records_career %}{{ org }}/{{ lg }}{% endblock %}
+{% block p_records_season %}{{ org }}/{{ lg }}{% endblock %}
+{% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
+{% block content %}
+<script>
+    var d = {{ df|safe }};
+    //d = JSON.parse(d);
+    let x = [];
+    let y = [];
+    d.forEach(val => y.push(val['Last']));
+    d.forEach(val => x.push(val['wRAAc']));
+    //Object.values(d).forEach(val => x.push(val));
+    var data = [
+        {
+            y: y.slice(0,10).reverse(),
+            x: x.slice(0,10).reverse(),
+            type: 'bar',
+            orientation:'h'
+        }
+    ];
+    
+</script>
+<br />
+<select id="year_pick" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+    {% for y in yrs %}
+            <option value="/stats/hitting/{{ org }}/{{ lg }}/league/{{ y }}">{{ y }}</option>
+    {% endfor %}
+</select>
+<br><br>
+<table class='dataframe' id='myTable' style="cursor:pointer;">
+    <tr>
+        <th align="left">Player</th>
+        <th align="left" onclick="sortTable(1)">Team</th>
+        <th onclick="sortTable(2)">GP</th>
+        <th onclick="sortTable(3)">PA</th>
+        <th onclick="sortTable(4)">AB</th>
+        <th onclick="sortTable(5)">R</th>
+        <th onclick="sortTable(6)">H</th>
+        <th onclick="sortTable(7)">1B</th>
+        <th onclick="sortTable(8)">2B</th>
+        <th onclick="sortTable(9)">3B</th>
+        <th onclick="sortTable(10)">HR</th>
+        <th onclick="sortTable(11)">RBI</th>
+        <th onclick="sortTable(12)">BB</th>
+        <th onclick="sortTable(13)">K</th>
+        <th onclick="sortTable(14)">HBP</th>
+        <th onclick="sortTable(15)">SB</th>
+        <th onclick="sortTable(16)">CS</th>
+        <th onclick="sortTable(17)">SF</th>
+        <th onclick="sortTable(18)">SH</th>
+        <th onclick="sortTable(19)">TB</th>
+        <th onclick="sortTable(20)">RC</th>
+        <th onclick="sortTable(21)">BA</th>
+        <th onclick="sortTable(22)">OBP</th>
+        <th onclick="sortTable(23)">SLG</th>
+        <th onclick="sortTable(24)">OPS</th>
+        <th onclick="sortTable(25)">OPS+</th>
+        <th onclick="sortTable(26)">wOBA</th>
+        <th onclick="sortTable(27)">wRAA</th>
+        <th onclick="sortTable(28)">wRC</th>
+        <th onclick="sortTable(29)">wRC+</th>
+    </tr>
+        {% for key,val in df2.iterrows() %}
+        <tr align="center">
+            <td align="left"><a href="/player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
+            <td align="left"><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ yr }}">{{ val['Team'] }}</a></td>
+            <td>{{ val['GP'] }}</td>
+            <td>{{ val['PA'] }}</td>
+            <td>{{ val['AB'] }}</td>
+            <td>{{ val['R'] }}</td>
+            <td>{{ val['H'] }}</td>
+            <td>{{ val['1B'] }}</td>
+            <td>{{ val['2B'] }}</td>
+            <td>{{ val['3B'] }}</td>
+            <td>{{ val['HR'] }}</td>
+            <td>{{ val['RBI'] }}</td>
+            <td>{{ val['BB'] }}</td>
+            <td>{{ val['K'] }}</td>
+            <td>{{ val['HBP'] }}</td>
+            <td>{{ val['SB'] }}</td>
+            <td>{{ val['CS'] }}</td>
+            <td>{{ val['SF'] }}</td>
+            <td>{{ val['SH'] }}</td>
+            <td>{{ val['TB'] }}</td>
+            <td>{{ val['RC'] }}</td>
+            <td>{{ val['BA'] }}</td>
+            <td>{{ val['OBP'] }}</td>
+            <td>{{ val['SLG'] }}</td>
+            <td>{{ val['OPS'] }}</td>
+            <td>{{ val['OPS+'] }}</td>
+            <td>{{ val['wOBA'] }}</td>
+            <td>{{ val['wRAAc'] }}</td>
+            <td>{{ val['wRC'] }}</td>
+            <td>{{ val['wRC+'] }}</td>
+        </tr>
+        {% endfor %}
+</table>
+<br>
+<br>
+<div id='myDiv'></div>
+<script>
+    Plotly.newPlot('myDiv', data);
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    url = url.pathname.split("/");
+    url = '/stats/hitting/{{ org }}/{{ lg }}/league/'+url[url.length-1]
+    $('#year_pick').val(url);
+</script>
+
+=======
+{% extends "header.html" %}
+{% block title %}Clubhouse{% endblock %}
+{% block standings %}"/standings/{{ org }}/{{ lg }}/{{ yr }}"{% endblock %}
+{% block champions %}"/{{ org }}/{{ lg }}/champions"{% endblock %}
+{% block hitting_stats %}{{ org }}/{{ lg }}/league/{{ yr }}{% endblock %}}
+{% block pitching_stats %}{{ org }}/{{ lg }}/league/{{ yr }}{% endblock %}}
+{% block h_records_season %}{{ org }}/{{ lg }}{% endblock %}
+{% block h_records_career %}{{ org }}/{{ lg }}{% endblock %}
+{% block p_records_season %}{{ org }}/{{ lg }}{% endblock %}
+{% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
+{% block content %}
+<script>
+    $(document).ready(function(){
+        $("#show_plot1").click(function(){
+            $("#plot1").fadeIn();
+            $("#show_plot1").hide();
+            $("#hide_plot1").show();
+        })
+    })
+    $(document).ready(function(){
+        $("#hide_plot1").click(function(){
+            $("#plot1").fadeOut();
+            $("#hide_plot1").hide();
+            $("#show_plot1").show();
+        })
+    })
+    var d = {{ df|safe }};
+    //d = JSON.parse(d);
+    let x = [];
+    let y = [];
+    d.forEach(val => y.push(val['Last']));
+    d.forEach(val => x.push(val['wRAAc']));
+    //Object.values(d).forEach(val => x.push(val));
+    var data = [
+        {
+            y: y.slice(0,10).reverse(),
+            x: x.slice(0,10).reverse(),
+            type: 'bar',
+            orientation:'h'
+        }
+    ];
+    
+</script>
+<br />
+<select id="year_pick" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+    {% for y in yrs %}
+            <option value="/stats/hitting/{{ org }}/{{ lg }}/league/{{ y }}">{{ y }}</option>
+    {% endfor %}
+</select>
+<button id="show_plot1">Show</button>
+<button id="hide_plot1" style="display: none;">Hide</button>
+<div id='plot1' style="display: none;"></div>
+<br><br>
+<table class='dataframe' id='myTable' style="cursor:pointer;">
+    <tr>
+        <th align="left">Player</th>
+        <th align="left" onclick="sortTable(1)">Team</th>
+        <th onclick="sortTable(2)">GP</th>
+        <th onclick="sortTable(3)">PA</th>
+        <th onclick="sortTable(4)">AB</th>
+        <th onclick="sortTable(5)">R</th>
+        <th onclick="sortTable(6)">H</th>
+        <th onclick="sortTable(7)">1B</th>
+        <th onclick="sortTable(8)">2B</th>
+        <th onclick="sortTable(9)">3B</th>
+        <th onclick="sortTable(10)">HR</th>
+        <th onclick="sortTable(11)">RBI</th>
+        <th onclick="sortTable(12)">BB</th>
+        <th onclick="sortTable(13)">K</th>
+        <th onclick="sortTable(14)">HBP</th>
+        <th onclick="sortTable(15)">SB</th>
+        <th onclick="sortTable(16)">CS</th>
+        <th onclick="sortTable(17)">SF</th>
+        <th onclick="sortTable(18)">SH</th>
+        <th onclick="sortTable(19)">TB</th>
+        <th onclick="sortTable(20)">RC</th>
+        <th onclick="sortTable(21)">BA</th>
+        <th onclick="sortTable(22)">OBP</th>
+        <th onclick="sortTable(23)">SLG</th>
+        <th onclick="sortTable(24)">OPS</th>
+        <th onclick="sortTable(25)">OPS+</th>
+        <th onclick="sortTable(26)">wOBA</th>
+        <th onclick="sortTable(27)">wRAA</th>
+        <th onclick="sortTable(28)">wRC</th>
+        <th onclick="sortTable(29)">wRC+</th>
+    </tr>
+        {% for key,val in df2.iterrows() %}
+        <tr align="center">
+            <td align="left"><a href="/player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
+            <td align="left"><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ yr }}">{{ val['Team'] }}</a></td>
+            <td>{{ val['GP'] }}</td>
+            <td>{{ val['PA'] }}</td>
+            <td>{{ val['AB'] }}</td>
+            <td>{{ val['R'] }}</td>
+            <td>{{ val['H'] }}</td>
+            <td>{{ val['1B'] }}</td>
+            <td>{{ val['2B'] }}</td>
+            <td>{{ val['3B'] }}</td>
+            <td>{{ val['HR'] }}</td>
+            <td>{{ val['RBI'] }}</td>
+            <td>{{ val['BB'] }}</td>
+            <td>{{ val['K'] }}</td>
+            <td>{{ val['HBP'] }}</td>
+            <td>{{ val['SB'] }}</td>
+            <td>{{ val['CS'] }}</td>
+            <td>{{ val['SF'] }}</td>
+            <td>{{ val['SH'] }}</td>
+            <td>{{ val['TB'] }}</td>
+            <td>{{ val['RC'] }}</td>
+            <td>{{ val['BA'] }}</td>
+            <td>{{ val['OBP'] }}</td>
+            <td>{{ val['SLG'] }}</td>
+            <td>{{ val['OPS'] }}</td>
+            <td>{{ val['OPS+'] }}</td>
+            <td>{{ val['wOBA'] }}</td>
+            <td>{{ val['wRAAc'] }}</td>
+            <td>{{ val['wRC'] }}</td>
+            <td>{{ val['wRC+'] }}</td>
+        </tr>
+        {% endfor %}
+</table>
+<br>
+<br>
+
+<div id='myDiv'></div>
+<script>
+    var scatter = {{ scatter|safe }};
+    console.log(scatter);
+    Plotly.newPlot('plot1', scatter);
+
+    Plotly.newPlot('myDiv', data);
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    url = url.pathname.split("/");
+    url = '/stats/hitting/{{ org }}/{{ lg }}/league/'+url[url.length-1]
+    $('#year_pick').val(url);
+</script>
+
+>>>>>>> Stashed changes
 {% endblock %}
