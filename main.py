@@ -156,6 +156,10 @@ async def pid_list():
     df2 = df2.dropna()
     return {'PID':df2.PID.tolist(), 'First':df2.First.tolist(), 'Last':df2.Last.tolist()}
 
+@app.get('blog', response_class=HTMLResponse)
+async def blog_post(request: Request):
+    return templates.TemplateResponse('blog.html', {'request':request})
+    
 @app.get("/sim", response_class=HTMLResponse)
 async def run_sims(request: Request, org: Optional[str] = 'MABL', lg: Optional[str] = '35', innings: Optional[int] = 7, sims: Optional[int] = 1, go: Optional[int] = 0, away_lineup: Optional[str] = '2432+1781+304+876+2019+1125+750+2043+484+376', away_pitcher: Optional[int] = 484, home_lineup: Optional[str] = '579+492+391+825+1632+495+1605+1978+509', home_pitcher: Optional[int] = 825):
     if org=='MABL':
