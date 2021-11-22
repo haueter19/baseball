@@ -73,16 +73,16 @@
         <th onclick="sortTable(17)">SF</th>
         <th onclick="sortTable(18)">SH</th>
         <th onclick="sortTable(19)">TB</th>
-        <th onclick="sortTable(20)">RC</th>
-        <th onclick="sortTable(21)">BA</th>
-        <th onclick="sortTable(22)">OBP</th>
-        <th onclick="sortTable(23)">SLG</th>
-        <th onclick="sortTable(24)">OPS</th>
-        <th onclick="sortTable(25)">OPS+</th>
-        <th onclick="sortTable(26)">wOBA</th>
-        <th onclick="sortTable(27)">wRAA</th>
-        <th onclick="sortTable(28)">wRC</th>
-        <th onclick="sortTable(29)">wRC+</th>
+        <th onclick="sortTable(20)">BA</th>
+        <th onclick="sortTable(21)">OBP</th>
+        <th onclick="sortTable(22)">SLG</th>
+        <th onclick="sortTable(23)">OPS</th>
+        <th onclick="sortTable(24)">OPS+</th>
+        <th onclick="sortTable(25)">wOBA</th>
+        <th onclick="sortTable(26)">wRAA</th>
+        <th onclick="sortTable(27)">wRC</th>
+        <th onclick="sortTable(28)">wRC+</th>
+        <th onclick="sortTable(29)">WAR</th>
     </tr>
         {% for key,val in df2.iterrows() %}
         <tr align="center">
@@ -106,7 +106,6 @@
             <td>{{ val['SF'] }}</td>
             <td>{{ val['SH'] }}</td>
             <td>{{ val['TB'] }}</td>
-            <td>{{ val['RC'] }}</td>
             <td>{{ val['BA'] }}</td>
             <td>{{ val['OBP'] }}</td>
             <td>{{ val['SLG'] }}</td>
@@ -116,6 +115,7 @@
             <td>{{ val['wRAAc'] }}</td>
             <td>{{ val['wRC'] }}</td>
             <td>{{ val['wRC+'] }}</td>
+            <td>{{ val['WAR'] }}</td>
         </tr>
         {% endfor %}
 </table>

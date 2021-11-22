@@ -98,6 +98,21 @@ def add_wRC_plus(z, avg):
     z['wRC+'] = round(((z['wRAAc']/z['PA'] + z['lgR']/z['lgPA'])  / (z['lgR']/z['lgPA'])) * 100, 0)
     return z
 
+def calc_hitting_war(df, org, lg, yr):
+    st_subset = st[(st['Org']==org) & (st['League']==lg) & (st['Year']==yr)]
+    df_subset = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
+    
+    num_teams = st_subset.Team.nunique()
+    num_games = st_subset['W'].sum() + st_subset['L'].sum() + st_subset['T'].sum()
+    
+    wins_avail = num_games/2
+    repl_wins = .297*wins_avail
+    pos_wins_avail = (wins_avail - repl_wins) * (4/7)
+    df_subset['replacement_runs'] = pos_wins_avail * df_subset.R.sum() / wins_avail * df_subset['PA'] / df_subset.PA.sum()
+    df.loc[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr), 'replacement_runs'] = pos_wins_avail * df_subset.R.sum() / wins_avail * df_subset['PA'] / df_subset.PA.sum()
+    df.loc[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr), 'WAR'] = round((df_subset['wRAAc']+df_subset['replacement_runs']) / (df_subset.R.sum() / wins_avail),2)
+    return
+
 df = add_rate_stats(df)
 df['OBP'].fillna(0, inplace=True)
 df['SLG'].fillna(0, inplace=True)
@@ -111,6 +126,12 @@ df = add_wRC_plus(df, h_lg_avg)
 df['wRC+'].fillna(0, inplace=True)
 df['wRC+'] = df['wRC+'].astype(int)
 
+oly = df[['Org', 'League', 'Year']].sort_values('Year').drop_duplicates().reset_index()
+st = pd.read_csv('C:\\Users\\pddnh\\Documents\\GitHub\\baseball\\Standings.csv')
+
+for i, row in oly.iterrows():
+    calc_hitting_war(df, row['Org'], row['League'], row['Year'])
+
 #add_rate_stats(h_lg_avg)
 
 def add_team_totals(z):
@@ -122,6 +143,8 @@ def add_team_totals(z):
     dict.update({'SLG':round(z['TB'].sum()/z['AB'].sum(),3)})
     dict.update({'OPS':round((z['H'].sum()+z['BB'].sum()+z['HBP'].sum())/(z['AB'].sum()+z['BB'].sum()+z['HBP'].sum()+z['SF'].sum())+(z['TB'].sum()/z['AB'].sum()), 3)})
     dict.update({'wRAAc':round(z['wRAAc'].sum(), 1)})
+    dict.update({'wRC':round(z['wRC'].sum(), 1)})
+    dict.update({'WAR':round(z['WAR'].sum(), 2)})
     z = z.append(dict, ignore_index = True)
     return z
 
@@ -287,7 +310,7 @@ async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Op
     if asc==None:
         asc=False
     if sort==None:
-        df2 = df2.sort_values('wRAAc', ascending=asc)
+        df2 = df2.sort_values('WAR', ascending=asc)
     else:
         df2 = df2.sort_values(sort, ascending=asc)
     yrs = df[(df['Org']==org) & (df['League']==lg)]['Year'].sort_values(ascending=False).unique().tolist()
@@ -317,7 +340,7 @@ async def team_stats_year(request: Request, org: str, lg: str, yr: int):
     
 @app.get("/stats/hitting/{org}/{lg}/{tm}/{yr}")
 async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort: Optional[str] = None, asc: Optional[bool] = False):
-    df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm) & (df['Year']==yr)][['PID', 'First', 'Last', 'GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB', 'wRAA', 'BA', 'OBP', 'SLG', 'OPS', 'OPS+', 'wRAAc', 'wOBA', 'wRC', 'wRC+']]
+    df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm) & (df['Year']==yr)][['PID', 'First', 'Last', 'GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB', 'wRAA', 'BA', 'OBP', 'SLG', 'OPS', 'OPS+', 'wRAAc', 'wOBA', 'wRC', 'wRC+', 'WAR']]
     df2['PID'] = df2['PID'].astype(int)
     add_rate_stats(df2)
     add_runs_created(df2)
@@ -339,7 +362,7 @@ async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort
     if asc==None:
         asc=False
     if sort==None:
-        df2 = df2.sort_values('wRAAc', ascending=False)
+        df2 = df2.sort_values('WAR', ascending=False)
     else:
         df2 = df2.sort_values(sort, ascending=asc)
     df2 = add_team_totals(df2)
@@ -430,7 +453,7 @@ async def org(request: Request, org: str):
     elif org=='MSCR':
         lg = 'Pacific'
     else:
-        lg = df2['League'].iloc[0]
+        lg = df2['League'].reset_index().iloc[0]
     return templates.TemplateResponse("org.html", {"request": request, 'org':org, 'lgs':lgs, 'lg': lg, 'max_yr':df2.Year.max()})
 
 @app.get("/{org}/{lg}/champions")
