@@ -453,7 +453,7 @@ async def org(request: Request, org: str):
     elif org=='MSCR':
         lg = 'Pacific'
     else:
-        lg = df2['League'].reset_index().iloc[0]
+        lg = '18+'
     return templates.TemplateResponse("org.html", {"request": request, 'org':org, 'lgs':lgs, 'lg': lg, 'max_yr':df2.Year.max()})
 
 @app.get("/{org}/{lg}/champions")
