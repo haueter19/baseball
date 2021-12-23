@@ -32,10 +32,10 @@ col:nth-child(2n+3) {background: #CCC}
 	overflow-x: scroll;
 	cursor: pointer;
 }
-th {
+.dataframe.th {
 	min-width: 25px;
 }
-tr:nth-child(odd) {
+.dataframe.tr:nth-child(odd) {
 	background-color: #d1d1d1;
 }
 .no_stripes th {
