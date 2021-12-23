@@ -99,18 +99,17 @@ def add_wRC_plus(z, avg):
     return z
 
 def calc_hitting_war(df, org, lg, yr):
-    st_subset = st[(st['Org']==org) & (st['League']==lg) & (st['Year']==yr)]
-    df_subset = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
-    
-    num_teams = st_subset.Team.nunique()
-    num_games = st_subset['W'].sum() + st_subset['L'].sum() + st_subset['T'].sum()
+    mask = (df['Org']==org) & (df['League']==lg) & (df['Year']==yr)
+    st_mask = (st['Org']==org) & (st['League']==lg) & (st['Year']==yr)
+    num_teams = st[st_mask].Team.nunique()
+    num_games = st[st_mask][['W', 'L', 'T']].sum().sum()
     
     wins_avail = num_games/2
     repl_wins = .297*wins_avail
     pos_wins_avail = (wins_avail - repl_wins) * (4/7)
-    df_subset['replacement_runs'] = pos_wins_avail * df_subset.R.sum() / wins_avail * df_subset['PA'] / df_subset.PA.sum()
-    df.loc[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr), 'replacement_runs'] = pos_wins_avail * df_subset.R.sum() / wins_avail * df_subset['PA'] / df_subset.PA.sum()
-    df.loc[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr), 'WAR'] = round((df_subset['wRAAc']+df_subset['replacement_runs']) / (df_subset.R.sum() / wins_avail),2)
+    df.loc[mask, 'replacement_runs'] = pos_wins_avail * df[mask].R.sum() / wins_avail * df[mask]['PA'] / df[mask]['PA'].sum()
+    df.loc[mask, 'replacement_runs'] = pos_wins_avail * df[mask].R.sum() / wins_avail * df[mask]['PA'] / df[mask].PA.sum()
+    df.loc[mask, 'WAR'] = (df[mask]['wRAAc']+df[mask]['replacement_runs']) / (df[mask].R.sum() / wins_avail)
     return
 
 df = add_rate_stats(df)
