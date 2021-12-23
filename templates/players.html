@@ -9,29 +9,219 @@
 {% block p_records_season %}{{ org }}/{{ lg }}{% endblock %}
 {% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block content %}
+<link href="{{ url_for('static', path='/bootstrap.min.css') }}" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
 function goToPage(){
     var v = document.querySelector('#player').value;
     window.location = '/player/'+v;
     return false;
 }
+$(document).ready(function(){
+  $("#push_me").click(function(){
+    $("#career_stats").slideToggle("slow");
+  });
+});
+//https://bootswatch.com/sandstone/
 </script>
-<div id="df_table">
-    <br>
-    <form>
-        <input list="players" name="player" id="player">
-        <datalist id="players">
-        {% for key,val in df.iterrows() %}
-        <option value="{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</option>
-        {% endfor %}
-        </datalist>
-        <input type="button" onclick="goToPage()" value="Submit">
-    </form>
+
+<div class="row">
+    <div class="col-lg-4">
+        <div><h1>{{ fname }} {{ lname }}</h1>
+            {% for team in team_list %}
+            <span class="badge bg-info">{{ team }}</span>
+            {% endfor %}</div>
+    </div>
+    <div class="col-lg-4"></div>
+    <div class="col-lg-4">
+        <div id="df_table" align='right'>
+            <br>
+            <form>
+                <input list="players" name="player" id="player">
+                <datalist id="players">
+                {% for key,val in df.iterrows() %}
+                <option value="{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</option>
+                {% endfor %}
+                </datalist>
+                <input type="button" class="btn btn-outline-secondary" onclick="goToPage()" value="Search">
+            </form>
+        </div>
+    </div>
 </div>
-<br />
-{{ fname }} {{ lname }}
-<br /><br />
 
-{{ df2|safe }}
+<div class="row" id="year_stats">
+    <div class="col-lg-12">
+        <table class='table table-hover table-condensed' id='myTable'>
+            <tr>
+                <th align='left' onclick="sortTable_alpha(0)">Year</th>
+                <th onclick="sortTable(1)">GP</th>
+                <th onclick="sortTable(2)">PA</th>
+                <th onclick="sortTable(3)">AB</th>
+                <th onclick="sortTable(4)">R</th>
+                <th onclick="sortTable(5)">H</th>
+                <th onclick="sortTable(6)">1B</th>
+                <th onclick="sortTable(7)">2B</th>
+                <th onclick="sortTable(8)">3B</th>
+                <th onclick="sortTable(9)">HR</th>
+                <th onclick="sortTable(10)">RBI</th>
+                <th onclick="sortTable(11)">BB</th>
+                <th onclick="sortTable(12)">K</th>
+                <th onclick="sortTable(13)">HBP</th>
+                <th onclick="sortTable(14)">SB</th>
+                <th onclick="sortTable(15)">CS</th>
+                <th onclick="sortTable(16)">SF</th>
+                <th onclick="sortTable(17)">SH</th>
+                <th onclick="sortTable(18)">TB</th>
+                <th onclick="sortTable(19)">BA</th>
+                <th onclick="sortTable(20)">OBP</th>
+                <th onclick="sortTable(21)">SLG</th>
+                <th onclick="sortTable(22)">OPS</th>
+                <th onclick="sortTable(23)">wRAA</th>
+                <th onclick="sortTable(24)">WAR</th>
+            </tr>
+            {% for key,val in df2.iterrows() %}
+            {% if key>-1 %}
+            <tr align='center'>
+                <td align='left'>{{ val['Year'] }}</a></td>
+                <td>{{ val['GP'] }}</td>
+                <td>{{ val['PA'] }}</td>
+                <td>{{ val['AB'] }}</td>
+                <td>{{ val['R'] }}</td>
+                <td>{{ val['H'] }}</td>
+                <td>{{ val['1B'] }}</td>
+                <td>{{ val['2B'] }}</td>
+                <td>{{ val['3B'] }}</td>
+                <td>{{ val['HR'] }}</td>
+                <td>{{ val['RBI'] }}</td>
+                <td>{{ val['BB'] }}</td>
+                <td>{{ val['K'] }}</td>
+                <td>{{ val['HBP'] }}</td>
+                <td>{{ val['SB'] }}</td>
+                <td>{{ val['CS'] }}</td>
+                <td>{{ val['SF'] }}</td>
+                <td>{{ val['SH'] }}</td>
+                <td>{{ val['TB'] }}</td>
+                <td>{{ val['BA'] }}</td>
+                <td>{{ val['OBP'] }}</td>
+                <td>{{ val['SLG'] }}</td>
+                <td>{{ val['OPS'] }}</td>
+                <td>{{ val['wRAAc'] }}</td>
+                <td>{{ val['WAR'] }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+</div>
+<div class="row" id="push_me">
+    <div class="col-lg-12"><h5>CAREER STATS</h5></div>
+</div>
+<div class="row" id="career_stats">
+    <div class="col-lg-12">
+        <table class='table' id='myTable'>
+            <tr>
+                <th align='left'>Year</th>
+                <th onclick="sortTable(1)">GP</th>
+                <th onclick="sortTable(2)">PA</th>
+                <th onclick="sortTable(3)">AB</th>
+                <th onclick="sortTable(4)">R</th>
+                <th onclick="sortTable(5)">H</th>
+                <th onclick="sortTable(6)">1B</th>
+                <th onclick="sortTable(7)">2B</th>
+                <th onclick="sortTable(8)">3B</th>
+                <th onclick="sortTable(9)">HR</th>
+                <th onclick="sortTable(10)">RBI</th>
+                <th onclick="sortTable(11)">BB</th>
+                <th onclick="sortTable(12)">K</th>
+                <th onclick="sortTable(13)">HBP</th>
+                <th onclick="sortTable(14)">SB</th>
+                <th onclick="sortTable(15)">CS</th>
+                <th onclick="sortTable(16)">SF</th>
+                <th onclick="sortTable(17)">SH</th>
+                <th onclick="sortTable(18)">TB</th>
+                <th onclick="sortTable(19)">BA</th>
+                <th onclick="sortTable(20)">OBP</th>
+                <th onclick="sortTable(21)">SLG</th>
+                <th onclick="sortTable(22)">OPS</th>
+                <th onclick="sortTable(23)">wRAA</th>
+                <th onclick="sortTable(24)">WAR</th>
+            </tr>
+            {% for key,val in df2.iterrows() %}
+            {% if key==-1 %}
+            <tr align='center'>
+                <td align='left'>{{ val['Year'] }}</a></td>
+                <td>{{ val['GP'] }}</td>
+                <td>{{ val['PA'] }}</td>
+                <td>{{ val['AB'] }}</td>
+                <td>{{ val['R'] }}</td>
+                <td>{{ val['H'] }}</td>
+                <td>{{ val['1B'] }}</td>
+                <td>{{ val['2B'] }}</td>
+                <td>{{ val['3B'] }}</td>
+                <td>{{ val['HR'] }}</td>
+                <td>{{ val['RBI'] }}</td>
+                <td>{{ val['BB'] }}</td>
+                <td>{{ val['K'] }}</td>
+                <td>{{ val['HBP'] }}</td>
+                <td>{{ val['SB'] }}</td>
+                <td>{{ val['CS'] }}</td>
+                <td>{{ val['SF'] }}</td>
+                <td>{{ val['SH'] }}</td>
+                <td>{{ val['TB'] }}</td>
+                <td>{{ val['BA'] }}</td>
+                <td>{{ val['OBP'] }}</td>
+                <td>{{ val['SLG'] }}</td>
+                <td>{{ val['OPS'] }}</td>
+                <td>{{ val['wRAAc'] }}</td>
+                <td>{{ val['WAR'] }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </table>
+        
+    </div>
+</div>
 
+<div class='row'>
+    <div class="col-lg-12">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Accordion Item #1
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-parent="#accordionExample" style="">
+                <div class="accordion-body">
+                  <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  Accordion Item #2
+                </button>
+              </h2>
+              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-parent="#accordionExample" style="">
+                <div class="accordion-body">
+                  <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                  Accordion Item #3
+                </button>
+              </h2>
+              <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-parent="#accordionExample" style="">
+                <div class="accordion-body">
+                  <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>
 {% endblock %}
