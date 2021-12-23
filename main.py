@@ -109,7 +109,7 @@ def calc_hitting_war(df, org, lg, yr):
     pos_wins_avail = (wins_avail - repl_wins) * (4/7)
     df.loc[mask, 'replacement_runs'] = pos_wins_avail * df[mask].R.sum() / wins_avail * df[mask]['PA'] / df[mask]['PA'].sum()
     df.loc[mask, 'replacement_runs'] = pos_wins_avail * df[mask].R.sum() / wins_avail * df[mask]['PA'] / df[mask].PA.sum()
-    df.loc[mask, 'WAR'] = (df[mask]['wRAAc']+df[mask]['replacement_runs']) / (df[mask].R.sum() / wins_avail)
+    df.loc[mask, 'WAR'] = round((df[mask]['wRAAc']+df[mask]['replacement_runs']) / (df[mask].R.sum() / wins_avail),2)
     return
 
 df = add_rate_stats(df)
@@ -153,7 +153,6 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/player/")
 async def player(request: Request, org: Optional[str] = 'MABL', lg: Optional[str] = '18+'):
-    #df2 = df['PID'].unique().tolist()
     df2 = df.copy()
     df2 = df2.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index()
     return templates.TemplateResponse("players.html", {"request": request, 'df':df2, 'org':org, 'lg':lg, 'fname':'', 'lname':''})
@@ -162,15 +161,20 @@ async def player(request: Request, org: Optional[str] = 'MABL', lg: Optional[str
 async def player_page(request: Request, pid: int, org: Optional[str] = 'MABL', lg: Optional[str] = '18+'):
     df2 = df[df['PID']==pid]
     df2 = df2.sort_values(['Year', 'Org'], ascending=True)
-    gp = df2.groupby('Year').agg({'GP':'sum', 'PA':'sum', 'AB':'sum', 'R':'sum', 'H':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'RBI':'sum', 'BB':'sum', 'K':'sum', 'HBP':'sum', 'SB':'sum', 'CS':'sum', 'SF':'sum', 'SH':'sum', 'TB':'sum', 'wRAA':'sum', 'wRAAc':'sum', 'WAR':'sum'}).reset_index()
+    gp = df2.groupby('Year').agg({'GP':'sum', 'PA':'sum', 'AB':'sum', 'R':'sum', 'H':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'RBI':'sum', 'BB':'sum', 'K':'sum', 'HBP':'sum', 'SB':'sum', 'CS':'sum', 'SF':'sum', 'SH':'sum', 'TB':'sum', 'wRAAc':'sum', 'WAR':'sum'}).reset_index()
     add_runs_created(gp)
     add_rate_stats(gp)
-    ba = gp.H.sum()/gp.AB.sum()
-    obp = (gp.H.sum()+gp.BB.sum()+gp.HBP.sum())/(gp.AB.sum()+gp.BB.sum()+gp.HBP.sum()+gp.SF.sum())
-    slg = gp.TB.sum()/gp.AB.sum()
-    ops = obp + slg
-    gp.at[-1] = ['Career', gp.GP.sum(), gp.PA.sum(), gp.AB.sum(), gp.R.sum(), gp.H.sum(), gp['1B'].sum(), gp['2B'].sum(), gp['3B'].sum(), gp.HR.sum(), gp.RBI.sum(), gp.BB.sum(),gp.K.sum(),gp.HBP.sum(),gp.SB.sum(),gp.CS.sum(),gp.SF.sum(),gp.SH.sum(),gp.TB.sum(),gp.wRAA.sum(),gp.wRAAc.sum(),gp.RC.sum(), gp.WAR.sum(), ba,obp,slg,ops]
-    return templates.TemplateResponse("players.html", {"request": request, "df":df.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index(), "df2":gp.to_html(index=False), 'fname':df2.First.max(), 'lname':df2.Last.max(), 'org':org, 'lg':lg})
+    ba = round(gp.H.sum()/gp.AB.sum(),3)
+    obp = round((gp.H.sum()+gp.BB.sum()+gp.HBP.sum())/(gp.AB.sum()+gp.BB.sum()+gp.HBP.sum()+gp.SF.sum()),3)
+    slg = round(gp.TB.sum()/gp.AB.sum(),3)
+    ops = round(obp + slg,3)
+    gp.at[-1] = ['Career', gp.GP.sum(), gp.PA.sum(), gp.AB.sum(), gp.R.sum(), gp.H.sum(), gp['1B'].sum(), gp['2B'].sum(), gp['3B'].sum(), gp.HR.sum(), gp.RBI.sum(), gp.BB.sum(),gp.K.sum(),gp.HBP.sum(),gp.SB.sum(),gp.CS.sum(),gp.SF.sum(),gp.SH.sum(),gp.TB.sum(),round(gp.wRAAc.sum(),2), round(gp.WAR.sum(),2), round(gp.RC.sum(),2), ba,obp,slg,ops]
+    for col in ['GP', 'PA', 'AB', 'R', 'H','1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K','HBP', 'SB', 'CS', 'SF', 'SH', 'TB']:
+        gp[col] = gp[col].astype(int)
+    for col in ['wRAAc', 'WAR']:
+        gp[col] = round(gp[col],3)
+    gp['Year'] = gp['Year'].apply(lambda x: int(x) if x != 'Career' else x)
+    return templates.TemplateResponse("players.html", {"request": request, "df":df.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index(), "df2":gp, 'fname':df2.First.max(), 'lname':df2.Last.max(), 'org':org, 'lg':lg, "team_list":df2.Team.unique()})
 
 @app.get("/pid")
 async def pid_list():
