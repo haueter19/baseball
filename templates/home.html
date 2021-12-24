@@ -1,11 +1,20 @@
 {% extends "header.html" %}
-{% block title %}Clubhouse{% endblock %}
-
-
+{% block title %}Home{% endblock %}
 {% block content %}
-<br />
-{% for o in orgs %}
-<a href="../{{ o }}">{{ o }}</a><br>
-{% endfor %}
+<link href="{{ url_for('static', path='/bootstrap.min.css') }}" rel="stylesheet">
+
+<div class='row'>
+    {% for o in orgs %}
+    <div class="col-lg-4">
+        <div class="card bg-light mb-3" style="max-width: 20rem;">
+            <div class="card-header">Organization</div>
+            <div class="card-body">
+                <h4 class="card-title"><a href="../{{ o }}">{{ o }}</a></h4>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
 {% endblock %}
 <br>

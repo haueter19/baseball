@@ -10,13 +10,20 @@
 {% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
 
 {% block content %}
+<link href="{{ url_for('static', path='/bootstrap.min.css') }}" rel="stylesheet">
 
-<br />
-Leagues<br>
-{% for lg in lgs %}
-<a href="/{{ org }}/{{ lg }}">{{ lg }}</a><br>
-{% endfor %}
-<br>
+<div class="row">
+    <div class="col-lg-12">
+        {% for lg in lgs %}
+        <div class="card bg-light mb-3" style="max-width: 20rem;">
+            <div class="card-header">League</div>
+            <div class="card-body">
+                <h4 class="card-title"><a href="/{{ org }}/{{ lg }}">{{ lg }}</a></h4>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 
 {% endblock %}
 
