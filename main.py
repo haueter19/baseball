@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 import json
 
-df = pd.read_csv('Master_Hitting.csv')
+df = pd.read_csv('Master_Hitting.csv', engine='python')
 df['League'].fillna('None', inplace=True)
 df['Team'].fillna('None', inplace=True)
 maxYear = df['Year'].max()
@@ -25,7 +25,7 @@ for i in ['GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 
 for i in ['PID', 'H', '1B', '2B', 'K', 'SF', 'SH']:
     df[i] = df[i].astype(int)
 
-pit = pd.read_csv('Master_Pitching.csv')
+pit = pd.read_csv('Master_Pitching.csv', engine='python')
 pit.fillna(0,inplace=True)
 for i in ['R', 'H', 'ER', 'BB', 'K', 'HBP', 'Outs']:
     pit[i] = pit[i].astype(int)
@@ -126,7 +126,7 @@ df['wRC+'].fillna(0, inplace=True)
 df['wRC+'] = df['wRC+'].astype(int)
 
 oly = df[['Org', 'League', 'Year']].sort_values('Year').drop_duplicates().reset_index()
-st = pd.read_csv('C:\\Users\\pddnh\\Documents\\GitHub\\baseball\\Standings.csv')
+st = pd.read_csv('standings.csv')
 
 for i, row in oly.iterrows():
     calc_hitting_war(df, row['Org'], row['League'], row['Year'])
