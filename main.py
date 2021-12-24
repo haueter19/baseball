@@ -175,7 +175,10 @@ async def player_page(request: Request, pid: int = 876, org: Optional[str] = 'MA
     for col in ['wRAAc', 'WAR']:
         gp[col] = round(gp[col],3)
     gp['Year'] = gp['Year'].apply(lambda x: int(x) if x != 'Career' else x)
-    return templates.TemplateResponse("players.html", {"request": request, "df":df.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index(), "df2":gp, 'fname':df2.First.max(), 'lname':df2.Last.max(), 'org':org, 'lg':lg, "team_list":df2.Team.unique(), 'gp2':df2.groupby(['Year', 'Org', 'League']).agg({'Team':'first', 'GP':'sum', 'PA':'sum', 'R':'sum', 'H':'sum'})})
+    gp2 = df2.groupby(['Year', 'Org', 'League']).agg({'Team':'first', 'GP':'sum', 'PA':'sum', 'AB':'sum', 'R':'sum', 'H':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'RBI':'sum', 'BB':'sum', 'K':'sum', 'HBP':'sum', 'SB':'sum', 'CS':'sum', 'SF':'sum', 'SH':'sum', 'TB':'sum', 'wRAAc':'sum', 'WAR':'sum'})
+    add_runs_created(gp2)
+    add_rate_stats(gp2)
+    return templates.TemplateResponse("players.html", {"request": request, "df":df.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index(), "df2":gp, 'fname':df2.First.max(), 'lname':df2.Last.max(), 'org':org, 'lg':lg, "team_list":df2.Team.unique(), 'gp2':gp2})
 
 @app.get("/pid")
 async def pid_list():
