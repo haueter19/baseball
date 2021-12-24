@@ -18,13 +18,20 @@ function goToPage(){
     return false;
 }
 $(document).ready(function(){
-    $("#push_me").click(function(){
-        $("#career_stats").slideToggle("slow");
+    $("#year_stats").hide();
+    //$("#career_stats").hide();
+    $('*[id*=_row]:visible').each(function() {
+        $(this).hide();
     });
-    $("#2011_group").click(function(){
-        $('[id=2011]').each(function() {
+    $('*[id*=_group]').click(function() {
+        var row_id = $(this).attr('id').substring(0,4)+"_row";
+        $('*[id*='+row_id+']').each(function(){
             $(this).slideToggle();
         });
+    });
+    $("#btn_sortable_table").click(function(){
+        $("#slideable_table").slideToggle();
+        $("#year_stats").slideToggle();
     });
 });
 
@@ -36,7 +43,13 @@ $(document).ready(function(){
         <div><h1>{{ fname }} {{ lname }}</h1>
             {% for team in team_list %}
             <span class="badge bg-info">{{ team }}</span>
-            {% endfor %}</div>
+            {% endfor %}
+        </div>
+        <div>
+            <p>
+                <br><button class="btn btn-lg btn-primary btn-sm" id="btn_sortable_table" type="button">Click for sortable table</button>
+            </p>
+        </div>
     </div>
     <div class="col-lg-4"></div>
     <div class="col-lg-4">
@@ -57,12 +70,145 @@ $(document).ready(function(){
         </div>
     </div>
 </div>
-<div class="row">
+
+<div class="row" id="slideable_table">
     <div class="col-lg-12"><h5>YEARLY STATS</h5></div>
-</div>
-<div class="row" id="year_stats">
     <div class="col-lg-12">
-        <table class='table table-hover table-condensed' id='myTable'>
+        <table class="table table-hover">
+            <tr>
+                <th>Org</th>
+                <th>League</th>
+                <th>Team</th>
+                <th>GP</th>
+                <th>PA</th>
+                <th>AB</th>
+                <th>H</th>
+                <th>R</th>
+                <th>1B</th>
+                <th>2B</th>
+                <th>3B</th>
+                <th>HR</th>
+                <th>RBI</th>
+                <th>BB</th>
+                <th>K</th>
+                <th>HBP</th>
+                <th>SB</th>
+                <th>CS</th>
+                <th>SF</th>
+                <th>SH</th>
+                <th>TB</th>
+                <th>BA</th>
+                <th>OBP</th>
+                <th>SLG</th>
+                <th>OPS</th>
+                <th>wRAA</th>
+                <th>WAR</th>
+            </tr>
+            {% for j, tot in df2.iterrows() %}
+                {% for i, row in gp2.iterrows() %}
+                    {% if loop.changed(i[0]) %}
+                        {% if tot['Year'] == i[0] %}
+                        <tr style="vertical-align: sub; background-color:rgb(248, 248, 248); border-style:solid; border-color:rgb(55, 158, 255);">
+                            <td><button type="button" id="{{i[0]}}_group" class="btn btn-outline-primary btn-sm">TOGGLE</button></td>
+                            <td colspan="2">{{ i[0] }} TOTALS</td>
+                            <td>{{tot['GP']}}</td>
+                            <td>{{tot['PA']}}</td>
+                            <td>{{tot['AB']}}</td>
+                            <td>{{tot['H']}}</td>
+                            <td>{{tot['R']}}</td>
+                            <td>{{tot['1B']}}</td>
+                            <td>{{tot['2B']}}</td>
+                            <td>{{tot['3B']}}</td>
+                            <td>{{tot['HR']}}</td>
+                            <td>{{tot['RBI']}}</td>
+                            <td>{{tot['BB']}}</td>
+                            <td>{{tot['K']}}</td>
+                            <td>{{tot['HBP']}}</td>
+                            <td>{{tot['SB']}}</td>
+                            <td>{{tot['CS']}}</td>
+                            <td>{{tot['SF']}}</td>
+                            <td>{{tot['SH']}}</td>
+                            <td>{{tot['TB']}}</td>
+                            <td>{{tot['BA']}}</td>
+                            <td>{{tot['OBP']}}</td>
+                            <td>{{tot['SLG']}}</td>
+                            <td>{{tot['OPS']}}</td>
+                            <td>{{tot['wRAA']}}</td>
+                            <td>{{tot['WAR']}}</td>
+                        </tr>
+                        <tr id="{{i[0]}}_row">
+                            <td>{{i[1]}}</td>
+                            <td>{{i[2]}}</td>
+                            <td>{{row['Team']}}</td>
+                            <td>{{row['GP']}}</td>
+                            <td>{{row['PA']}}</td>
+                            <td>{{row['AB']}}</td>
+                            <td>{{row['H']}}</td>
+                            <td>{{row['R']}}</td>
+                            <td>{{row['1B']}}</td>
+                            <td>{{row['2B']}}</td>
+                            <td>{{row['3B']}}</td>
+                            <td>{{row['HR']}}</td>
+                            <td>{{row['RBI']}}</td>
+                            <td>{{row['BB']}}</td>
+                            <td>{{row['K']}}</td>
+                            <td>{{row['HBP']}}</td>
+                            <td>{{row['SB']}}</td>
+                            <td>{{row['CS']}}</td>
+                            <td>{{row['SF']}}</td>
+                            <td>{{row['SH']}}</td>
+                            <td>{{row['TB']}}</td>
+                            <td>{{row['BA']}}</td>
+                            <td>{{row['OBP']}}</td>
+                            <td>{{row['SLG']}}</td>
+                            <td>{{row['OPS']}}</td>
+                            <td>{{row['wRAA']}}</td>
+                            <td>{{row['WAR']}}</td>
+                        </tr>
+                        {% endif %}
+                    {% else %}
+                        {% if tot['Year'] == i[0] %}
+                        <tr id="{{i[0]}}_row">
+                            <td>{{i[1]}}</td>
+                            <td>{{i[2]}}</td>
+                            <td>{{row['Team']}}</td>
+                            <td>{{row['GP']}}</td>
+                            <td>{{row['PA']}}</td>
+                            <td>{{row['AB']}}</td>
+                            <td>{{row['H']}}</td>
+                            <td>{{row['R']}}</td>
+                            <td>{{row['1B']}}</td>
+                            <td>{{row['2B']}}</td>
+                            <td>{{row['3B']}}</td>
+                            <td>{{row['HR']}}</td>
+                            <td>{{row['RBI']}}</td>
+                            <td>{{row['BB']}}</td>
+                            <td>{{row['K']}}</td>
+                            <td>{{row['HBP']}}</td>
+                            <td>{{row['SB']}}</td>
+                            <td>{{row['CS']}}</td>
+                            <td>{{row['SF']}}</td>
+                            <td>{{row['SH']}}</td>
+                            <td>{{row['TB']}}</td>
+                            <td>{{row['BA']}}</td>
+                            <td>{{row['OBP']}}</td>
+                            <td>{{row['SLG']}}</td>
+                            <td>{{row['OPS']}}</td>
+                            <td>{{row['wRAA']}}</td>
+                            <td>{{row['WAR']}}</td>
+                        </tr>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<div class="row" id="year_stats">
+    <div class="col-lg-12"><h5>YEARLY STATS</h5></div>
+    <div class="col-lg-12">
+        <table class='table table-hover table-condensed' id="myTable">
             <tr>
                 <th align='left' onclick="sortTable_alpha(0)">Year</th>
                 <th onclick="sortTable(1)">GP</th>
@@ -124,12 +270,11 @@ $(document).ready(function(){
         </table>
     </div>
 </div>
-<div class="row" id="push_me">
-    <div class="col-lg-12"><h5>CAREER TOTALS</h5></div>
-</div>
+
 <div class="row" id="career_stats">
+    <div class="col-lg-12"><h5>CAREER TOTALS</h5></div>
     <div class="col-lg-12">
-        <table class='table' id='myTable'>
+        <table class='table'>
             <tr>
                 <th align='left'>Year</th>
                 <th onclick="sortTable(1)">GP</th>
@@ -188,84 +333,8 @@ $(document).ready(function(){
             </tr>
             {% endif %}
             {% endfor %}
-        </table>
-        
+        </table>   
     </div>
 </div>
-<div class="row">
-    <div class="col-lg-12">
-        <table class="table table-hover">
-            <tr>
-                <th>Year</th>
-                <th>Org</th>
-                <th>League</th>
-                <th>Team</th>
-                <th>GP</th>
-                <th>PA</th>
-                <th>H</th>
-                <th>R</th>
-                <th>1B</th>
-                <th>2B</th>
-                <th>3B</th>
-                <th>HR</th>
-                <th>RBI</th>
-                <th>BB</th>
-                <th>K</th>
-                <th>HBP</th>
-                <th>SB</th>
-                <th>CS</th>
-                <th>SF</th>
-                <th>SH</th>
-                <th>TB</th>
-                <th>BA</th>
-                <th>OBP</th>
-                <th>SLG</th>
-                <th>OPS</th>
-                <th>wRAA</th>
-                <th>WAR</th>
-            </tr>
-            {% for j, tot in df2.iterrows() %}
-                {% for i, row in gp2.iterrows() %}
-                    {% if loop.changed(i[0]) %}
-                        {% if tot['Year'] == i[0] %}
-                        <tr>
-                            <td><button type="button" id="{{i[0]}}_group" class="btn btn-outline-primary">{{i[0]}}</button></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>{{tot['GP']}}</td>
-                            <td>{{tot['PA']}}</td>
-                            <td>{{tot['H']}}</td>
-                            <td>{{tot['R']}}</td>
-                        </tr>
-                        <tr id="{{i[0]}}">
-                            <td>{{i[0]}}</td>
-                            <td>{{i[1]}}</td>
-                            <td>{{i[2]}}</td>
-                            <td>{{row['Team']}}</td>
-                            <td>{{row['GP']}}</td>
-                            <td>{{row['PA']}}</td>
-                            <td>{{row['H']}}</td>
-                            <td>{{row['R']}}</td>
-                        </tr>
-                        {% endif %}
-                    {% else %}
-                        {% if tot['Year'] == i[0] %}
-                        <tr id="{{i[0]}}">
-                            <td>{{i[0]}}</td>
-                            <td>{{i[1]}}</td>
-                            <td>{{i[2]}}</td>
-                            <td>{{row['Team']}}</td>
-                            <td>{{row['GP']}}</td>
-                            <td>{{row['PA']}}</td>
-                            <td>{{row['H']}}</td>
-                            <td>{{row['R']}}</td>
-                        </tr>
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-            {% endfor %}
-        </table>
-    </div>
-</div>
+
 {% endblock %}
