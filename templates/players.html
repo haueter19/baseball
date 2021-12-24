@@ -18,10 +18,16 @@ function goToPage(){
     return false;
 }
 $(document).ready(function(){
-  $("#push_me").click(function(){
-    $("#career_stats").slideToggle("slow");
-  });
+    $("#push_me").click(function(){
+        $("#career_stats").slideToggle("slow");
+    });
+    $("#2011_group").click(function(){
+        $('[id=2011]').each(function() {
+            $(this).slideToggle();
+        });
+    });
 });
+
 //https://bootswatch.com/sandstone/
 </script>
 
@@ -186,5 +192,80 @@ $(document).ready(function(){
         
     </div>
 </div>
-
+<div class="row">
+    <div class="col-lg-12">
+        <table class="table table-hover">
+            <tr>
+                <th>Year</th>
+                <th>Org</th>
+                <th>League</th>
+                <th>Team</th>
+                <th>GP</th>
+                <th>PA</th>
+                <th>H</th>
+                <th>R</th>
+                <th>1B</th>
+                <th>2B</th>
+                <th>3B</th>
+                <th>HR</th>
+                <th>RBI</th>
+                <th>BB</th>
+                <th>K</th>
+                <th>HBP</th>
+                <th>SB</th>
+                <th>CS</th>
+                <th>SF</th>
+                <th>SH</th>
+                <th>TB</th>
+                <th>BA</th>
+                <th>OBP</th>
+                <th>SLG</th>
+                <th>OPS</th>
+                <th>wRAA</th>
+                <th>WAR</th>
+            </tr>
+            {% for j, tot in df2.iterrows() %}
+                {% for i, row in gp2.iterrows() %}
+                    {% if loop.changed(i[0]) %}
+                        {% if tot['Year'] == i[0] %}
+                        <tr>
+                            <td><button type="button" id="{{i[0]}}_group" class="btn btn-outline-primary">{{i[0]}}</button></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{tot['GP']}}</td>
+                            <td>{{tot['PA']}}</td>
+                            <td>{{tot['H']}}</td>
+                            <td>{{tot['R']}}</td>
+                        </tr>
+                        <tr id="{{i[0]}}">
+                            <td>{{i[0]}}</td>
+                            <td>{{i[1]}}</td>
+                            <td>{{i[2]}}</td>
+                            <td>{{row['Team']}}</td>
+                            <td>{{row['GP']}}</td>
+                            <td>{{row['PA']}}</td>
+                            <td>{{row['H']}}</td>
+                            <td>{{row['R']}}</td>
+                        </tr>
+                        {% endif %}
+                    {% else %}
+                        {% if tot['Year'] == i[0] %}
+                        <tr id="{{i[0]}}">
+                            <td>{{i[0]}}</td>
+                            <td>{{i[1]}}</td>
+                            <td>{{i[2]}}</td>
+                            <td>{{row['Team']}}</td>
+                            <td>{{row['GP']}}</td>
+                            <td>{{row['PA']}}</td>
+                            <td>{{row['H']}}</td>
+                            <td>{{row['R']}}</td>
+                        </tr>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </table>
+    </div>
+</div>
 {% endblock %}
