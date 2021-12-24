@@ -10,8 +10,13 @@
 {% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
 
 {% block content %}
-<a href="../{{ org }}">{{ org }}</a> > {{ lg }}
-<br /><br />
+<link href="{{ url_for('static', path='/bootstrap.min.css') }}" rel="stylesheet">
+
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="../{{ org }}">{{ org }}</a></li>
+    <li class="breadcrumb-item active">{{ lg }}</li>
+</ol>
+
 
 Teams<br>
 <p>
