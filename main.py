@@ -155,10 +155,11 @@ templates = Jinja2Templates(directory="templates")
 async def player(request: Request, org: Optional[str] = 'MABL', lg: Optional[str] = '18+'):
     df2 = df.copy()
     df2 = df2.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index()
-    return templates.TemplateResponse("players.html", {"request": request, 'df':df2, 'org':org, 'lg':lg, 'fname':'', 'lname':''})
+    return RedirectResponse('/player/876')
+    #templates.TemplateResponse("players.html", {"request": request, 'df':df2, 'org':org, 'lg':lg, 'fname':'', 'lname':''})
 
 @app.get("/player/{pid}")
-async def player_page(request: Request, pid: int, org: Optional[str] = 'MABL', lg: Optional[str] = '18+'):
+async def player_page(request: Request, pid: int = 876, org: Optional[str] = 'MABL', lg: Optional[str] = '18+'):
     df2 = df[df['PID']==pid]
     df2 = df2.sort_values(['Year', 'Org'], ascending=True)
     gp = df2.groupby('Year').agg({'GP':'sum', 'PA':'sum', 'AB':'sum', 'R':'sum', 'H':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'RBI':'sum', 'BB':'sum', 'K':'sum', 'HBP':'sum', 'SB':'sum', 'CS':'sum', 'SF':'sum', 'SH':'sum', 'TB':'sum', 'wRAAc':'sum', 'WAR':'sum'}).reset_index()
@@ -174,7 +175,7 @@ async def player_page(request: Request, pid: int, org: Optional[str] = 'MABL', l
     for col in ['wRAAc', 'WAR']:
         gp[col] = round(gp[col],3)
     gp['Year'] = gp['Year'].apply(lambda x: int(x) if x != 'Career' else x)
-    return templates.TemplateResponse("players.html", {"request": request, "df":df.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index(), "df2":gp, 'fname':df2.First.max(), 'lname':df2.Last.max(), 'org':org, 'lg':lg, "team_list":df2.Team.unique()})
+    return templates.TemplateResponse("players.html", {"request": request, "df":df.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index(), "df2":gp, 'fname':df2.First.max(), 'lname':df2.Last.max(), 'org':org, 'lg':lg, "team_list":df2.Team.unique(), 'gp2':df2.groupby(['Year', 'Org', 'League']).agg({'Team':'first', 'GP':'sum', 'PA':'sum', 'R':'sum', 'H':'sum'})})
 
 @app.get("/pid")
 async def pid_list():
