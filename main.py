@@ -481,8 +481,10 @@ async def league(request: Request, org: str, lg: str):
      #| {% for y in yrs %}<a href="/stats/hitting//{{ org }}/{{ lg }}/{{ tm }}/{{ y }}">{{ y }}</a> {% endfor %}
     tms = df2['Team'].sort_values().unique()
     maxYear = df2.Year.max()
+    minYear = df2.Year.min()
     yrs = df[(df['Org']==org) & (df['League']==lg)]['Year'].sort_values().unique().tolist()
-    return templates.TemplateResponse("league.html", {"request": request, 'org':org, 'lg':lg, 'tms':tms, 'maxYear':maxYear, 'yrs':yrs, 'yr_list': _list.to_dict()})
+    return templates.TemplateResponse("league.html", {"request": request, 'org':org, 'lg':lg, 'tms':tms, 'maxYear':maxYear, 'minYear':minYear, 
+                                        'yrs':yrs, 'yr_list': _list.to_dict()})
 
 @app.get("/{org}/{lg}/{tm}")
 async def orglgtm(request: Request, org: str, lg: str, tm: str):
