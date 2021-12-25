@@ -47,6 +47,7 @@ col:nth-child(2n+3) {background: #CCC}
 .no_stripes a {
 	color: black;
 }
+/*
 ul {
 	list-style-type: none;
 	margin: 0;
@@ -59,7 +60,6 @@ li {
 }
 li a, .dropbtn {
 	display: inline-block;
-	color: white;
 	text-align: center;
 	padding: 14px 16px;
 	text-decoration: none;
@@ -70,6 +70,7 @@ li a:hover, .dropdown:hover .dropbtn {
 li.dropdown {
 	display: inline-block;
 }
+
 .dropdown-content {
 	display: none;
 	position: absolute;
@@ -89,6 +90,7 @@ li.dropdown {
 .dropdown:hover .dropdown-content {
 	display: block;
 }
+*/
 body {
 	background-color: gray
 	/*
@@ -96,6 +98,7 @@ body {
 	BACKGROUND-REPEAT: repeat;
 	*/
 }
+/*
 ul.breadcrumb {
 	padding: 0px 10px;
 	list-style: none;
@@ -125,3 +128,4 @@ li a:hover, .dropdown:hover .breadcrumb {
 	background-color: #eee;
 	vertical-align: middle;
 }
+*/
