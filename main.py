@@ -261,7 +261,8 @@ async def slash():
 @app.get("/home")
 async def home(request: Request):
     orgs = df['Org'].sort_values().unique()
-    return templates.TemplateResponse("home.html", {"request": request, 'orgs':orgs})
+    gp = df.sort_values(by=['Org', 'League']).groupby('Org')['League'].unique().reset_index()
+    return templates.TemplateResponse("home.html", {"request": request, 'orgs':orgs, 'lgs':gp})
 
 @app.get("/standings/{org}/{lg}/{yr}")
 async def standings(request: Request, org: str, lg: str, yr: int, sort: Optional[str] = 'Pct', asc: Optional[bool] = False):
