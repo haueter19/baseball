@@ -10,9 +10,10 @@
 {% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block content %}
 
-<div style="display:flex;">
-    <div style="flex:20%">
-        <label for="sort_list">Choose stat:</label>
+<br>
+<div class="row">
+    <div class="col-lg-3">
+        <label for="sort_list">Choose stat:</label><br>
         <select name="stat" id="sort_list" onchange="window.location = '/records/{{ type }}/season/{{ org }}/{{ lg }}?stat='+this.options[this.selectedIndex].value;">
             {% for col in df2 %}
             {% if col not in ['PID', 'Org', 'League', 'Team', 'Year', 'First', 'Last'] %}
@@ -20,9 +21,16 @@
             {% endif %}
             {% endfor %}
         </select>
+        <p>
+            <br>Organization: <font color="red">{{ org }}</font>
+            <br>League: <font color="red">{{ lg }}</font>
+        </p>
+        <p class="text-muted">
+            <br>{{ qual }} PA required to qualify
+        </p>
     </div>
-    <div style="flex:80%;">
-        <table class='dataframe' id='df_table' style="width:450px;cursor:default;">
+    <div class="col-lg-8">
+        <table class='table table-hover w-75' id='df_table' style="cursor:default;">
             <tr>
                 <th>Rank</th>
                 <th align='left'>Player</th>
@@ -30,7 +38,6 @@
                 <th align='center'>Year</th>
                 <th align='center'>{{ stat }}</th>
                 <th align='center'>PA</th>
-                <th align='center'>IP</th>
             </tr>
                 {% for key,val in df2.iterrows() %}
                 <tr>
@@ -40,17 +47,18 @@
                     <td align='center'><a href="/stats/hitting/{{ org }}/{{ lg }}/league/{{ val['Year'] }}">{{ val['Year'] }}</a></td>
                     <td align='center'>{{ val['stat'] }}</td>
                     <td align='center'>{{ val['PA']}}</td>
-                    <td align='center'>{{ val['IP']}}</td>
                 </tr>
                 {% endfor %}
         </table>
     </div>
-    <script>
-        var url_string = window.location.href;
-        var url = new URL(url_string);
-        var c = url.searchParams.get("stat");
-        $('#sort_list').val(c);
-    </script>
+    <div class="col-lg-1"></div>
 </div>
+
+<script>
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    var c = url.searchParams.get("stat");
+    $('#sort_list').val(c);
+</script>
 
 {% endblock %}
