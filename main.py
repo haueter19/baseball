@@ -402,7 +402,7 @@ async def season_records(request: Request, org: str, lg: str, stat: Optional[str
     df2 = df[(df['Org']==org) & (df['League']==lg) & (df['PA']>25)].sort_values(stat, ascending=False).head(50)
     #df2.columns=['PID', 'First', 'Last', 'Team', 'Year', 'PA', 'stat']
     df2['stat'] = df2[stat]
-    return templates.TemplateResponse("season_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat, 'type':'hitting'})
+    return templates.TemplateResponse("season_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat, 'type':'hitting', 'qual':25})
 
 @app.get("/records/pitching/season/{org}/{lg}")
 async def season_records(request: Request, org: str, lg: str, stat: Optional[str] = 'H'):
