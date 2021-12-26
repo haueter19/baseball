@@ -44,52 +44,63 @@
         yaxis: { title: 'RF' },
     }
 </script>
-<ul class="breadcrumb">
-    <li><a href="/{{ org }}">{{ org }}</a></li>
-    <li><a href="/{{ org }}/{{ lg }}/">{{ lg }}</a></li>
-    <li><a href="/stats/hitting/{{ org }}/{{ lg }}/league/{{ yr }}">League</a></li>
-    <li>
-        <select id="year_pick" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
-            {% for y in yrs %}
-                    <option value="/standings/{{ org }}/{{ lg }}/{{ y }}">{{ y }}</option>
-            {% endfor %}
-        </select>
-    </li>
-</ul> 
+<div class="row">
+    <div class="col-lg-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="../home">Home</a></li>
+            <li class="breadcrumb-item"><a href="/{{ org }}/{{ lg }}">{{ org }} {{ lg }}</a></li>
+            <li class="breadcrumb-item active">Standings</li>
+            <li class="breadcrumb-item active">
+                <select id="year_pick" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+                    {% for y in yrs %}
+                            <option value="/standings/{{ org }}/{{ lg }}/{{ y }}">{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </li>
+        </ol>
+    </div>
+</div>
 
-<br>
-<table class='dataframe' id='myTable'>
-    <tr>
-        <th onclick="sortTable_alpha(0)" align='left'>Team</th>
-        <th onclick="sortTable(1)">W</th>
-        <th onclick="sortTable(2)">L</th>
-        <th onclick="sortTable(3)">T</th>
-        <th onclick="sortTable(4)">Pct</th>
-        <th onclick="sortTable(5)">GB</th>
-        <th onclick="sortTable(6)">RF</th>
-        <th onclick="sortTable(7)">RA</th>
-        <th onclick="sortTable(8)">Pyth</th>
-        <th onclick="sortTable(9)">xWins</th>
-        <th onclick="sortTable(10)">Champs</th>
-    </tr>
-        {% for key,val in st.iterrows() %}
-        <tr align="center">
-            <td align='left'><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ yr }}">{{ val['Team'] }}</a></td>
-            <td>{{ val['W'] }}</td>
-            <td>{{ val['L'] }}</td>
-            <td>{{ val['T'] }}</td>
-            <td>{{ val['Pct'] }}</td>
-            <td>{{ val['GB'] }}</td>
-            <td>{{ val['RF'] }}</td>
-            <td>{{ val['RA'] }}</td>
-            <td>{{ val['Pyth'] }}</td>
-            <td>{{ val['xW'] }}</td>
-            <td>{{ val['Postseason'] }}</td>
-        </tr>
-        {% endfor %}
-</table>
-<br>
-<div id='myDiv'></div>
+<div class="row">
+    <div class="col-lg-12">
+        <table class='table table-condensed table-hover' id='myTable'>
+            <tr>
+                <th onclick="sortTable_alpha(0)" align='left'>Team</th>
+                <th onclick="sortTable(1)">W</th>
+                <th onclick="sortTable(2)">L</th>
+                <th onclick="sortTable(3)">T</th>
+                <th onclick="sortTable(4)">Pct</th>
+                <th onclick="sortTable(5)">GB</th>
+                <th onclick="sortTable(6)">RF</th>
+                <th onclick="sortTable(7)">RA</th>
+                <th onclick="sortTable(8)">Pyth</th>
+                <th onclick="sortTable(9)">xWins</th>
+                <th onclick="sortTable(10)">Champs</th>
+            </tr>
+                {% for key,val in st.iterrows() %}
+                <tr align="center">
+                    <td align='left'><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ yr }}">{{ val['Team'] }}</a></td>
+                    <td>{{ val['W'] }}</td>
+                    <td>{{ val['L'] }}</td>
+                    <td>{{ val['T'] }}</td>
+                    <td>{{ val['Pct'] }}</td>
+                    <td>{{ val['GB'] }}</td>
+                    <td>{{ val['RF'] }}</td>
+                    <td>{{ val['RA'] }}</td>
+                    <td>{{ val['Pyth'] }}</td>
+                    <td>{{ val['xW'] }}</td>
+                    <td>{{ val['Postseason'] }}</td>
+                </tr>
+                {% endfor %}
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div id='myDiv'></div>
+    </div>
+</div>
+
 <script>
     Plotly.newPlot('myDiv', data, layout);
     var url_string = window.location.href;

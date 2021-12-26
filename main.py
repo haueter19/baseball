@@ -272,6 +272,7 @@ async def standings(request: Request, org: str, lg: str, yr: int, sort: Optional
     st['GP'] = st['W']+st['L']+st['T']
     st['Pyth'] = round(((st['RF']*st['RF']) / ((st['RF']*st['RF']) + (st['RA']*st['RA']))),3)
     st['xW'] = round(st['Pyth']*st['GP'],1)
+    st['Pct'] = round(st['Pct'],3)
     #df2 = df[(df['Org']==org) & (df['League']==lg) & (df['Year']==yr)]
     return templates.TemplateResponse("standings.html", {'request': request, 'st':st, 'org':org, 'lg':lg, 'yr':yr, 'yrs':yrs, 'df':st.fillna('').to_dict(orient='records'),})
 

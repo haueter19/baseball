@@ -10,71 +10,80 @@
 {% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block content %}
 
-<ul class="breadcrumb">
-    <li><a href="/{{ org }}">{{ org }}</a></li>
-    <li><a href="/{{ org }}/{{ lg }}/">{{ lg }}</a></li>
-    <li><a href="/{{ org }}/{{ lg }}/{{ tm }}">{{ tm }}</a></li>
-    <li>
-        <select id="year_pick" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
-            {% for y in yrs %}
-                    <option value="/stats/pitching/{{ org }}/{{ lg }}/{{ tm }}/{{ y }}">{{ y }}</option>
-            {% endfor %}
-        </select>
-    </li>
-</ul> 
-<br /><br />
-<table class='dataframe' id='myTable'>
-    <tr>
-        <th align='left'>Player</th>
-        <th onclick="sortTable(1)">GP</th>
-        <th onclick="sortTable(2)">IP</th>
-        <th onclick="sortTable(3)">R</th>
-        <th onclick="sortTable(4)">ER</th>
-        <th onclick="sortTable(5)">K</th>
-        <th onclick="sortTable(6)">H</th>
-        <th onclick="sortTable(7)">BB</th>
-        <th onclick="sortTable(8)">HBP</th>
-        <th onclick="sortTable(9)">HR</th>
-        <th onclick="sortTable(10)">CG</th>
-        <th onclick="sortTable(11)">W</th>
-        <th onclick="sortTable(12)">L</th>
-        <th onclick="sortTable(13)">Sv</th>
-        <th onclick="sortTable(14)">HLD</th>
-        <th onclick="sortTable(15)">AB</th>
-        <th onclick="sortTable(16)">BAA</th>
-        <th onclick="sortTable(17)">ERA</th>
-        <th onclick="sortTable(18)">WHIP</th>
-        <th onclick="sortTable(19)">K/9</th>
-        <th onclick="sortTable(20)">BB/9</th>
-        <th onclick="sortTable(21)">H/9</th>
-    </tr>
-        {% for key,val in df2.iterrows() %}
-        <tr align='center'>
-            <td align='left'><a href="/player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
-            <td>{{ val['GP'] }}</td>
-            <td>{{ val['IP'] }}</td>
-            <td>{{ val['R'] }}</td>
-            <td>{{ val['ER'] }}</td>
-            <td>{{ val['K'] }}</td>
-            <td>{{ val['H'] }}</td>
-            <td>{{ val['BB'] }}</td>
-            <td>{{ val['HBP'] }}</td>
-            <td>{{ val['HR'] }}</td>
-            <td>{{ val['CG'] }}</td>
-            <td>{{ val['W'] }}</td>
-            <td>{{ val['L'] }}</td>
-            <td>{{ val['Sv'] }}</td>
-            <td>{{ val['HLD'] }}</td>
-            <td>{{ val['ABA'] }}</td>
-            <td>{{ val['BAA'] }}</td>
-            <td>{{ val['ERA'] }}</td>
-            <td>{{ val['WHIP'] }}</td>
-            <td>{{ val['Kper9'] }}</td>
-            <td>{{ val['BBper9'] }}</td>
-            <td>{{ val['Hper9'] }}</td>
-        </tr>
-        {% endfor %}
-</table>
+<div class="row">
+    <div class="col-lg-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="../home">Home</a></li>
+            <li class="breadcrumb-item"><a href="/{{ org }}/{{ lg }}">{{ org }} {{ lg }}</a></li>
+            <li class="breadcrumb-item active">{{ tm }}</li>
+            <li class="breadcrumb-item">
+                <select id="year_pick" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+                    {% for y in yrs %}
+                            <option value="/stats/pitching/{{ org }}/{{ lg }}/{{ tm }}/{{ y }}">{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <table class='table table-condensed table-hover' id='myTable'>
+            <tr>
+                <th align='left'>Player</th>
+                <th onclick="sortTable(1)">GP</th>
+                <th onclick="sortTable(2)">IP</th>
+                <th onclick="sortTable(3)">R</th>
+                <th onclick="sortTable(4)">ER</th>
+                <th onclick="sortTable(5)">K</th>
+                <th onclick="sortTable(6)">H</th>
+                <th onclick="sortTable(7)">BB</th>
+                <th onclick="sortTable(8)">HBP</th>
+                <th onclick="sortTable(9)">HR</th>
+                <th onclick="sortTable(10)">CG</th>
+                <th onclick="sortTable(11)">W</th>
+                <th onclick="sortTable(12)">L</th>
+                <th onclick="sortTable(13)">Sv</th>
+                <th onclick="sortTable(14)">HLD</th>
+                <th onclick="sortTable(15)">AB</th>
+                <th onclick="sortTable(16)">BAA</th>
+                <th onclick="sortTable(17)">ERA</th>
+                <th onclick="sortTable(18)">WHIP</th>
+                <th onclick="sortTable(19)">K/9</th>
+                <th onclick="sortTable(20)">BB/9</th>
+                <th onclick="sortTable(21)">H/9</th>
+            </tr>
+                {% for key,val in df2.iterrows() %}
+                <tr align='center'>
+                    <td align='left'><a href="/player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
+                    <td>{{ val['GP'] }}</td>
+                    <td>{{ val['IP'] }}</td>
+                    <td>{{ val['R'] }}</td>
+                    <td>{{ val['ER'] }}</td>
+                    <td>{{ val['K'] }}</td>
+                    <td>{{ val['H'] }}</td>
+                    <td>{{ val['BB'] }}</td>
+                    <td>{{ val['HBP'] }}</td>
+                    <td>{{ val['HR'] }}</td>
+                    <td>{{ val['CG'] }}</td>
+                    <td>{{ val['W'] }}</td>
+                    <td>{{ val['L'] }}</td>
+                    <td>{{ val['Sv'] }}</td>
+                    <td>{{ val['HLD'] }}</td>
+                    <td>{{ val['ABA'] }}</td>
+                    <td>{{ val['BAA'] }}</td>
+                    <td>{{ val['ERA'] }}</td>
+                    <td>{{ val['WHIP'] }}</td>
+                    <td>{{ val['Kper9'] }}</td>
+                    <td>{{ val['BBper9'] }}</td>
+                    <td>{{ val['Hper9'] }}</td>
+                </tr>
+                {% endfor %}
+        </table>
+    </div>
+</div>
+
 <br>
 <script>
     var url_string = window.location.href;

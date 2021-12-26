@@ -8,14 +8,19 @@
 {% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block sched %}"schedule/mabl"{% endblock %}
 {% block content %}
-<ul class="breadcrumb">
-    <li><a href="/{{ org }}">{{ org }}</a></li>
-    <li><a href="/{{ org }}/{{ lg }}/">{{ lg }}</a></li>
-    <li><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ tm }}/{{ max_yr }}">{{ tm }}</a></li>
-</ul> 
 
+<a href="/stats/hitting/{{ org }}/{{ lg }}/{{ tm }}/{{ max_yr }}">{{ tm }}</a>
+<div class="row">
+    <div class="col-lg-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="../home">Home</a></li>
+            <li class="breadcrumb-item"><a href="/{{ org }}/{{ lg }}">{{ org }} {{ lg }}</a></li>
+            <li class="breadcrumb-item active">{{ tm }} Projections</li>
+        </ol>
+    </div>
+</div>
 <br>
-<table class='dataframe' id='myTable'>
+<table class='table table-condensed table-hover' id='myTable'>
     <tr>
         <th align='left'>Player</th>
         <th onclick="sortTable(1)">PA</th>
