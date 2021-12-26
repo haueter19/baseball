@@ -418,7 +418,8 @@ async def career_records(request: Request, org: str, lg: str, stat: Optional[str
         df2 = add_rate_stats(df2)
         df2 = df2.query('PA>=@qual').sort_values(stat, ascending=False).head(50).reset_index()
         df2['stat'] = df2[stat]
-        df2.columns=['PID', 'First', 'Last', 'Team', 'PA', 'H', 'BB', 'HBP', 'AB', 'TB', 'SF', 'BA', 'OBP', 'SLG','OPS', 'stat']
+        df2.columns=['PID', 'First', 'Last', 'Team', 'PA', 'R', 'RBI', 'H', '1B', '2B', '3B', 'HR', 'BB', 'HBP', 'AB', 'SB', 'CS', 'TB', 'SF', 'BA', 'OBP', 'SLG', 'OPS', 'stat']
+        #df2.columns=['PID', 'First', 'Last', 'Team', 'PA', 'H', 'BB', 'HBP', 'AB', 'TB', 'SF', 'BA', 'OBP', 'SLG', 'OPS', 'stat']
     else:
         df2 = df[(df['Org']==org) & (df['League']==lg)].groupby('PID').agg({'First':'last', 'Last':'last', 'Team':'last', 'PA':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'BB':'sum', 'HBP':'sum', 'AB':'sum', 'SB':'sum', 'CS':'sum', 'TB':'sum', 'SF':'sum'}).sort_values(stat, ascending=False).head(50).reset_index()
         df2['stat'] = df2[stat]
