@@ -10,9 +10,10 @@
 {% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block content %}
 
-<div style="display:flex;">
-    <div style="flex:20%;">
-        <label for="sort_list">Choose stat:</label>
+<br>
+<div class="row">
+    <div class="col-lg-2">
+        <label for="sort_list">Choose stat:</label><br>
         <select name="stat" id="sort_list" onchange="window.location = '/records/{{ type }}/career/{{ org }}/{{ lg }}?stat='+this.options[this.selectedIndex].value;">
             {% for col in df2 %}
             {% if col not in ['PID', 'Org', 'League', 'Team', 'Year', 'First', 'Last'] %}
@@ -20,33 +21,45 @@
             {% endif %}
             {% endfor %}
         </select>
+        <p>
+            <br>Organization: <font color="red">{{ org }}</font>
+            <br>League: <font color="red">{{ lg }}</font>
+        </p>
+        <p class="text-muted">
+            {{ qual }} PA required to qualify for rate stats
+        </p>
+        <p class="text-muted">
+            <a href="/records/career/season/{{ org }}/{{ lg }}?stat={{ stat }}&qual=150">150 PA to qualify</a>
+        </p>
     </div>
-    <div style="flex:80%;">
-    <table class='dataframe' id='df_table' style="width:450px;margin:auto;">
-        <tr>
-            <th>Rank</th>
-            <th align='left'>Player</th>
-            <th align="left">Team</th>
-            <th>{{ stat }}</th>
-            <th>PA</th>
-            <th>IP</th>
-        </tr>
-            {% for key,val in df2.iterrows() %}
+    <div class="col-lg-8">
+        <table class='table table-hover w-75' id='df_table' style="margin:auto;">
             <tr>
-                <td align="center">{{ loop.index }}</td>
-                <td><a href="/player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
-                <td><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ val['Year'] }}">{{ val['Team'] }}</a></td>
-                <td align="center">{{ val['stat'] }}</td>
-                <td align="center">{{ val['PA'] }}</td>
-                <td align="center">{{ val['IP'] }}</td>
+                <th>Rank</th>
+                <th align='left'>Player</th>
+                <th align="left">Team</th>
+                <th>{{ stat }}</th>
+                <th>PA</th>
             </tr>
-            {% endfor %}
-    </table>
-    <script>
-        var url_string = window.location.href;
-        var url = new URL(url_string);
-        var c = url.searchParams.get("stat");
-        $('#sort_list').val(c); 
-    </script>
+                {% for key,val in df2.iterrows() %}
+                <tr>
+                    <td align="center">{{ loop.index }}</td>
+                    <td><a href="/player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
+                    <td><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ val['Year'] }}">{{ val['Team'] }}</a></td>
+                    <td align="center">{{ val['stat'] }}</td>
+                    <td align="center">{{ val['PA'] }}</td>
+                </tr>
+                {% endfor %}
+        </table>
+    </div>
+    <div class="col-lg-2"></div>
 </div>
+
+<script>
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    var c = url.searchParams.get("stat");
+    $('#sort_list').val(c); 
+</script>
+
 {% endblock %}

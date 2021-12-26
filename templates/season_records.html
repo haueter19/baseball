@@ -12,7 +12,7 @@
 
 <br>
 <div class="row">
-    <div class="col-lg-3">
+    <div class="col-lg-2">
         <label for="sort_list">Choose stat:</label><br>
         <select name="stat" id="sort_list" onchange="window.location = '/records/{{ type }}/season/{{ org }}/{{ lg }}?stat='+this.options[this.selectedIndex].value;">
             {% for col in df2 %}
@@ -26,7 +26,10 @@
             <br>League: <font color="red">{{ lg }}</font>
         </p>
         <p class="text-muted">
-            <br>{{ qual }} PA required to qualify
+            {{ qual }} PA required to qualify for rate stats
+        </p>
+        <p class="text-muted">
+            <a href="/records/hitting/season/{{ org }}/{{ lg }}?stat={{ stat }}&qual=50">50 PA to qualify</a>
         </p>
     </div>
     <div class="col-lg-8">
@@ -51,7 +54,7 @@
                 {% endfor %}
         </table>
     </div>
-    <div class="col-lg-1"></div>
+    <div class="col-lg-2"></div>
 </div>
 
 <script>
