@@ -1,5 +1,5 @@
 {% extends "header.html" %}
-{% block title %}Clubhouse{% endblock %}
+{% block title %}Player Page{% endblock %}
 {% block standings %}"/standings/{{ org }}/{{ lg }}/2019"{% endblock %}
 {% block champions %}"/{{ org }}/{{ lg }}/champions"{% endblock %}
 {% block hitting_stats %}MABL/18+/league/2021{% endblock %}}
@@ -70,271 +70,420 @@ $(document).ready(function(){
     </div>
 </div>
 
-<div class="row" id="slideable_table">
-    <div class="col-lg-12"><h5>YEARLY STATS</h5></div>
+<div class="row">
     <div class="col-lg-12">
-        <table class="table table-hover">
-            <tr>
-                <th>Org</th>
-                <th>League</th>
-                <th>Team</th>
-                <th>GP</th>
-                <th>PA</th>
-                <th>AB</th>
-                <th>H</th>
-                <th>R</th>
-                <th>1B</th>
-                <th>2B</th>
-                <th>3B</th>
-                <th>HR</th>
-                <th>RBI</th>
-                <th>BB</th>
-                <th>K</th>
-                <th>HBP</th>
-                <th>SB</th>
-                <th>CS</th>
-                <th>SF</th>
-                <th>SH</th>
-                <th>TB</th>
-                <th>BA</th>
-                <th>OBP</th>
-                <th>SLG</th>
-                <th>OPS</th>
-                <th>wRAA</th>
-                <th>WAR</th>
-            </tr>
-            {% for j, tot in df2.iterrows() %}
-                {% for i, row in gp2.iterrows() %}
-                    {% if loop.changed(i[0]) %}
-                        {% if tot['Year'] == i[0] %}
-                        <tr style="vertical-align: sub; background-color:rgb(248, 248, 248); border-style:solid; border-color:rgb(55, 158, 255);">
-                            <td><button type="button" id="{{i[0]}}_group" class="btn btn-outline-primary btn-sm">TOGGLE</button></td>
-                            <td colspan="2">{{ i[0] }} TOTALS</td>
-                            <td>{{tot['GP']}}</td>
-                            <td>{{tot['PA']}}</td>
-                            <td>{{tot['AB']}}</td>
-                            <td>{{tot['H']}}</td>
-                            <td>{{tot['R']}}</td>
-                            <td>{{tot['1B']}}</td>
-                            <td>{{tot['2B']}}</td>
-                            <td>{{tot['3B']}}</td>
-                            <td>{{tot['HR']}}</td>
-                            <td>{{tot['RBI']}}</td>
-                            <td>{{tot['BB']}}</td>
-                            <td>{{tot['K']}}</td>
-                            <td>{{tot['HBP']}}</td>
-                            <td>{{tot['SB']}}</td>
-                            <td>{{tot['CS']}}</td>
-                            <td>{{tot['SF']}}</td>
-                            <td>{{tot['SH']}}</td>
-                            <td>{{tot['TB']}}</td>
-                            <td>{{tot['BA']}}</td>
-                            <td>{{tot['OBP']}}</td>
-                            <td>{{tot['SLG']}}</td>
-                            <td>{{tot['OPS']}}</td>
-                            <td>{{tot['wRAAc']}}</td>
-                            <td>{{tot['WAR']}}</td>
-                        </tr>
-                        <tr id="{{i[0]}}_row">
-                            <td>{{i[1]}}</td>
-                            <td>{{i[2]}}</td>
-                            <td>{{row['Team']}}</td>
-                            <td>{{row['GP']}}</td>
-                            <td>{{row['PA']}}</td>
-                            <td>{{row['AB']}}</td>
-                            <td>{{row['H']}}</td>
-                            <td>{{row['R']}}</td>
-                            <td>{{row['1B']}}</td>
-                            <td>{{row['2B']}}</td>
-                            <td>{{row['3B']}}</td>
-                            <td>{{row['HR']}}</td>
-                            <td>{{row['RBI']}}</td>
-                            <td>{{row['BB']}}</td>
-                            <td>{{row['K']}}</td>
-                            <td>{{row['HBP']}}</td>
-                            <td>{{row['SB']}}</td>
-                            <td>{{row['CS']}}</td>
-                            <td>{{row['SF']}}</td>
-                            <td>{{row['SH']}}</td>
-                            <td>{{row['TB']}}</td>
-                            <td>{{row['BA']}}</td>
-                            <td>{{row['OBP']}}</td>
-                            <td>{{row['SLG']}}</td>
-                            <td>{{row['OPS']}}</td>
-                            <td>{{row['wRAAc']}}</td>
-                            <td>{{row['WAR']}}</td>
-                        </tr>
-                        {% endif %}
-                    {% else %}
-                        {% if tot['Year'] == i[0] %}
-                        <tr id="{{i[0]}}_row">
-                            <td>{{i[1]}}</td>
-                            <td>{{i[2]}}</td>
-                            <td>{{row['Team']}}</td>
-                            <td>{{row['GP']}}</td>
-                            <td>{{row['PA']}}</td>
-                            <td>{{row['AB']}}</td>
-                            <td>{{row['H']}}</td>
-                            <td>{{row['R']}}</td>
-                            <td>{{row['1B']}}</td>
-                            <td>{{row['2B']}}</td>
-                            <td>{{row['3B']}}</td>
-                            <td>{{row['HR']}}</td>
-                            <td>{{row['RBI']}}</td>
-                            <td>{{row['BB']}}</td>
-                            <td>{{row['K']}}</td>
-                            <td>{{row['HBP']}}</td>
-                            <td>{{row['SB']}}</td>
-                            <td>{{row['CS']}}</td>
-                            <td>{{row['SF']}}</td>
-                            <td>{{row['SH']}}</td>
-                            <td>{{row['TB']}}</td>
-                            <td>{{row['BA']}}</td>
-                            <td>{{row['OBP']}}</td>
-                            <td>{{row['SLG']}}</td>
-                            <td>{{row['OPS']}}</td>
-                            <td>{{row['wRAAc']}}</td>
-                            <td>{{row['WAR']}}</td>
-                        </tr>
-                        {% endif %}
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" data-bs-toggle="tab" href="#hitting">Hitting</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#pitching">Pitching</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="tab" href="#menu2">Menu 2</a>
+            </li>
+          </ul>
+    </div>
+</div>
+<div class="tab-content">
+    <div class="tab-pane container active" id="hitting">
+        <div class="row" id="slideable_table">
+            <div class="col-lg-12"><br><h5>YEARLY STATS</h5></div>
+            <div class="col-lg-12">
+                <table class="table table-hover">
+                    <tr>
+                        <th>Org</th>
+                        <th>League</th>
+                        <th>Team</th>
+                        <th>GP</th>
+                        <th>PA</th>
+                        <th>AB</th>
+                        <th>H</th>
+                        <th>R</th>
+                        <th>1B</th>
+                        <th>2B</th>
+                        <th>3B</th>
+                        <th>HR</th>
+                        <th>RBI</th>
+                        <th>BB</th>
+                        <th>K</th>
+                        <th>HBP</th>
+                        <th>SB</th>
+                        <th>CS</th>
+                        <th>SF</th>
+                        <th>SH</th>
+                        <th>TB</th>
+                        <th>BA</th>
+                        <th>OBP</th>
+                        <th>SLG</th>
+                        <th>OPS</th>
+                        <th>wRAA</th>
+                        <th>WAR</th>
+                    </tr>
+                    {% for j, tot in df2.iterrows() %}
+                        {% for i, row in gp2.iterrows() %}
+                            {% if loop.changed(i[0]) %}
+                                {% if tot['Year'] == i[0] %}
+                                <tr style="vertical-align: sub; background-color:rgb(248, 248, 248); border-style:solid; border-color:rgb(55, 158, 255);">
+                                    <td><button type="button" id="{{i[0]}}_group" class="btn btn-outline-primary btn-sm">TOGGLE</button></td>
+                                    <td colspan="2">{{ i[0] }} TOTALS</td>
+                                    <td>{{tot['GP']}}</td>
+                                    <td>{{tot['PA']}}</td>
+                                    <td>{{tot['AB']}}</td>
+                                    <td>{{tot['H']}}</td>
+                                    <td>{{tot['R']}}</td>
+                                    <td>{{tot['1B']}}</td>
+                                    <td>{{tot['2B']}}</td>
+                                    <td>{{tot['3B']}}</td>
+                                    <td>{{tot['HR']}}</td>
+                                    <td>{{tot['RBI']}}</td>
+                                    <td>{{tot['BB']}}</td>
+                                    <td>{{tot['K']}}</td>
+                                    <td>{{tot['HBP']}}</td>
+                                    <td>{{tot['SB']}}</td>
+                                    <td>{{tot['CS']}}</td>
+                                    <td>{{tot['SF']}}</td>
+                                    <td>{{tot['SH']}}</td>
+                                    <td>{{tot['TB']}}</td>
+                                    <td>{{tot['BA']}}</td>
+                                    <td>{{tot['OBP']}}</td>
+                                    <td>{{tot['SLG']}}</td>
+                                    <td>{{tot['OPS']}}</td>
+                                    <td>{{tot['wRAAc']}}</td>
+                                    <td>{{tot['WAR']}}</td>
+                                </tr>
+                                <tr id="{{i[0]}}_row">
+                                    <td>{{i[1]}}</td>
+                                    <td>{{i[2]}}</td>
+                                    <td>{{row['Team']}}</td>
+                                    <td>{{row['GP']}}</td>
+                                    <td>{{row['PA']}}</td>
+                                    <td>{{row['AB']}}</td>
+                                    <td>{{row['H']}}</td>
+                                    <td>{{row['R']}}</td>
+                                    <td>{{row['1B']}}</td>
+                                    <td>{{row['2B']}}</td>
+                                    <td>{{row['3B']}}</td>
+                                    <td>{{row['HR']}}</td>
+                                    <td>{{row['RBI']}}</td>
+                                    <td>{{row['BB']}}</td>
+                                    <td>{{row['K']}}</td>
+                                    <td>{{row['HBP']}}</td>
+                                    <td>{{row['SB']}}</td>
+                                    <td>{{row['CS']}}</td>
+                                    <td>{{row['SF']}}</td>
+                                    <td>{{row['SH']}}</td>
+                                    <td>{{row['TB']}}</td>
+                                    <td>{{row['BA']}}</td>
+                                    <td>{{row['OBP']}}</td>
+                                    <td>{{row['SLG']}}</td>
+                                    <td>{{row['OPS']}}</td>
+                                    <td>{{row['wRAAc']}}</td>
+                                    <td>{{row['WAR']}}</td>
+                                </tr>
+                                {% endif %}
+                            {% else %}
+                                {% if tot['Year'] == i[0] %}
+                                <tr id="{{i[0]}}_row">
+                                    <td>{{i[1]}}</td>
+                                    <td>{{i[2]}}</td>
+                                    <td>{{row['Team']}}</td>
+                                    <td>{{row['GP']}}</td>
+                                    <td>{{row['PA']}}</td>
+                                    <td>{{row['AB']}}</td>
+                                    <td>{{row['H']}}</td>
+                                    <td>{{row['R']}}</td>
+                                    <td>{{row['1B']}}</td>
+                                    <td>{{row['2B']}}</td>
+                                    <td>{{row['3B']}}</td>
+                                    <td>{{row['HR']}}</td>
+                                    <td>{{row['RBI']}}</td>
+                                    <td>{{row['BB']}}</td>
+                                    <td>{{row['K']}}</td>
+                                    <td>{{row['HBP']}}</td>
+                                    <td>{{row['SB']}}</td>
+                                    <td>{{row['CS']}}</td>
+                                    <td>{{row['SF']}}</td>
+                                    <td>{{row['SH']}}</td>
+                                    <td>{{row['TB']}}</td>
+                                    <td>{{row['BA']}}</td>
+                                    <td>{{row['OBP']}}</td>
+                                    <td>{{row['SLG']}}</td>
+                                    <td>{{row['OPS']}}</td>
+                                    <td>{{row['wRAAc']}}</td>
+                                    <td>{{row['WAR']}}</td>
+                                </tr>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        
+        <div class="row" id="year_stats">
+            <div class="col-lg-12"><br><h5>YEARLY STATS</h5></div>
+            <div class="col-lg-12">
+                <table class='table table-hover table-condensed' id="myTable">
+                    <tr>
+                        <th align='left' onclick="sortTable_alpha(0)">Year</th>
+                        <th onclick="sortTable(1)">GP</th>
+                        <th onclick="sortTable(2)">PA</th>
+                        <th onclick="sortTable(3)">AB</th>
+                        <th onclick="sortTable(4)">R</th>
+                        <th onclick="sortTable(5)">H</th>
+                        <th onclick="sortTable(6)">1B</th>
+                        <th onclick="sortTable(7)">2B</th>
+                        <th onclick="sortTable(8)">3B</th>
+                        <th onclick="sortTable(9)">HR</th>
+                        <th onclick="sortTable(10)">RBI</th>
+                        <th onclick="sortTable(11)">BB</th>
+                        <th onclick="sortTable(12)">K</th>
+                        <th onclick="sortTable(13)">HBP</th>
+                        <th onclick="sortTable(14)">SB</th>
+                        <th onclick="sortTable(15)">CS</th>
+                        <th onclick="sortTable(16)">SF</th>
+                        <th onclick="sortTable(17)">SH</th>
+                        <th onclick="sortTable(18)">TB</th>
+                        <th onclick="sortTable(19)">BA</th>
+                        <th onclick="sortTable(20)">OBP</th>
+                        <th onclick="sortTable(21)">SLG</th>
+                        <th onclick="sortTable(22)">OPS</th>
+                        <th onclick="sortTable(23)">wRAA</th>
+                        <th onclick="sortTable(24)">WAR</th>
+                    </tr>
+                    {% for key,val in df2.iterrows() %}
+                    {% if key>-1 %}
+                    <tr align='center'>
+                        <td align='left'>{{ val['Year'] }}</a></td>
+                        <td>{{ val['GP'] }}</td>
+                        <td>{{ val['PA'] }}</td>
+                        <td>{{ val['AB'] }}</td>
+                        <td>{{ val['R'] }}</td>
+                        <td>{{ val['H'] }}</td>
+                        <td>{{ val['1B'] }}</td>
+                        <td>{{ val['2B'] }}</td>
+                        <td>{{ val['3B'] }}</td>
+                        <td>{{ val['HR'] }}</td>
+                        <td>{{ val['RBI'] }}</td>
+                        <td>{{ val['BB'] }}</td>
+                        <td>{{ val['K'] }}</td>
+                        <td>{{ val['HBP'] }}</td>
+                        <td>{{ val['SB'] }}</td>
+                        <td>{{ val['CS'] }}</td>
+                        <td>{{ val['SF'] }}</td>
+                        <td>{{ val['SH'] }}</td>
+                        <td>{{ val['TB'] }}</td>
+                        <td>{{ val['BA'] }}</td>
+                        <td>{{ val['OBP'] }}</td>
+                        <td>{{ val['SLG'] }}</td>
+                        <td>{{ val['OPS'] }}</td>
+                        <td>{{ val['wRAAc'] }}</td>
+                        <td>{{ val['WAR'] }}</td>
+                    </tr>
                     {% endif %}
-                {% endfor %}
-            {% endfor %}
-        </table>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        
+        <div class="row" id="career_stats">
+            <div class="col-lg-12"><h5>CAREER TOTALS</h5></div>
+            <div class="col-lg-12">
+                <table class='table'>
+                    <tr>
+                        <th align='left'>Year</th>
+                        <th onclick="sortTable(1)">GP</th>
+                        <th onclick="sortTable(2)">PA</th>
+                        <th onclick="sortTable(3)">AB</th>
+                        <th onclick="sortTable(4)">R</th>
+                        <th onclick="sortTable(5)">H</th>
+                        <th onclick="sortTable(6)">1B</th>
+                        <th onclick="sortTable(7)">2B</th>
+                        <th onclick="sortTable(8)">3B</th>
+                        <th onclick="sortTable(9)">HR</th>
+                        <th onclick="sortTable(10)">RBI</th>
+                        <th onclick="sortTable(11)">BB</th>
+                        <th onclick="sortTable(12)">K</th>
+                        <th onclick="sortTable(13)">HBP</th>
+                        <th onclick="sortTable(14)">SB</th>
+                        <th onclick="sortTable(15)">CS</th>
+                        <th onclick="sortTable(16)">SF</th>
+                        <th onclick="sortTable(17)">SH</th>
+                        <th onclick="sortTable(18)">TB</th>
+                        <th onclick="sortTable(19)">BA</th>
+                        <th onclick="sortTable(20)">OBP</th>
+                        <th onclick="sortTable(21)">SLG</th>
+                        <th onclick="sortTable(22)">OPS</th>
+                        <th onclick="sortTable(23)">wRAA</th>
+                        <th onclick="sortTable(24)">WAR</th>
+                    </tr>
+                    {% for key,val in df2.iterrows() %}
+                    {% if key==-1 %}
+                    <tr align='center'>
+                        <td align='left'>{{ val['Year'] }}</a></td>
+                        <td>{{ val['GP'] }}</td>
+                        <td>{{ val['PA'] }}</td>
+                        <td>{{ val['AB'] }}</td>
+                        <td>{{ val['R'] }}</td>
+                        <td>{{ val['H'] }}</td>
+                        <td>{{ val['1B'] }}</td>
+                        <td>{{ val['2B'] }}</td>
+                        <td>{{ val['3B'] }}</td>
+                        <td>{{ val['HR'] }}</td>
+                        <td>{{ val['RBI'] }}</td>
+                        <td>{{ val['BB'] }}</td>
+                        <td>{{ val['K'] }}</td>
+                        <td>{{ val['HBP'] }}</td>
+                        <td>{{ val['SB'] }}</td>
+                        <td>{{ val['CS'] }}</td>
+                        <td>{{ val['SF'] }}</td>
+                        <td>{{ val['SH'] }}</td>
+                        <td>{{ val['TB'] }}</td>
+                        <td>{{ val['BA'] }}</td>
+                        <td>{{ val['OBP'] }}</td>
+                        <td>{{ val['SLG'] }}</td>
+                        <td>{{ val['OPS'] }}</td>
+                        <td>{{ val['wRAAc'] }}</td>
+                        <td>{{ val['WAR'] }}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </table>   
+            </div>
+        </div>
     </div>
+    <div class="tab-pane container fade" id="pitching">
+        <div class="row">
+            <div class="col-lg-12">
+                <table class='table table-condensed table-hover'>
+                    <tr>
+                        <thead>
+                            <th>Year</th>
+                            <th>GP</th>
+                            <th>GS</th>
+                            <th>IP</th>
+                            <th>R</th>
+                            <th>ER</th>
+                            <th>K</th>
+                            <th>H</th>
+                            <th>BB</th>
+                            <th>HBP</th>
+                            <th>HR</th>
+                            <th>CG</th>
+                            <th>W</th>
+                            <th>L</th>
+                            <th>Sv</th>
+                            <th>Hld</th>
+                            <th>ABA</th>
+                            <th>BAA</th>
+                            <th>ERA</th>
+                            <th>WHIP</th>
+                            <th>FIP</th>
+                            <th>K/9</th>
+                            <th>BB/9</th>
+                            <th>H/9</th>
+                            <th>WAR</th>
+                        </thead>
+                    </tr>
+                    {% for i, row in pit.iterrows() %}
+                    <tr>
+                        <td>{{ row['Year'] }}</td>
+                        <td>{{ row['GP'] }}</td>
+                        <td>{{ row['GS'] }}</td>
+                        <td>{{ row['IP'] }}</td>
+                        <td>{{ row['R'] }}</td>
+                        <td>{{ row['ER'] }}</td>
+                        <td>{{ row['K'] }}</td>
+                        <td>{{ row['H'] }}</td>
+                        <td>{{ row['BB'] }}</td>
+                        <td>{{ row['HBP'] }}</td>
+                        <td>{{ row['HR'] }}</td>
+                        <td>{{ row['CG'] }}</td>
+                        <td>{{ row['W'] }}</td>
+                        <td>{{ row['L'] }}</td>
+                        <td>{{ row['Sv'] }}</td>
+                        <td>{{ row['HLD'] }}</td>
+                        <td>{{ row['ABA'] }}</td>
+                        <td>{{ row['BAA'] }}</td>
+                        <td>{{ row['ERA'] }}</td>
+                        <td>{{ row['WHIP'] }}</td>
+                        <td>{{ row['FIP'] }}</td>
+                        <td>{{ row['Kper9'] }}</td>
+                        <td>{{ row['BBper9'] }}</td>
+                        <td>{{ row['Hper9'] }}</td>
+                        <td>{{ row['WAR'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <table class='table table-condensed table-hover'>
+                    <tr>
+                        <thead>
+                            <th>Year</th>
+                            <th>GP</th>
+                            <th>GS</th>
+                            <th>IP</th>
+                            <th>R</th>
+                            <th>ER</th>
+                            <th>K</th>
+                            <th>H</th>
+                            <th>BB</th>
+                            <th>HBP</th>
+                            <th>HR</th>
+                            <th>CG</th>
+                            <th>W</th>
+                            <th>L</th>
+                            <th>Sv</th>
+                            <th>Hld</th>
+                            <th>ABA</th>
+                            <th>BAA</th>
+                            <th>ERA</th>
+                            <th>WHIP</th>
+                            <th>FIP</th>
+                            <th>K/9</th>
+                            <th>BB/9</th>
+                            <th>H/9</th>
+                            <th>WAR</th>
+                        </thead>
+                    </tr>
+                    <tr>
+                        <td>{{ pit_career['Year'] }}</td>
+                        <td>{{ pit_career['GP'] }}</td>
+                        <td>{{ pit_career['GS'] }}</td>
+                        <td>{{ pit_career['IP'] }}</td>
+                        <td>{{ pit_career['R'] }}</td>
+                        <td>{{ pit_career['ER'] }}</td>
+                        <td>{{ pit_career['K'] }}</td>
+                        <td>{{ pit_career['H'] }}</td>
+                        <td>{{ pit_career['BB'] }}</td>
+                        <td>{{ pit_career['HBP'] }}</td>
+                        <td>{{ pit_career['HR'] }}</td>
+                        <td>{{ pit_career['CG'] }}</td>
+                        <td>{{ pit_career['W'] }}</td>
+                        <td>{{ pit_career['L'] }}</td>
+                        <td>{{ pit_career['Sv'] }}</td>
+                        <td>{{ pit_career['HLD'] }}</td>
+                        <td>{{ pit_career['ABA'] }}</td>
+                        <td>{{ pit_career['BAA'] }}</td>
+                        <td>{{ pit_career['ERA'] }}</td>
+                        <td>{{ pit_career['WHIP'] }}</td>
+                        <td>{{ pit_career['FIP'] }}</td>
+                        <td>{{ pit_career['Kper9'] }}</td>
+                        <td>{{ pit_career['BBper9'] }}</td>
+                        <td>{{ pit_career['Hper9'] }}</td>
+                        <td>{{ pit_career['WAR'] }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane container fade" id="menu2">...</div>
 </div>
 
-<div class="row" id="year_stats">
-    <div class="col-lg-12"><h5>YEARLY STATS</h5></div>
-    <div class="col-lg-12">
-        <table class='table table-hover table-condensed' id="myTable">
-            <tr>
-                <th align='left' onclick="sortTable_alpha(0)">Year</th>
-                <th onclick="sortTable(1)">GP</th>
-                <th onclick="sortTable(2)">PA</th>
-                <th onclick="sortTable(3)">AB</th>
-                <th onclick="sortTable(4)">R</th>
-                <th onclick="sortTable(5)">H</th>
-                <th onclick="sortTable(6)">1B</th>
-                <th onclick="sortTable(7)">2B</th>
-                <th onclick="sortTable(8)">3B</th>
-                <th onclick="sortTable(9)">HR</th>
-                <th onclick="sortTable(10)">RBI</th>
-                <th onclick="sortTable(11)">BB</th>
-                <th onclick="sortTable(12)">K</th>
-                <th onclick="sortTable(13)">HBP</th>
-                <th onclick="sortTable(14)">SB</th>
-                <th onclick="sortTable(15)">CS</th>
-                <th onclick="sortTable(16)">SF</th>
-                <th onclick="sortTable(17)">SH</th>
-                <th onclick="sortTable(18)">TB</th>
-                <th onclick="sortTable(19)">BA</th>
-                <th onclick="sortTable(20)">OBP</th>
-                <th onclick="sortTable(21)">SLG</th>
-                <th onclick="sortTable(22)">OPS</th>
-                <th onclick="sortTable(23)">wRAA</th>
-                <th onclick="sortTable(24)">WAR</th>
-            </tr>
-            {% for key,val in df2.iterrows() %}
-            {% if key>-1 %}
-            <tr align='center'>
-                <td align='left'>{{ val['Year'] }}</a></td>
-                <td>{{ val['GP'] }}</td>
-                <td>{{ val['PA'] }}</td>
-                <td>{{ val['AB'] }}</td>
-                <td>{{ val['R'] }}</td>
-                <td>{{ val['H'] }}</td>
-                <td>{{ val['1B'] }}</td>
-                <td>{{ val['2B'] }}</td>
-                <td>{{ val['3B'] }}</td>
-                <td>{{ val['HR'] }}</td>
-                <td>{{ val['RBI'] }}</td>
-                <td>{{ val['BB'] }}</td>
-                <td>{{ val['K'] }}</td>
-                <td>{{ val['HBP'] }}</td>
-                <td>{{ val['SB'] }}</td>
-                <td>{{ val['CS'] }}</td>
-                <td>{{ val['SF'] }}</td>
-                <td>{{ val['SH'] }}</td>
-                <td>{{ val['TB'] }}</td>
-                <td>{{ val['BA'] }}</td>
-                <td>{{ val['OBP'] }}</td>
-                <td>{{ val['SLG'] }}</td>
-                <td>{{ val['OPS'] }}</td>
-                <td>{{ val['wRAAc'] }}</td>
-                <td>{{ val['WAR'] }}</td>
-            </tr>
-            {% endif %}
-            {% endfor %}
-        </table>
-    </div>
-</div>
-
-<div class="row" id="career_stats">
-    <div class="col-lg-12"><h5>CAREER TOTALS</h5></div>
-    <div class="col-lg-12">
-        <table class='table'>
-            <tr>
-                <th align='left'>Year</th>
-                <th onclick="sortTable(1)">GP</th>
-                <th onclick="sortTable(2)">PA</th>
-                <th onclick="sortTable(3)">AB</th>
-                <th onclick="sortTable(4)">R</th>
-                <th onclick="sortTable(5)">H</th>
-                <th onclick="sortTable(6)">1B</th>
-                <th onclick="sortTable(7)">2B</th>
-                <th onclick="sortTable(8)">3B</th>
-                <th onclick="sortTable(9)">HR</th>
-                <th onclick="sortTable(10)">RBI</th>
-                <th onclick="sortTable(11)">BB</th>
-                <th onclick="sortTable(12)">K</th>
-                <th onclick="sortTable(13)">HBP</th>
-                <th onclick="sortTable(14)">SB</th>
-                <th onclick="sortTable(15)">CS</th>
-                <th onclick="sortTable(16)">SF</th>
-                <th onclick="sortTable(17)">SH</th>
-                <th onclick="sortTable(18)">TB</th>
-                <th onclick="sortTable(19)">BA</th>
-                <th onclick="sortTable(20)">OBP</th>
-                <th onclick="sortTable(21)">SLG</th>
-                <th onclick="sortTable(22)">OPS</th>
-                <th onclick="sortTable(23)">wRAA</th>
-                <th onclick="sortTable(24)">WAR</th>
-            </tr>
-            {% for key,val in df2.iterrows() %}
-            {% if key==-1 %}
-            <tr align='center'>
-                <td align='left'>{{ val['Year'] }}</a></td>
-                <td>{{ val['GP'] }}</td>
-                <td>{{ val['PA'] }}</td>
-                <td>{{ val['AB'] }}</td>
-                <td>{{ val['R'] }}</td>
-                <td>{{ val['H'] }}</td>
-                <td>{{ val['1B'] }}</td>
-                <td>{{ val['2B'] }}</td>
-                <td>{{ val['3B'] }}</td>
-                <td>{{ val['HR'] }}</td>
-                <td>{{ val['RBI'] }}</td>
-                <td>{{ val['BB'] }}</td>
-                <td>{{ val['K'] }}</td>
-                <td>{{ val['HBP'] }}</td>
-                <td>{{ val['SB'] }}</td>
-                <td>{{ val['CS'] }}</td>
-                <td>{{ val['SF'] }}</td>
-                <td>{{ val['SH'] }}</td>
-                <td>{{ val['TB'] }}</td>
-                <td>{{ val['BA'] }}</td>
-                <td>{{ val['OBP'] }}</td>
-                <td>{{ val['SLG'] }}</td>
-                <td>{{ val['OPS'] }}</td>
-                <td>{{ val['wRAAc'] }}</td>
-                <td>{{ val['WAR'] }}</td>
-            </tr>
-            {% endif %}
-            {% endfor %}
-        </table>   
-    </div>
-</div>
 <script>
     $("#players_nav").addClass('active')
 </script>
