@@ -188,17 +188,20 @@ async def player_page(request: Request, pid: int = 876, org: Optional[str] = 'MA
     pit2['IP'] = pit2['Outs'].apply(lambda x: str(math.floor(x/3))+"."+str(x % 3))
     pit_career['IP'] = str(math.floor(pit_career['Outs']/3))+"."+str(pit_career['Outs'] % 3)
     pit2['BAA'] = round(pit2['H']/pit2['ABA'],3)
-    pit_career['BAA'] = round(pit_career['H']/pit_career['ABA'],3)
     pit2['ERA'] = round(pit2['ER']/(pit2['Outs']/3)*9,2)
-    pit_career['ERA'] = round(pit_career['ER']/(pit_career['Outs']/3)*9,2)
     pit2['WHIP'] = round((pit2['H']+pit2['BB'])/(pit2['Outs']/3),2)
-    pit_career['WHIP'] = round((pit_career['H']+pit_career['BB'])/(pit_career['Outs']/3),2)
     pit2['Kper9'] = round(pit2['K']/(pit2['Outs']/3)*9,1)
-    pit_career['Kper9'] = round(pit_career['K']/(pit_career['Outs']/3)*9,1)
     pit2['BBper9'] = round(pit2['BB']/(pit2['Outs']/3)*9,1)
-    pit_career['BBper9'] = round(pit_career['BB']/(pit_career['Outs']/3)*9,1)
     pit2['Hper9'] = round(pit2['H']/(pit2['Outs']/3)*9,1)
-    pit_career['Hper9'] = round(pit_career['H']/(pit_career['Outs']/3)*9,1)
+    try:
+        pit_career['BAA'] = round(pit_career['H']/pit_career['ABA'],3)
+        pit_career['ERA'] = round(pit_career['ER']/(pit_career['Outs']/3)*9,2)
+        pit_career['WHIP'] = round((pit_career['H']+pit_career['BB'])/(pit_career['Outs']/3),2)
+        pit_career['Kper9'] = round(pit_career['K']/(pit_career['Outs']/3)*9,1)
+        pit_career['BBper9'] = round(pit_career['BB']/(pit_career['Outs']/3)*9,1)
+        pit_career['Hper9'] = round(pit_career['H']/(pit_career['Outs']/3)*9,1)
+    except:
+        pit_career['BAA'] = 0
     pit_career['Year'] = 'Career'
     return templates.TemplateResponse("players.html", {"request": request, "df":df.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index(), "df2":gp, 'fname':df2.First.max(), 'lname':df2.Last.max(), 'org':org, 'lg':lg, "team_list":df2.Team.unique(), 'gp2':gp2, 'pit':pit2, 'pit_career':pit_career})
 
