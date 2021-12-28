@@ -399,14 +399,14 @@ async def team_stats_year(request: Request, org: str, lg: str, tm: str, yr: int)
 
 @app.get("/records/hitting/season/{org}/{lg}")
 async def season_records(request: Request, org: str, lg: str, stat: Optional[str] = 'H', qual: Optional[int] = 25):
-    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['PA']>qual)].sort_values(stat, ascending=False).head(50)
+    df2 = df[(df['Org']==org) & (df['League']==lg) & (df['PA']>qual)].sort_values([stat, 'PA'], ascending=[False, True]).head(50)
     #df2.columns=['PID', 'First', 'Last', 'Team', 'Year', 'PA', 'stat']
     df2['stat'] = df2[stat]
     return templates.TemplateResponse("season_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat, 'type':'hitting', 'qual':qual})
 
 @app.get("/records/pitching/season/{org}/{lg}")
 async def season_records(request: Request, org: str, lg: str, stat: Optional[str] = 'H'):
-    df2 = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Outs']>63)].sort_values(stat, ascending=False).head(50)
+    df2 = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Outs']>63)].sort_values([stat, 'Outs'], ascending=[False, True]).head(50)
     #df2.columns=['PID', 'First', 'Last', 'Team', 'Year', 'PA', 'stat']
     df2['stat'] = df2[stat]
     return templates.TemplateResponse("season_records.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'stat':stat, 'type':'pitching'})
@@ -416,12 +416,12 @@ async def career_records(request: Request, org: str, lg: str, stat: Optional[str
     if stat in ['BA', 'OBP', 'SLG', 'OPS']:
         df2 = df[(df['Org']==org) & (df['League']==lg)].groupby('PID').agg({'First':'last', 'Last':'last', 'Team':'last', 'PA':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'BB':'sum', 'HBP':'sum', 'AB':'sum', 'SB':'sum', 'CS':'sum', 'TB':'sum', 'SF':'sum'})
         df2 = add_rate_stats(df2)
-        df2 = df2.query('PA>=@qual').sort_values(stat, ascending=False).head(50).reset_index()
+        df2 = df2.query('PA>=@qual').sort_values([stat, 'PA'], ascending=[False, True]).head(50).reset_index()
         df2['stat'] = df2[stat]
         df2.columns=['PID', 'First', 'Last', 'Team', 'PA', 'R', 'RBI', 'H', '1B', '2B', '3B', 'HR', 'BB', 'HBP', 'AB', 'SB', 'CS', 'TB', 'SF', 'BA', 'OBP', 'SLG', 'OPS', 'stat']
         #df2.columns=['PID', 'First', 'Last', 'Team', 'PA', 'H', 'BB', 'HBP', 'AB', 'TB', 'SF', 'BA', 'OBP', 'SLG', 'OPS', 'stat']
     else:
-        df2 = df[(df['Org']==org) & (df['League']==lg)].groupby('PID').agg({'First':'last', 'Last':'last', 'Team':'last', 'PA':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'BB':'sum', 'HBP':'sum', 'AB':'sum', 'SB':'sum', 'CS':'sum', 'TB':'sum', 'SF':'sum'}).sort_values(stat, ascending=False).head(50).reset_index()
+        df2 = df[(df['Org']==org) & (df['League']==lg)].groupby('PID').agg({'First':'last', 'Last':'last', 'Team':'last', 'PA':'sum', 'R':'sum', 'RBI':'sum', 'H':'sum', '1B':'sum', '2B':'sum', '3B':'sum', 'HR':'sum', 'BB':'sum', 'HBP':'sum', 'AB':'sum', 'SB':'sum', 'CS':'sum', 'TB':'sum', 'SF':'sum'}).sort_values([stat, 'PA'], ascending=[False, True]).head(50).reset_index()
         df2['stat'] = df2[stat]
         df2 = add_rate_stats(df2)
         #df2 = add_wRAA(df2)
@@ -446,7 +446,7 @@ async def career_records(request: Request, org: str, lg: str, stat: Optional[str
         df2['stat'] = df2[stat]
         #df2.columns=['PID', 'First', 'Last', 'Team', 'PA', 'H', 'BB', 'HBP', 'AB', 'TB', 'SF', 'BA', 'OBP', 'SLG','OPS', 'stat']
     else:
-        df2 = pit[(pit['Org']==org) & (pit['League']==lg)].groupby('PID').agg({'First':'last', 'Last':'last', 'Team':'last', 'Outs':'sum', 'R':'sum', 'ER':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'ABA':'sum', 'K':'sum', 'W':'sum', 'L':'sum', 'Sv':'sum', 'CG':'sum'}).sort_values(stat, ascending=False).head(50).reset_index()
+        df2 = pit[(pit['Org']==org) & (pit['League']==lg)].groupby('PID').agg({'First':'last', 'Last':'last', 'Team':'last', 'Outs':'sum', 'R':'sum', 'ER':'sum', 'H':'sum', 'BB':'sum', 'HBP':'sum', 'ABA':'sum', 'K':'sum', 'W':'sum', 'L':'sum', 'Sv':'sum', 'CG':'sum'}).sort_values([stat, 'Outs'], ascending=[False, True]).head(50).reset_index()
         df2['IP'] = df2['Outs'].apply(lambda x: str(math.floor(x/3))+"."+str(x % 3))
         df2['stat'] = df2[stat]
         df2 = df2[df2['Outs']>=min]
