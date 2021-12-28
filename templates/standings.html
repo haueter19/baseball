@@ -109,7 +109,7 @@
     url = url.pathname.split("/");
     url = '/standings/{{ org }}/{{ lg }}/'+url[url.length-1]
     $('#year_pick').val(url);
-
+    $("#standings_nav").addClass('active')
 </script>
 
 {% endblock %}

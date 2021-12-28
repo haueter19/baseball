@@ -156,6 +156,9 @@
     url = url.pathname.split("/");
     url = '/stats/hitting/{{ org }}/{{ lg }}/league/'+url[url.length-1]
     $('#year_pick').val(url);
+
+    $("#stats_nav").addClass('active')
+
 </script>
 
 {% endblock %}

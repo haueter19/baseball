@@ -14,7 +14,7 @@
 	<div id="main">
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 			<div class="container-fluid">
-				<a class="navbar-brand" href="/home">MABL/RRL</a>
+				<a class="navbar-brand" href="/home">MABL | RRL</a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
@@ -22,29 +22,29 @@
 			<div class="collapse navbar-collapse" id="navbarColor01">
 				<ul class="navbar-nav me-auto">
 					<li class="nav-item">
-						<a class="nav-link active" href="/home">Home
+						<a class="nav-link" href="/home" id="home_nav">Home
 						<span class="visually-hidden">(current)</span>
 						</a>
 					</li>
 					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Standings</a>
+						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" id="standings_nav">Standings</a>
 						<div class="dropdown-menu">
 							<a class="dropdown-item" href={% block standings %}{% endblock %}>Season Standings</a>
 							<a class="dropdown-item" href={% block champions %}{% endblock %}>Champions</a>
 						</div>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/player/">Players</a>
+						<a class="nav-link" href="/player/" id="players_nav">Players</a>
 					</li>
 					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Stats</a>
+						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" id="stats_nav">Stats</a>
 						<div class="dropdown-menu">
 							<a class="dropdown-item" href="/stats/hitting/{% block hitting_stats %}{% endblock %}">Hitting</a>
 							<a class="dropdown-item" href="/stats/pitching/{% block pitching_stats %}{% endblock %}">Pitching</a>
 						</div>
 					</li>
 					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Records</a>
+						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" id="records_nav">Records</a>
 						<div class="dropdown-menu">
 							<a class="dropdown-item" href="/records/hitting/season/{% block h_records_season %}{% endblock %}">Hitting (Season)</a>
 							<a class="dropdown-item" href="/records/hitting/career/{% block h_records_career %}{% endblock %}">Hitting (Career)</a>

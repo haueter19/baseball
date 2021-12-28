@@ -26,33 +26,64 @@
             <br>League: <font color="red">{{ lg }}</font>
         </p>
         <p class="text-muted">
+            {% if type=='hitting' %}
             {{ qual }} PA required to qualify for rate stats
+            {% else %}
+            {{ qual }} Outs required to qualify for rate stats
+            {% endif %}
         </p>
         <p class="text-muted">
+            {% if type=='hitting' %}
             <a href="/records/hitting/season/{{ org }}/{{ lg }}?stat={{ stat }}&qual=50">50 PA to qualify</a>
+            {% else %}
+            <a href="/records/pitching/season/{{ org }}/{{ lg }}?stat={{ stat }}&qual=50">50 Outs to qualify</a>
+            {% endif %}
         </p>
     </div>
     <div class="col-lg-8">
-        <table class='table table-hover w-75' id='df_table' style="cursor:default;">
-            <tr>
-                <th align='center'>Rank</th>
-                <th align='left'>Player</th>
-                <th align='left'>Team</th>
-                <th align='center'>Year</th>
-                <th align='center'>{{ stat }}</th>
-                <th align='center'>PA</th>
-            </tr>
-                {% for key,val in df2.iterrows() %}
+        {% if type=='hitting' %}
+            <table class='table table-hover w-75' id='df_table' style="cursor:default;">
                 <tr>
-                    <td align='center'>{{ loop.index }}</td>
-                    <td><a href="/player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
-                    <td><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ val['Year'] }}">{{ val['Team'] }}</a></td>
-                    <td align='center'><a href="/stats/hitting/{{ org }}/{{ lg }}/league/{{ val['Year'] }}">{{ val['Year'] }}</a></td>
-                    <td align='center'>{{ val['stat'] }}</td>
-                    <td align='center'>{{ val['PA']}}</td>
+                    <th align='center'>Rank</th>
+                    <th align='left'>Player</th>
+                    <th align='left'>Team</th>
+                    <th align='center'>Year</th>
+                    <th align='center'>{{ stat }}</th>
+                    <th align='center'>PA</th>
                 </tr>
-                {% endfor %}
-        </table>
+                    {% for key,val in df2.iterrows() %}
+                    <tr>
+                        <td align='center'>{{ loop.index }}</td>
+                        <td><a href="/player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
+                        <td><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ val['Year'] }}">{{ val['Team'] }}</a></td>
+                        <td align='center'><a href="/stats/hitting/{{ org }}/{{ lg }}/league/{{ val['Year'] }}">{{ val['Year'] }}</a></td>
+                        <td align='center'>{{ val['stat'] }}</td>
+                        <td align='center'>{{ val['PA']}}</td>
+                    </tr>
+                    {% endfor %}
+            </table>
+        {% else %}
+            <table class='table table-hover w-75' id='df_table' style="cursor:default;">
+                <tr>
+                    <th align='center'>Rank</th>
+                    <th align='left'>Player</th>
+                    <th align='left'>Team</th>
+                    <th align='center'>Year</th>
+                    <th align='center'>{{ stat }}</th>
+                    <th align='center'>IP</th>
+                </tr>
+                    {% for key,val in df2.iterrows() %}
+                    <tr>
+                        <td align='center'>{{ loop.index }}</td>
+                        <td><a href="/player/{{ val['PID'] }}">{{ val['First'] }} {{ val['Last'] }}</a></td>
+                        <td><a href="/stats/pitching/{{ org }}/{{ lg }}/{{ val['Team'] }}/{{ val['Year'] }}">{{ val['Team'] }}</a></td>
+                        <td align='center'><a href="/stats/pitching/{{ org }}/{{ lg }}/league/{{ val['Year'] }}">{{ val['Year'] }}</a></td>
+                        <td align='center'>{{ val['stat'] }}</td>
+                        <td align='center'>{{ val['IP']}}</td>
+                    </tr>
+                    {% endfor %}
+            </table>
+        {% endif %}
     </div>
     <div class="col-lg-2"></div>
 </div>
@@ -63,6 +94,8 @@
     var url = new URL(url_string);
     var c = url.searchParams.get("stat");
     $('#sort_list').val(c);
+    
+    $("#records_nav").addClass('active')
 </script>
 
 {% endblock %}
