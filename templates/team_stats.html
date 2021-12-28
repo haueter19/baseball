@@ -1,5 +1,5 @@
 {% extends "header.html" %}
-{% block title %}Clubhouse{% endblock %}
+{% block title %}League Stats{% endblock %}
 {% block standings %}"/standings/{{ org }}/{{ lg }}/{{ yr }}"{% endblock %}
 {% block champions %}"/{{ org }}/{{ lg }}/champions"{% endblock %}
 {% block hitting_stats %}{{ org }}/{{ lg }}/league/{{ yr }}{% endblock %}}
@@ -16,7 +16,7 @@
     let x = [];
     let y = [];
     d.forEach(val => y.push(val['Name']));
-    d.forEach(val => x.push(val['wRAAc']));
+    d.forEach(val => x.push(val['WAR']));
     //Object.values(d).forEach(val => x.push(val));
     var data = [
         {
