@@ -27,7 +27,7 @@ for i in ['PID', 'H', '1B', '2B', 'K', 'SF', 'SH']:
 
 pit = pd.read_csv('Master_Pitching.csv', engine='python')
 pit.fillna(0,inplace=True)
-for i in ['R', 'H', 'ER', 'BB', 'K', 'HBP', 'Outs']:
+for i in ['R', 'H', 'ER', 'BB', 'K', 'HBP', 'Outs', 'HLD', 'W', 'L', 'Sv']:
     pit[i] = pit[i].astype(int)
 
 #pit['League'].fillna('None', inplace=True)
