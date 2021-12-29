@@ -72,7 +72,7 @@ logos = {
                 'Madison Braves':'braves.jpg',
                 'Mammoths':'mammoths.jpgs',
                 'Mariners':'mariners.jpg',
-                'Monarchs':'monarchs.jpg',
+                'Monarchs':'monarchs.png',
                 'Mules':'mules.jpg',
                 'Pirates':'pirates.jpg',
                 'Rangers':'rangers.jpg',
@@ -606,7 +606,7 @@ async def league(request: Request, org: str, lg: str):
     minYear = df2.Year.min()
     yrs = df[(df['Org']==org) & (df['League']==lg)]['Year'].sort_values().unique().tolist()
     return templates.TemplateResponse("league.html", {"request": request, 'org':org, 'lg':lg, 'tms':tms, 'maxYear':maxYear, 'minYear':minYear, 
-                                        'yrs':yrs, 'yr_list': _list.to_dict()})
+                                        'yrs':yrs, 'yr_list': _list.to_dict(), 'logos':logos})
 
 @app.get("/{org}/{lg}/{tm}")
 async def orglgtm(request: Request, org: str, lg: str, tm: str):
