@@ -62,16 +62,16 @@
       <div id="League-wide" class="tabcontent">
         <h3>League-wide</h3>
         <p>
-          Standings:
-          {% for n in range(minYear, maxYear+1) %}<a href="/standings/{{ org }}/{{ lg }}/{{ n }}">{{ n }}</a> | {% endfor %}
-        </p>
-        <p>
           Hitting:
           {% for n in range(minYear, maxYear+1) %}<a href="/stats/hitting/{{ org }}/{{ lg }}/league/{{ n }}">{{ n }}</a> | {% endfor %}
         </p>
         <p>
           Pitching: 
           {% for n in range(minYear, maxYear+1) %}<a href="/stats/pitching/{{ org }}/{{ lg }}/league/{{ n }}">{{ n }}</a> | {% endfor %}
+        </p>
+        <p>
+          Standings:
+          {% for n in range(minYear, maxYear+1) %}<a href="/standings/{{ org }}/{{ lg }}/{{ n }}">{{ n }}</a> | {% endfor %}
         </p>
         <p>
           <a href="/{{ org }}/{{ lg }}/champions/">List of Champions</a>
@@ -81,6 +81,7 @@
       </div>
       {% for tm, yrs in yr_list.items() %}
       <div id="{{ tm }}" class="tabcontent">
+        <img src="/static/images/team_logos/{{ logos[org][lg][tm] }}" height="75" width="75" alt="{{ tm }}">
         <h3>{{ tm }}</h3>
         <p>
           Hitting:
