@@ -36,7 +36,7 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 ,MSCR,Pacific,2007,Badger Sports,3,11,0,0.214,9,24,56,0.155172414,2.2,0.8,0,0
 ,MSCR,Pacific,2007,Rooks,3,11,0,0.214,9,16,54,0.080706179,1.1,1.9,0,0
 ,MSCR,Pacific,2007,Brewers,2,12,0,0.143,10,24,89,0.067788631,0.9,1.1,0,0
-,MSCR,Northern,2008,Epic Bombers,5,2,0,0.714,,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
+,MSCR,Northern,2008,Epic,5,2,0,0.714,,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
 ,MSCR,Northern,2008,Bill Lee,4,3,0,0.571,,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
 ,MSCR,Northern,2008,Wildman Fischer,4,1,0,0.8,,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
 ,MSCR,Northern,2008,El Dorado,2,2,0,0.5,,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
@@ -80,7 +80,7 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 ,MSCR,Pacific,2010,Doughboys,8,7,0,0.533,6,110,100,0.547511312,8.2,-0.2,0,0
 ,MSCR,Pacific,2010,Berghoff,7,8,0,0.467,7,100,108,0.461595273,6.9,0.1,0,0
 ,MSCR,Pacific,2010,Pooley's,6,9,0,0.4,8,115,112,0.513213551,7.7,-1.7,0,0
-,MSCR,Pacific,2010,Epic Bombers,5,10,0,0.333,9,108,137,0.383268163,5.7,-0.7,0,0
+,MSCR,Pacific,2010,Epic,5,10,0,0.333,9,108,137,0.383268163,5.7,-0.7,0,0
 ,MSCR,Pacific,2010,Badger Sports,3,11,0,0.214,11,65,131,0.197559151,2.8,0.2,0,0
 ,MSCR,Pacific,2010,VTS,2,12,0,0.143,12,60,159,0.124649423,1.7,0.3,0,0
 ,MABL,18+,2011,Athletics,12,6,0,0.667,0,149,65,0.840119579,15.1,-3.1,0,1
@@ -98,7 +98,7 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 ,MSCR,Pacific,2011,Berghoff,11,3,0,0.786,0,112,69,0.724877203,10.1,0.9,1,1
 1,MSCR,Pacific,2011,Rockers,9,5,0,0.643,2,144,77,0.777648603,10.9,-1.9,0,0
 ,MSCR,Pacific,2011,Warriors,9,6,0,0.6,2.5,86,89,0.482862179,7.2,1.8,0,0
-,MSCR,Pacific,2011,Epic Bombers,8,6,0,0.571,3,84,82,0.512046444,7.2,0.8,0,0
+,MSCR,Pacific,2011,Epic,8,6,0,0.571,3,84,82,0.512046444,7.2,0.8,0,0
 ,MSCR,Pacific,2011,Pooley's,3,11,0,0.214,8,87,113,0.372160488,5.2,-2.2,0,0
 ,MSCR,Pacific,2011,Badger Sports,3,12,0,0.2,8.5,63,146,0.156970536,2.4,0.6,0,0
 ,RRL,Southern,2011,Neosho,16,2,0,0.889,0,,,,,,1,0
@@ -131,7 +131,7 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 ,MSCR,Caspian,2012,Cellar Lazer Dawgs,1,9,0,0.1,7,,,,,,0,0
 1,MSCR,Pacific,2012,Rockers,13,2,0,0.867,0,153,31,0.96056627,14.4,-1.4,1,1
 ,MSCR,Pacific,2012,UW Club,9,6,0,0.6,4,92,89,0.516570034,7.7,1.3,0,0
-,MSCR,Pacific,2012,Epic Bombers,9,6,0,0.6,4,85,82,0.517958277,7.8,1.2,0,0
+,MSCR,Pacific,2012,Epic,9,6,0,0.6,4,85,82,0.517958277,7.8,1.2,0,0
 ,MSCR,Pacific,2012,Berghoff,8,7,0,0.533,8,89,92,0.483429966,7.3,0.7,0,0
 ,MSCR,Pacific,2012,Badger Sports,3,12,0,0.2,10,69,125,0.233542627,3.5,-0.5,0,0
 ,MSCR,Pacific,2012,Dahmen's,3,12,0,0.2,10,50,119,0.150051017,2.3,0.7,0,0
@@ -167,7 +167,7 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 ,MABL,45+,2013,Grays,4,6,0,0.4,2,0,0,#DIV/0!,#DIV/0!,#DIV/0!,0,0
 1,MSCR,Pacific,2013,Rockers,13,2,0,0.867,0,105,29,0.929125232,13.9,-0.9,1,1
 ,MSCR,Pacific,2013,UW Club,7,8,0,0.467,6,56,61,0.457342861,6.9,0.1,0,0
-,MSCR,Pacific,2013,Epic Bombers,6,9,0,0.4,7,66,77,0.423529412,6.4,-0.4,0,0
+,MSCR,Pacific,2013,Epic,6,9,0,0.4,7,66,77,0.423529412,6.4,-0.4,0,0
 ,MSCR,Pacific,2013,Badger Sports,4,11,0,0.267,9,51,111,0.174306393,2.6,1.4,0,0
 ,MSCR,Northern,2013,Bill Lee,10,0,0,1,0,89,31,0.891803648,8.9,1.1,1,1
 ,MSCR,Northern,2013,Pooley's,7,3,0,0.7,3,,,,,,0,0
@@ -215,7 +215,7 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 ,MABL,45+,2014,Crawfords,6,6,0,0.5,1,132,109,0.594574305,7.1,-1.1,0,0
 ,MABL,45+,2014,Bears,5,7,0,0.417,2,99,116,0.421421508,5.1,-0.1,0,0
 1,MSCR,Pacific,2014,Rockers,14,2,0,0.875,0,132,38,0.923468306,14.8,-0.8,1,1
-,MSCR,Pacific,2014,Epic Bombers,11,5,0,0.688,3,97,56,0.750019928,12,-1,0,0
+,MSCR,Pacific,2014,Epic,11,5,0,0.688,3,97,56,0.750019928,12,-1,0,0
 ,MSCR,Pacific,2014,What A Hack,7,9,0,0.438,7,71,88,0.394290184,6.3,0.7,0,0
 ,MSCR,Pacific,2014,Pooley's,5,11,0,0.313,9,80,116,0.322320709,5.2,-0.2,0,0
 ,MSCR,Pacific,2014,Badger Sports,3,13,0,0.188,11,54,136,0.136185317,2.2,0.8,0,0
@@ -270,7 +270,7 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 ,MSCR,Northern,2015,Buschmen,1,9,0,0.1,9,,,,,,0,0
 1,MSCR,Pacific,2015,Rockers,11,1,0,0.917,0,77,20,0.936798862,11.2,-0.2,1,1
 ,MSCR,Pacific,2015,The Flock,6,6,0,0.5,5,66,58,0.564248705,6.8,-0.8,0,0
-,MSCR,Pacific,2015,Epic Bombers,5,7,0,0.417,6,45,66,0.317348378,3.8,1.2,0,0
+,MSCR,Pacific,2015,Epic,5,7,0,0.417,6,45,66,0.317348378,3.8,1.2,0,0
 ,MSCR,Pacific,2015,Sergenians,2,10,0,0.167,9,30,74,0.141154329,1.7,0.3,0,0
 ,RRL,Northern,2015,Hartford,16,2,0,0.889,0,151,76,0.797879414,14.4,1.6,1,0
 ,RRL,Northern,2015,Brownsville,15,3,0,0.833,1,124,54,0.840586049,15.1,-0.1,0,0
@@ -314,7 +314,7 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 ,MABL,45+,2016,Crawfords,8,10,0,0.444,8.5,157,163,0.481256589,8.7,-0.7,0,0
 ,MABL,45+,2016,Orioles,2,14,0,0.125,13.5,124,224,0.234561875,3.8,-1.8,0,0
 1,MSCR,Pacific,2016,Rockers,10,0,0,1,0,120,18,0.97799511,9.8,0.2,1,1
-,MSCR,Pacific,2016,Epic Bombers,8,2,0,0.8,2,71,39,0.768210911,7.7,0.3,0,0
+,MSCR,Pacific,2016,Epic,8,2,0,0.8,2,71,39,0.768210911,7.7,0.3,0,0
 ,MSCR,Pacific,2016,Black N Tans,7,3,0,0.7,3,75,54,0.658587987,6.6,0.4,0,0
 ,MSCR,Pacific,2016,Buckingham's,6,4,0,0.6,4,39,40,0.4873438,4.9,1.1,0,0
 ,MSCR,Pacific,2016,Rick's Olde Gold,4,5,1,0.444,5.5,57,79,0.342360379,3.4,0.6,0,0
@@ -490,36 +490,36 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 ,RRL,Southern,2020,Ashippun,3,9,0,0.25,8,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
 ,RRL,Southern,2020,Helenville,2,9,0,0.182,8.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
 ,RRL,Southern,2020,Farmington,2,10,0,0.167,9,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
-,MABL,18+,2021,Angels,18,0,0,1.000,0,224,72,0.906,16.3,1.7,1,1
+,MABL,18+,2021,Angels,18,0,0,1,0,224,72,0.906,16.3,1.7,1,1
 ,MABL,18+,2021,Athletics,13,6,0,0.684,5.5,182,119,0.701,13.3,-0.3,0,0
 ,MABL,18+,2021,Blue Jays,10,9,0,0.526,8.5,151,137,0.548,10.4,-0.4,0,0
-,MABL,18+,2021,Los Banditos,9,9,0,0.500,9,174,103,0.741,13.3,-4.3,0,0
+,MABL,18+,2021,Los Banditos,9,9,0,0.5,9,174,103,0.741,13.3,-4.3,0,0
 ,MABL,18+,2021,Jobu,3,13,0,0.188,12.5,108,189,0.246,3.9,-0.9,0,0
-,MABL,18+,2021,Muskrats,0,16,0,0.000,15.5,58,277,0.042,0.7,-0.7,0,0
-,MABL,35+,2021,Black Sox,11,6,0,0.647,4,133,98,0.648,11.0,0.0,0,0
+,MABL,18+,2021,Muskrats,0,16,0,0,15.5,58,277,0.042,0.7,-0.7,0,0
+,MABL,35+,2021,Black Sox,11,6,0,0.647,4,133,98,0.648,11,0,0,0
 ,MABL,35+,2021,Braves,8,7,0,0.533,5.5,90,80,0.559,8.4,-0.4,0,0
 ,MABL,35+,2021,Pirates,6,8,0,0.429,6.5,51,75,0.316,4.4,1.6,0,0
 ,MABL,35+,2021,Mariners,4,8,0,0.333,8,45,67,0.311,3.7,0.3,0,0
-,MABL,35+,2021,Athletics,14,2,0,0.875,0,126,47,0.878,14.0,0.0,1,1
-,MABL,35+,2021,Colt 45s,2,11,0,0.154,10.5,54,99,0.229,3.0,-1.0,0,0
+,MABL,35+,2021,Athletics,14,2,0,0.875,0,126,47,0.878,14,0,1,1
+,MABL,35+,2021,Colt 45s,2,11,0,0.154,10.5,54,99,0.229,3,-1,0,0
 ,MABL,35+,2021,HomeBrewers,4,8,0,0.333,8,43,83,0.212,2.5,1.5,0,0
 ,MABL,45+,2021,Grays,9,4,0,0.692,2.5,132,145,0.453,5.9,3.1,0,0
 ,MABL,45+,2021,Sand Crabs,12,2,0,0.857,0,164,57,0.892,12.5,-0.5,1,1
-,MABL,45+,2021,Crawfords,7,7,0,0.500,5,132,127,0.519,7.3,-0.3,0,0
+,MABL,45+,2021,Crawfords,7,7,0,0.5,5,132,127,0.519,7.3,-0.3,0,0
 ,MABL,45+,2021,Orioles,5,9,0,0.357,7,115,127,0.451,6.3,-1.3,0,0
 ,MABL,45+,2021,Rangers,1,12,0,0.077,10.5,89,176,0.204,2.6,-1.6,0,0
 ,MABL,55+,2021,Reds,11,2,1,0.786,0,162,108,0.692,9.7,1.3,1,1
 ,MABL,55+,2021,Bears,9,5,0,0.643,2.5,165,109,0.696,9.7,-0.7,0,0
-,MABL,55+,2021,Bulldogs,1,14,0,0.067,11,91,217,0.150,2.2,-1.2,0,0
+,MABL,55+,2021,Bulldogs,1,14,0,0.067,11,91,217,0.15,2.2,-1.2,0,0
 ,MABL,55+,2021,Expos,7,7,1,0.467,4.5,132,116,0.564,8.5,-1.5,0,0
-,MABL,17+,2021,Epic,12,0,0,1.000,0,115,25,0.955,11.5,0.5,1,1
-,MABL,17+,2021,Los Banditos,6,6,0,0.500,6,81,60,0.646,7.7,-1.7,0,0
+,MABL,17+,2021,Epic,12,0,0,1,0,115,25,0.955,11.5,0.5,1,1
+,MABL,17+,2021,Los Banditos,6,6,0,0.5,6,81,60,0.646,7.7,-1.7,0,0
 ,MABL,17+,2021,Buckinghams,7,5,0,0.583,5,65,57,0.565,6.8,0.2,0,0
-,MABL,17+,2021,Blue Sox,4,6,0,0.400,7,58,74,0.381,3.8,0.2,0,0
-,MABL,17+,2021,Mad City Labs,6,6,0,0.500,6,66,98,0.312,3.7,2.3,0,0
-,MABL,17+,2021,Village Bar,3,7,0,0.300,8,53,67,0.385,3.8,-0.8,0,0
-,MABL,17+,2021,Buschmen,1,9,0,0.100,10,40,97,0.145,1.5,-0.5,0,0
-,RRL,Southern,2021,Rubicon,14,0,0,1.000,0,,,#DIV/0!,#DIV/0!,#DIV/0!,1,0
+,MABL,17+,2021,Blue Sox,4,6,0,0.4,7,58,74,0.381,3.8,0.2,0,0
+,MABL,17+,2021,Mad City Labs,6,6,0,0.5,6,66,98,0.312,3.7,2.3,0,0
+,MABL,17+,2021,Village Bar,3,7,0,0.3,8,53,67,0.385,3.8,-0.8,0,0
+,MABL,17+,2021,Buschmen,1,9,0,0.1,10,40,97,0.145,1.5,-0.5,0,0
+,RRL,Southern,2021,Rubicon,14,0,0,1,0,,,#DIV/0!,#DIV/0!,#DIV/0!,1,0
 ,RRL,Southern,2021,Neosho,10,3,0,0.769,3.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
 ,RRL,Southern,2021,Clyman,10,4,0,0.714,4,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
 ,RRL,Southern,2021,Johnson Creek,8,6,0,0.571,0,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
@@ -530,8 +530,8 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 ,RRL,Northern,2021,Hartford,10,3,0,0.769,0,,,#DIV/0!,#DIV/0!,#DIV/0!,1,1
 ,RRL,Northern,2021,Hustisford,10,4,0,0.714,0.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
 ,RRL,Northern,2021,Kewaskum,10,4,0,0.714,0.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
-,RRL,Northern,2021,Brownsville,7,7,0,0.500,3.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
+,RRL,Northern,2021,Brownsville,7,7,0,0.5,3.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
 ,RRL,Northern,2021,Cedarburg,6,8,0,0.429,4.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
 ,RRL,Northern,2021,Thiensville-Mequon,5,7,0,0.417,5.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
-,RRL,Northern,2021,Oakfield,3,9,0,0.250,6.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
+,RRL,Northern,2021,Oakfield,3,9,0,0.25,6.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
 ,RRL,Northern,2021,Saukville,2,11,0,0.154,8,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
