@@ -47,9 +47,9 @@ logos = {
             {
                 'Angels':'angels.jpg',
                 'Athletics':'athletics.jpg',
-                'Black Sox': 'blacksox.jpg',
+                'Black Sox': 'Black_Sox.png',
                 'Blue Jays': 'bluejays.png',
-                'Braves': 'none',
+                'Braves': 'Braves.gif',
                 'Broncos': 'broncos.jpg',
                 'Bulldogs': 'bulldogs.jpg',
                 'Cardinals': 'cardinals.jpg',
@@ -66,31 +66,31 @@ logos = {
         '35+':
             {
                 'Athletics':'athletics.jpg',
-                'Black Sox':'blacksox.jpg',
+                'Black Sox':'Black_Sox.png',
                 'Colt 45s':'colt45s.jpg',
-                'Cubs':'cubs.jpg',
+                'Cubs':'cubs.gif',
                 'HomeBrewers':'homebrewers.png',
-                'Madison Braves':'braves.jpg',
-                'Mammoths':'mammoths.jpgs',
+                'Madison Braves':'Braves.gif',
+                'Mammoths':'mammoths.jpg',
                 'Mariners':'mariners.jpg',
                 'Monarchs':'monarchs.png',
                 'Mules':'mules.jpg',
                 'Pirates':'pirates.jpg',
-                'Rangers':'rangers.jpg',
+                'Rangers':'rangers.gif',
                 'White Sox':'whitesox.jpg',
             },
         '45+':
             {
                 'Brewers':'brewers.jpg',
-                'Crawfords':'crawfords.jpg',
+                'Crawfords':'crawfords.jpeg',
                 'Grays':'grays.jpg',
                 'Orioles':'orioles.jpg',
-                'Rangers':'rangers.jpg',
+                'Rangers':'rangers.gif',
                 'Sand Crabs':'sandcrabs.jpg', 
             },
         '55+':
             {
-                'Bears':'bears.jpg',
+                'Bears':'logo-bears.gif',
                 'Bulldogs':'bulldogs.jpg',
                 'Expos':'expos.jpg',
                 'Reds':'reds.jpg',
@@ -99,7 +99,7 @@ logos = {
             {
                 'Black N Tans':'blackntans.jpg',
                 'Blue Sox':'bluesox.jpg',
-                'Buckinghams':'buckinghams.jpg',
+                'Buckinghams':'logo-bucks.gif',
                 'Buschmen':'buschmen.jpg',
                 'Epic':'epic.jpg',
                 'Los Banditos':'losbanditos.jpg',
@@ -110,25 +110,60 @@ logos = {
     'RRL':
         {'Southern':
             {
+                'Ashippun':'ashippun.jpg',
+                'Black Sox':'black_sox.jpg',
+                'Clyman':'clyman.jpg',
+                'Farmington':'Farmington.jpg',
+                'Helenville':'Helenville.png',
+                'Hustisford':'Hustisford.jpg',
+                'Janesville':'Janesville.jpg',
+                'Johnson Creek':'Johnson_Creek.jpg',
+                'Juneau':'Juneau.gif',
+                'Lebanon':'Lebanon.jpg',
+                'Milton':'Milton.jpg',
+                'Neosho':'Neosho.png',
                 'Rockers':'rockers.jpg',
+                'Rubicon':'rubicon.jpg',
+                'Watertown':'watertown.jpg',
             },
         'Northern':
             {
-                'Hustisford':'hustisford.jpg',
+                'Ashippun':'ashippun.jpg',
+                'Brownsville':'brownsville.gif',
+                'Cedarburg':'cedarburg.jpg',
+                'Grafton':'Grafton.jpg',
+                'Hartford':'Hartford.jpg',
+                'Horicon':'Horicon.jpg',
+                'Hustisford':'Hustisford.jpg',
+                'Juneau':'Juneau.gif',
+                'Kewaskum':'Kewaskum.jpg',
+                'Lebanon':'Lebanon.jpg',
+                'Milwaukee':'Milwaukee.jpg',
+                'Oakfield':'Oakfield.jpg',
+                'Plymouth':'Plymouth.png',
+                'Rubicon':'rubicon.jpg',
+                'Saukville':'saukville.png',
+                'Thiensville-Mequon':'thiensville-mequon.gif'
             }
         },
     'MSCR':
         {'Caspian':
             {
-                'Annabelle Lee':'annabellelee.jpg',
-                'Bill Lee':'billlee.jpg',
+                'Annabelle Lee':'lee3.jpg',
+                'Bill Lee':'lee3.jpg',
             },
         'Northern':
             {
-                'Bill Lee':'billlee.jpg',
+                'Bill Lee':'lee3.jpg',
             },
         'Pacific':
             {
+                'Big Ten Pub':'logo-bigten.gif',
+                'Bucks':'logo-bucks.gif',
+                'Echo Tap':'logo-echo.gif',
+                'El Dorado':'logo-eldorado.gif',
+                'Kollege Klub':'logo-kk.gif',
+                'Precise': 'logo-precise.gif',
                 'Rockers':'rockers.jpg',
             },
         }
