@@ -40,6 +40,98 @@ pit['HBP_rate'] = pit['HBP']/pit['PAA']
 pit['K_rate'] = pit['K']/pit['PAA']
 pit['H_rate'] = pit['H']/pit['PAA']
 
+logos = {
+    'MABL':
+        {'18+':
+            {
+                'Angels':'angels.jpg',
+                'Athletics':'athletics.jpg',
+                'Black Sox': 'blacksox.jpg',
+                'Blue Jays': 'bluejays.png',
+                'Braves': 'none',
+                'Broncos': 'broncos.jpg',
+                'Bulldogs': 'bulldogs.jpg',
+                'Cardinals': 'cardinals.jpg',
+                'Diablos': 'diablos.jpg',
+                'Grays': 'grays.jpg',
+                'Jobu': 'jobu.jpg',
+                'Los Banditos': 'losbanditos.jpg',
+                'Los Pericos': 'lospericos.jpg',
+                'Monarchs': 'monarchs.png', 
+                'Muskrats': 'muskrats.jpg',
+                'Orioles': 'orioles.jpg',
+                'Reds': 'reds.jpg'
+            },
+        '35+':
+            {
+                'Athletics':'athletics.jpg',
+                'Black Sox':'blacksox.jpg',
+                'Colt 45s':'colt45s.jpg',
+                'Cubs':'cubs.jpg',
+                'HomeBrewers':'homebrewers.png',
+                'Madison Braves':'braves.jpg',
+                'Mammoths':'mammoths.jpgs',
+                'Mariners':'mariners.jpg',
+                'Monarchs':'monarchs.jpg',
+                'Mules':'mules.jpg',
+                'Pirates':'pirates.jpg',
+                'Rangers':'rangers.jpg',
+                'White Sox':'whitesox.jpg',
+            },
+        '45+':
+            {
+                'Brewers':'brewers.jpg',
+                'Crawfords':'crawfords.jpg',
+                'Grays':'grays.jpg',
+                'Orioles':'orioles.jpg',
+                'Rangers':'rangers.jpg',
+                'Sand Crabs':'sandcrabs.jpg', 
+            },
+        '55+':
+            {
+                'Bears':'bears.jpg',
+                'Bulldogs':'bulldogs.jpg',
+                'Expos':'expos.jpg',
+                'Reds':'reds.jpg',
+            },
+        '17+':
+            {
+                'Black N Tans':'blackntans.jpg',
+                'Blue Sox':'bluesox.jpg',
+                'Buckinghams':'buckinghams.jpg',
+                'Buschmen':'buschmen.jpg',
+                'Epic':'epic.jpg',
+                'Los Banditos':'losbanditos.jpg',
+                'Mad City Labs':'madcitylabs.jpg',
+                'Rockers':'rockers.jpg',
+            },
+        },
+    'RRL':
+        {'Southern':
+            {
+                'Rockers':'rockers.jpg',
+            },
+        'Northern':
+            {
+                'Hustisford':'hustisford.jpg',
+            }
+        },
+    'MSCR':
+        {'Caspian':
+            {
+                'Annabelle Lee':'annabellelee.jpg',
+                'Bill Lee':'billlee.jpg',
+            },
+        'Northern':
+            {
+                'Bill Lee':'billlee.jpg',
+            },
+        'Pacific':
+            {
+                'Rockers':'rockers.jpg',
+            },
+        }
+    }
 def add_rate_stats(z):
     z['BA'] = round(z['H']/z['AB'],3)
     z['OBP'] = round((z['H']+z['BB']+z['HBP'])/(z['AB']+z['BB']+z['HBP']+z['SF']),3)
@@ -502,7 +594,7 @@ async def standings(request: Request, org: str, lg: str):
     season_winners = standings[(standings['Org']==org.upper()) & (standings['League']==lg) & (standings['Season']==1)][['Year', 'Team']].sort_values('Year', ascending=False)
     season_winners.columns=['Year', 'Season']
     champs = post_winners.merge(season_winners, on='Year', how='outer')
-    return templates.TemplateResponse("champions.html", {'request': request, 'org': org, 'lg': lg, "champs": champs})
+    return templates.TemplateResponse("champions.html", {'request': request, 'org': org, 'lg': lg, "champs": champs, 'logos':logos})
 
 @app.get("/{org}/{lg}")
 async def league(request: Request, org: str, lg: str):
