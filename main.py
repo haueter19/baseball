@@ -1,3 +1,4 @@
+import os
 import math
 from typing import Optional
 from fastapi import FastAPI, Request
@@ -613,3 +614,9 @@ async def orglgtm(request: Request, org: str, lg: str, tm: str):
     df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm)]
     yrs = df2['Year'].sort_values().unique()
     return templates.TemplateResponse("team.html", {"request": request, 'org':org, 'lg':lg, 'tm':tm, 'yrs':yrs})
+
+@app.get("/{org}/{lg}/{tm}/gallery")
+async def orglgtm(request: Request, org: str, lg: str, tm: str):
+    path = os.path.join('static', 'images', org, lg, tm)
+    img_list = os.listdir(path)
+    return templates.TemplateResponse('gallery.html', {'request':request, 'org':org, 'lg':lg, 'tm':tm, 'len':len(img_list), 'img_list':img_list})

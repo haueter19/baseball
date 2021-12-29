@@ -24,15 +24,17 @@
         <table class="table table-hover">
             <thead>
                 <th style="border-right: 1px solid black;">Year</th>
-                <th style="border-right: 1px solid black;">Champion</th>
+                <th >Champion</th>
+                <th style="border-right: 1px solid black;"></th>
                 <th>Regular Season Winner</th>
             </thead>
             {% for key, val in champs.iterrows() %}
             <tr>
                 <td style="border-right: 1px solid black;"><a href="/{{ org }}/{{ lg }}">{{ val['Year'] }}</a></td>
-                <td style="border-right: 1px solid black;"><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ val['Playoffs'] }}/{{ val['Year'] }}">
+                <td><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ val['Playoffs'] }}/{{ val['Year'] }}">
                     <img src="/static/images/team_logos/{{ logos[org][lg][val['Playoffs']] }}" height="75" width="75" alt="{{ val['Playoffs'] }}"></a>
                 </td>
+                <td style="border-right: 1px solid black;"></td>
                 <td><a href="/stats/hitting/{{ org }}/{{ lg }}/{{ val['Season'] }}/{{ val['Year'] }}">
                     <img src="/static/images/team_logos/{{ logos[org][lg][val['Season']] }}" height="75" width="75" alt="{{ val['Season'] }}"></a>
                 </td>
