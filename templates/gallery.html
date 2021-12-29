@@ -21,7 +21,7 @@
 }
 
 /* Clear floats after the columns */
-.row:after {
+.row_css:after {
   content: "";
   display: table;
   clear: both;
@@ -45,12 +45,18 @@
 /* Closable button inside the image */
 .closebtn {
   position: absolute;
-  top: 10px;
-  right: 15px;
+  top: 1px;
+  right: 30px;
   color: white;
   font-size: 35px;
   cursor: pointer;
 } 
+img {
+  border: 1px solid #ddd; /* Gray border */
+  border-radius: 4px;  /* Rounded border */
+  padding: 5px; /* Some padding */
+  width: 150px; /* Set a small width */
+}
 </style>
 <script>
     function myFunction(imgs) {
@@ -71,25 +77,32 @@
  <!-- The grid: four columns -->
 <div class="row">
     <div class='col-lg-12'>
-        {% for img in img_list %}
-        <div class="column">
-            <img src="/static/images/{{ org }}/{{ lg }}/{{ tm }}/{{ img }}" onclick="myFunction(this);">
+        <div style="overflow:auto;">
+            <table class='table'>
+                <tr>
+                    {% for img in img_list %}
+                        <td><img src="/static/images/{{ org }}/{{ lg }}/{{ tm }}/{{ img }}" width="100%" onclick="myFunction(this);"></td>
+                    {% endfor %}
+                </tr>
+            </table>
         </div>
-        {% endfor %}
     </div>
 </div>
+<div class="row">
+    <div class="col-lg-12">
+        <!-- The expanding image container -->
+        <div class="container">
+            <!-- Close the image -->
+            <span onclick="this.parentElement.style.display='none'" class="closebtn">&times;</span>
   
-  <!-- The expanding image container -->
-  <div class="container">
-    <!-- Close the image -->
-    <span onclick="this.parentElement.style.display='none'" class="closebtn">&times;</span>
-  
-    <!-- Expanded image -->
-    <img id="expandedImg" style="width:100%">
-  
-    <!-- Image text -->
-    <div id="imgtext"></div>
-  </div> 
+            <!-- Expanded image -->
+            <img id="expandedImg" style="width:100%">
+            
+            <!-- Image text -->
+            <div id="imgtext"></div>
+        </div> 
+    </div>
+</div>
 {% else %}
   <br><h3>No images to display</h3>
 {% endif %}
