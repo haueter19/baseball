@@ -1,8 +1,8 @@
 {% extends "header.html" %}
-{% block title %}Clubhouse{% endblock %}
-{% block standings %}"/standings/{{ org }}/{{ lg }}/2019"{% endblock %}
+{% block title %}Sim Game{% endblock %}
+{% block standings %}"/standings/{{ org }}/{{ lg }}/2021"{% endblock %}
 {% block champions %}"/{{ org }}/{{ lg }}/champions"{% endblock %}
-{% block lg_stats %}"/{{ org }}/{{ lg }}/league/2019"{% endblock %}
+{% block lg_stats %}"/{{ org }}/{{ lg }}/league/2021"{% endblock %}
 {% block content %}
 
 <script>
@@ -64,452 +64,468 @@
     
 </script>
 
-<form id="myForm" method="GET">
-    <input type="radio" id="MABL" name="org" value="MABL" checked>MABL
-    <input type="radio" id="RRL" name="org" value="RRL">RRL
-    <input type="radio" id="MSCR" name="org" value="MSCR" disabled>MSCR<br>
-    <input type="radio" name="lg" value="17" disabled>17+
-    <input type="radio" name="lg" value="18">18+
-    <input type="radio" name="lg" value="35" checked>35+
-    <input type="radio" name="lg" value="45" disabled>45+
-    <input type="radio" name="lg" value="55" disabled>55+<br>
-    <input type="radio" name="lg" value="Southern">Southern
-    <input type="radio" name="lg" value="Northern">Northern<br>
-    <label for="range"># of Simulations</label><br><input type="range"name="sims" min="1" max="1000" step="50" value="1"><br>
-    <label for="innings">Innings:</label>
-    <input type="radio" name="innings" value="7" checked>7
-    <input type="radio" name="innings" value="9">9
-    <br>
-    <div id="lineup_container" style="width: 100%; overflow: hidden;">
-        <div id="away_team" style="width: 50%; float: left;">
-            <table>
-                <tr>
-                    <td>1</td>
-                    <td>
-                        <select id="a1">
-                            <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in away_proj.iterrows() %}
-                            {% if key==0 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>
-                        <select id="a2">
-                            <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in away_proj.iterrows() %}
-                            {% if key==1 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>
-                        <select id="a3">
-                            <option value="0">Pick a player</option>
-                            {% for key, val in plyrs.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+<div class="row">
+    <div class="col-lg-12">
+        <form id="myForm" method="GET">
+            <input type="radio" id="MABL" name="org" value="MABL" checked>MABL
+            <input type="radio" id="RRL" name="org" value="RRL">RRL
+            <input type="radio" id="MSCR" name="org" value="MSCR" disabled>MSCR<br>
+            <input type="radio" name="lg" value="17" disabled>17+
+            <input type="radio" name="lg" value="18">18+
+            <input type="radio" name="lg" value="35" checked>35+
+            <input type="radio" name="lg" value="45" disabled>45+
+            <input type="radio" name="lg" value="55" disabled>55+<br>
+            <input type="radio" name="lg" value="Southern">Southern
+            <input type="radio" name="lg" value="Northern">Northern<br>
+            <label for="range"># of Simulations</label><br><input type="range"name="sims" min="1" max="1000" step="50" value="1"><br>
+            <label for="innings">Innings:</label>
+            <input type="radio" name="innings" value="7" checked>7
+            <input type="radio" name="innings" value="9">9
+            <br>
+            <div class="row" id="lineup_container">
+                <div class="col-lg-4" id="away_team">
+                    <table>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <select id="a1">
+                                    <option value="0">Pick a player</option>
+                                {% for key, val in plyrs.iterrows() %}
+                                    <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in away_proj.iterrows() %}
+                                    {% if key==0 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>
+                                <select id="a2">
+                                    <option value="0">Pick a player</option>
+                                {% for key, val in plyrs.iterrows() %}
+                                    <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in away_proj.iterrows() %}
+                                    {% if key==1 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>
+                                <select id="a3">
+                                    <option value="0">Pick a player</option>
+                                    {% for key, val in plyrs.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in away_proj.iterrows() %}
+                                    {% if key==2 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>
+                                <select id="a4">
+                                    <option value="0">Pick a player</option>
+                                    {% for key, val in plyrs.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in away_proj.iterrows() %}
+                                    {% if key==3 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>
+                                <select id="a5">
+                                    <option value="0">Pick a player</option>
+                                    {% for key, val in plyrs.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in away_proj.iterrows() %}
+                                    {% if key==4 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>
+                                <select id="a6">
+                                    <option value="0">Pick a player</option>
+                                    {% for key, val in plyrs.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            {% for key, val in away_proj.iterrows() %}
+                                {% if key==5 %}
+                                    <td>{{ val['BA'] }}</td>
+                                    <td>{{ val['OBP'] }}</td>
+                                    <td>{{ val['SLG'] }}</td>
+                                    <td>{{ val['OPS'] }}</td>
+                                {% endif %}
                             {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in away_proj.iterrows() %}
-                            {% if key==2 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>
-                        <select id="a4">
-                            <option value="0">Pick a player</option>
-                            {% for key, val in plyrs.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in away_proj.iterrows() %}
-                            {% if key==3 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>
-                        <select id="a5">
-                            <option value="0">Pick a player</option>
-                            {% for key, val in plyrs.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in away_proj.iterrows() %}
-                            {% if key==4 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td>
-                        <select id="a6">
-                            <option value="0">Pick a player</option>
-                            {% for key, val in plyrs.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                    {% for key, val in away_proj.iterrows() %}
-                        {% if key==5 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-                <tr>
-                    <td>7</td>
-                    <td>
-                        <select id="a7">
-                            <option value="0">Pick a player</option>
-                            {% for key, val in plyrs.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in away_proj.iterrows() %}
-                            {% if key==6 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>8</td>
-                    <td>
-                        <select id="a8">
-                            <option value="0">Pick a player</option>
-                            {% for key, val in plyrs.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in away_proj.iterrows() %}
-                            {% if key==7 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>9</td>
-                    <td>
-                        <select id="a9">
-                            <option value="0">Pick a player</option>
-                            {% for key, val in plyrs.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in away_proj.iterrows() %}
-                            {% if key==8 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>10</td>
-                    <td>
-                        <select id="a10">
-                            <option value="0">Pick a player</option>
-                            {% for key, val in plyrs.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in away_proj.iterrows() %}
-                            {% if key==9 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>P</td>
-                    <td>
-                        <select id="a_p">
-                            <option value="0">Pick a Pitcher</option>
-                            {% for key, val in lg_pitchers.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                </tr>
-            </table>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>
+                                <select id="a7">
+                                    <option value="0">Pick a player</option>
+                                    {% for key, val in plyrs.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in away_proj.iterrows() %}
+                                    {% if key==6 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>
+                                <select id="a8">
+                                    <option value="0">Pick a player</option>
+                                    {% for key, val in plyrs.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in away_proj.iterrows() %}
+                                    {% if key==7 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>
+                                <select id="a9">
+                                    <option value="0">Pick a player</option>
+                                    {% for key, val in plyrs.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in away_proj.iterrows() %}
+                                    {% if key==8 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>
+                                <select id="a10">
+                                    <option value="0">Pick a player</option>
+                                    {% for key, val in plyrs.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in away_proj.iterrows() %}
+                                    {% if key==9 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>P</td>
+                            <td>
+                                <select id="a_p">
+                                    <option value="0">Pick a Pitcher</option>
+                                    {% for key, val in lg_pitchers.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-lg-4" id="home_team">
+                    <table>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <select id="h1">
+                                    <option value="0">Pick a player</option>
+                                {% for key, val in plyrs.iterrows() %}
+                                    <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in home_proj.iterrows() %}
+                                    {% if key==0 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>
+                                <select id="h2">
+                                    <option value="0">Pick a player</option>
+                                    {% for key, val in plyrs.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in home_proj.iterrows() %}
+                                    {% if key==1 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>
+                                <select id="h3">
+                                    <option value="0">Pick a player</option>
+                                    {% for key, val in plyrs.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in home_proj.iterrows() %}
+                                    {% if key==2 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>
+                                <select id="h4">
+                                    <option value="0">Pick a player</option>
+                                    {% for key, val in plyrs.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in home_proj.iterrows() %}
+                                    {% if key==3 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>
+                                <select id="h5">
+                                    <option value="0">Pick a player</option>
+                                    {% for key, val in plyrs.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in home_proj.iterrows() %}
+                                    {% if key==4 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>
+                                <select id="h6">
+                                    <option value="0">Pick a player</option>
+                                    {% for key, val in plyrs.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in home_proj.iterrows() %}
+                                    {% if key==5 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>
+                                <select id="h7">
+                                    <option value="0">Pick a player</option>
+                                    {% for key, val in plyrs.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in home_proj.iterrows() %}
+                                    {% if key==6 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>
+                                <select id="h8">
+                                    <option value="0">Pick a player</option>
+                                    {% for key, val in plyrs.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in home_proj.iterrows() %}
+                                    {% if key==7 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>
+                                <select id="h9">
+                                    <option value="0">Pick a player</option>
+                                    {% for key, val in plyrs.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in home_proj.iterrows() %}
+                                    {% if key==8 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>
+                                <select id="h10">
+                                    <option value="0">Pick a player</option>
+                                    {% for key, val in plyrs.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                                {% for key, val in home_proj.iterrows() %}
+                                    {% if key==9 %}
+                                        <td>{{ val['BA'] }}</td>
+                                        <td>{{ val['OBP'] }}</td>
+                                        <td>{{ val['SLG'] }}</td>
+                                        <td>{{ val['OPS'] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                        </tr>
+                        <tr>
+                            <td>P</td>
+                            <td>
+                                <select id="h_p">
+                                    <option value="0">Pick a Pitcher</option>
+                                    {% for key, val in lg_pitchers.iterrows() %}
+                                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                </div>
+                <div id="ab_results" style="margin-left: 90%;">
+                    {{ ab_results_away }}
+                </div>
+            </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <input type="button" id="submit-button" value='Run Simulations' onclick="submitFormRunSims()">
+                <input type="button" id="submit-button" value='Change League' onclick="submitFormChangeLeague()">
+            </div>
         </div>
-        <div id="home_team" style="margin-left: 40%;"></div>
-            <table>
-                <tr>
-                    <td>1</td>
-                    <td>
-                        <select id="h1">
-                            <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in home_proj.iterrows() %}
-                            {% if key==0 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>
-                        <select id="h2">
-                            <option value="0">Pick a player</option>
-                            {% for key, val in plyrs.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in home_proj.iterrows() %}
-                            {% if key==1 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>
-                        <select id="h3">
-                            <option value="0">Pick a player</option>
-                            {% for key, val in plyrs.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in home_proj.iterrows() %}
-                            {% if key==2 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>
-                        <select id="h4">
-                            <option value="0">Pick a player</option>
-                            {% for key, val in plyrs.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in home_proj.iterrows() %}
-                            {% if key==3 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>
-                        <select id="h5">
-                            <option value="0">Pick a player</option>
-                            {% for key, val in plyrs.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in home_proj.iterrows() %}
-                            {% if key==4 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>6</td>
-                    <td>
-                        <select id="h6">
-                            <option value="0">Pick a player</option>
-                            {% for key, val in plyrs.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in home_proj.iterrows() %}
-                            {% if key==5 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>7</td>
-                    <td>
-                        <select id="h7">
-                            <option value="0">Pick a player</option>
-                            {% for key, val in plyrs.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in home_proj.iterrows() %}
-                            {% if key==6 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>8</td>
-                    <td>
-                        <select id="h8">
-                            <option value="0">Pick a player</option>
-                            {% for key, val in plyrs.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in home_proj.iterrows() %}
-                            {% if key==7 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>9</td>
-                    <td>
-                        <select id="h9">
-                            <option value="0">Pick a player</option>
-                            {% for key, val in plyrs.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in home_proj.iterrows() %}
-                            {% if key==8 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>10</td>
-                    <td>
-                        <select id="h10">
-                            <option value="0">Pick a player</option>
-                            {% for key, val in plyrs.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                        {% for key, val in home_proj.iterrows() %}
-                            {% if key==9 %}
-                                <td>{{ val['BA'] }}</td>
-                                <td>{{ val['OBP'] }}</td>
-                                <td>{{ val['SLG'] }}</td>
-                                <td>{{ val['OPS'] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                </tr>
-                <tr>
-                    <td>P</td>
-                    <td>
-                        <select id="h_p">
-                            <option value="0">Pick a Pitcher</option>
-                            {% for key, val in lg_pitchers.iterrows() %}
-                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div id="ab_results" style="margin-left: 90%;">
-            {{ ab_results_away }}
-        </div>
-<br>
-
-<input type="button" id="submit-button" value='Run Simulations' onclick="submitFormRunSims()">
-<input type="button" id="submit-button" value='Change League' onclick="submitFormChangeLeague()">
-</form>
-<P>
-    <input type='button' id="As_35" value="A's" onclick="setDefaultAs35()">
-</p>
-<p>{{ score }}</p>
-<div id="game_log_container" style="width: 100%; overflow: hidden;">
-    <br>
-    <div id="game_log_away_side" style="width: 50%; float: left;">
-        {{ game_log_away|safe }}
+        </form>
     </div>
-    <div id="game_log_home_side" style="margin-left: 50%;">
-        {{ game_log_home|safe }}
+</div>
+
+<div clss="row">
+    <div class="col-lg-12">
+        <P>
+            <input type='button' id="As_35" value="A's" onclick="setDefaultAs35()">
+        </p>
+        <p>{{ score }}</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6">
+        <div id="game_log_away_side">
+            {{ game_log_away|safe }}
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div id="game_log_home_side">
+            {{ game_log_home|safe }}
+        </div>
     </div>
 </div>
 <script>
