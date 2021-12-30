@@ -2,7 +2,7 @@ import math
 import pandas as pd
 from typing import Optional
 from fastapi import APIRouter, Request
-from fastapi.responses import RedirectResponse, HTMLResponse
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 templates = Jinja2Templates(directory="templates")
 from data_init import df, pit
