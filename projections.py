@@ -1,13 +1,3 @@
-import numpy as np
-import pandas as pd
-
-#df = pd.read_csv('C:\\Users\\Daniel\\Documents\\Rockers\\Master_Hitting.csv')
-#df['League'].fillna('None', inplace=True)
-#df['Team'].fillna('None', inplace=True)
-#for i in ['GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB', 'wRAA']:
-    #df[i].fillna(0, inplace=True)
-
-#df = df[(df['Org']=='MABL') & (df['League']=='35+') & (df['Team']=='Athletics') & (df['Year']>2015)]
 def make_projections(df, pa):
     stats = ['AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB']
     df = df.reset_index()
