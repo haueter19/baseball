@@ -1,4 +1,5 @@
 import math
+from datetime import datetime
 import pandas as pd
 from typing import Optional
 from fastapi import APIRouter, Request
@@ -20,14 +21,14 @@ async def run_sims(request: Request, org: Optional[str] = 'MABL', lg: Optional[s
     plyrs = make_projections(df[(df['Org']==org) & (df['League']==lg) & (df['Year']>2015)], 50)
     plyrs.drop(columns='PID',inplace=True)
     plyrs = plyrs.reset_index()
-    lg_pitchers = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Year']==2019)]
+    lg_pitchers = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Year']==2021)]
     
     if go==0:
         score = 'No sims run'
-        away_lineup = plyrs['PID'][:10].to_list()
-        away_pitcher = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Year']==2019)]['PID'].iloc[0]
-        home_lineup = plyrs['PID'][:10].to_list()
-        home_pitcher = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Year']==2019)]['PID'].iloc[1]
+        away_lineup = plyrs['PID'][:10].tolist()
+        away_pitcher = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Year']==2021)]['PID'].iloc[0]
+        home_lineup = plyrs['PID'][:10].tolist()
+        home_pitcher = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Year']==2021)]['PID'].iloc[1]
         game_log_away = ''
         game_log_home = ''
         ab_results_away = ['']

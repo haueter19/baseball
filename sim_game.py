@@ -17,8 +17,10 @@ def at_bat_result(single_rate, double_rate, triple_rate, hr_rate, bb_rate, hbp_r
     triple_rate = triple_ratio*hit_rate
     hr_rate = hr_ratio*hit_rate
     out_rate = 1-(single_rate+double_rate+triple_rate+hr_rate+bb_rate+hbp_rate+k_rate)
+    if out_rate<0:
+        out_rate=.75
     #print(bb_rate, hbp_rate, k_rate, out_rate)
-    p=[single_rate, double_rate, triple_rate, hr_rate, bb_rate, hbp_rate, k_rate, out_rate]
+    #p=[single_rate, double_rate, triple_rate, hr_rate, bb_rate, hbp_rate, k_rate, out_rate]
     return np.random.choice(['1B', '2B', '3B', 'HR', 'BB', 'HBP', 'K', 'Out'], p=[single_rate, double_rate, triple_rate, hr_rate, bb_rate, hbp_rate, k_rate, out_rate])
 
 def update_base_state(result, bases, r):
