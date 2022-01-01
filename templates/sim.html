@@ -500,23 +500,17 @@
 <div class="row">
     <div class="col-lg-4">
         <div id="ab_results">
-            {{ ab_results_away }}
+            <h5>{{ score }}</h5>
+            <p>{{ ab_results_away }}</p>
+            
         </div>
     </div>
-</div>
-
-<div clss="row">
-    <div class="col-lg-12">
-        <p>{{ score }}</p>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-4">
         <div id="game_log_away_side">
             {{ game_log_away|safe }}
         </div>
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-4">
         <div id="game_log_home_side">
             {{ game_log_home|safe }}
         </div>

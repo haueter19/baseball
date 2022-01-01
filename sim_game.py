@@ -17,10 +17,9 @@ def at_bat_result(single_rate, double_rate, triple_rate, hr_rate, bb_rate, hbp_r
     triple_rate = triple_ratio*hit_rate
     hr_rate = hr_ratio*hit_rate
     out_rate = 1-(single_rate+double_rate+triple_rate+hr_rate+bb_rate+hbp_rate+k_rate)
-    if out_rate<0:
-        out_rate=.75
-    #print(bb_rate, hbp_rate, k_rate, out_rate)
+    
     #p=[single_rate, double_rate, triple_rate, hr_rate, bb_rate, hbp_rate, k_rate, out_rate]
+    single_rate, double_rate, triple_rate, hr_rate, bb_rate, hbp_rate, k_rate, out_rate = .2, .1, .05, .05, .1, .05, .2, .25
     return np.random.choice(['1B', '2B', '3B', 'HR', 'BB', 'HBP', 'K', 'Out'], p=[single_rate, double_rate, triple_rate, hr_rate, bb_rate, hbp_rate, k_rate, out_rate])
 
 def update_base_state(result, bases, r):
@@ -92,6 +91,7 @@ def update_base_state(result, bases, r):
 def sim_game(prj, tp, innings):
     log = {}
     ab_results = [[],[],[],[],[],[],[],[],[],[]]
+    ab_results_dict = {}
     outs=0
     inn=1
     half='top'
@@ -99,11 +99,9 @@ def sim_game(prj, tp, innings):
     bases = [0, 0, 0]
     p = 0
     tto = 1
-    #print('Inning 1')
     game_log = "<b>Inning 1</b><br>"
     while inn<innings+1:
         result = at_bat_result(prj['1B_per_PA'].iloc[p], prj['2B_per_PA'].loc[p], prj['3B_per_PA'].iloc[p], prj['HR_per_PA'].iloc[p], prj['BB_per_PA'].iloc[p], prj['HBP_per_PA'].iloc[p], prj['K_per_PA'].iloc[p], tp['K_rate'].iloc[0], tp['BB_rate'].iloc[0], tp['HBP_rate'].iloc[0], tp['H_rate'].iloc[0])
-        #print(prj['Last'].iloc[p]+':',result)
         game_log += prj['Last'].iloc[p]+': '+result+'<br>'
         ab_results[p-1].append(result)
         if result in ['Out', 'K']:
@@ -123,7 +121,9 @@ def sim_game(prj, tp, innings):
             p = 0
             tto += 1
     #print(r,'runs')
-    #print(ab_results)
+    for i in range(10):
+        ab_results_dict[prj.Last.iloc[i]] = ab_results[i]
+    ab_results = ab_results_dict
     return r, game_log, ab_results
 
 def run_sim(prj, tp, innings, g):
