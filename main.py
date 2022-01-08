@@ -6,13 +6,14 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 from logos import logos
 from data_init import df, pit, st, h_lg_avg, oly
-import nav, player_page, stats, records, standings, sim_endpoints
+import nav, player_page, stats, records, standings, sim_endpoints, fantasy
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 app.include_router(player_page.router)
+app.include_router(fantasy.router)
 app.include_router(stats.router)
 app.include_router(records.router)
 app.include_router(standings.router)
