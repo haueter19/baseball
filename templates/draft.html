@@ -22,6 +22,12 @@
                     $("#projected_stats_table tr:first").show();
                     $("#"+v).show();
                 });
+                $("#button").click(function(){
+                    var v = $("#player_select").val();
+                    $.get("/fantasy/draft/"+v, function(data, status){
+                        alert("Data: " + data + "\nStatus: " + status);
+                    });
+                }); 
             })
         </script>
     </head>
@@ -32,7 +38,7 @@
                 <select id="player_select">
                     <option value="" selected>Choose a player</option>
                     {% for i, row in hitters.iterrows() %}
-                        <option value="{{ i }}">{{ row['Name'] }}</option>
+                        <option value="{{ row['playerid'] }}">{{ row['Name'] }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -51,8 +57,8 @@
                         <th>Z</th>
                     </thead>
                     {% for i, row in hitters.iterrows() %}
-                        <tr id="{{ i }}">
-                            <td>{{ i }}</td>
+                        <tr id="{{ row['playerid'] }}">
+                            <td>{{ row['playerid'] }}</td>
                             <td>{{ row['Name'] }}</td>
                             <td>{{ row['PA'] }}</td>
                             <td>{{ row['AVG'] }}</td>
@@ -68,6 +74,8 @@
             </div>
         </div>
 
-
+    <div id="test">test section
+        <button id="button">Click</button>
+    </div>
     </body>
 </html>

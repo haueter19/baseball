@@ -4,7 +4,13 @@ from typing import Optional
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from sqlalchemy import Column, Integer, String, ForeignKey, Table, create_engine
+from sqlalchemy.orm import relationship, backref, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+
 templates = Jinja2Templates(directory="templates")
+
+engine = create_engine('sqlite:///fantasy_data.db', echo=False)
 
 num_teams = 12
 num_dollars = 260
@@ -179,9 +185,15 @@ router = APIRouter(prefix='/fantasy', responses={404: {"description": "Not found
 
 @router.get("/draft")
 async def draft_view(request: Request):
-    h, p = load_data()
+    #h, p = load_data()
+    h = pd.read_sql('hitting', engine)
     h['Primary_Pos'] = h['Pos'].apply(lambda x: find_primary_pos(x))
-    p['Primary_Pos'] = p['Pos'].apply(lambda x: find_primary_pos(x))
-    h, pos_avg, pos_std = process_top_hitters(h)
-    h = process_rem_hitters(h, pos_avg, pos_std)
+    #p['Primary_Pos'] = p['Pos'].apply(lambda x: find_primary_pos(x))
+    #h, pos_avg, pos_std = process_top_hitters(h)
+    #h = process_rem_hitters(h, pos_avg, pos_std)
     return templates.TemplateResponse('draft.html', {'request':request, 'hitters':h})
+
+@router.get("/draft/{a_thing}")
+async def update_db(a_thing: str):
+    
+    return a_thing
