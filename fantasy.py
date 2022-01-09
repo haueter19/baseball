@@ -4,9 +4,10 @@ from typing import Optional
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import Column, Integer, String, ForeignKey, Table, create_engine
+from sqlalchemy import text, Column, Integer, String, ForeignKey, Table, create_engine
 from sqlalchemy.orm import relationship, backref, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from starlette.responses import RedirectResponse
 
 templates = Jinja2Templates(directory="templates")
 
@@ -187,13 +188,22 @@ router = APIRouter(prefix='/fantasy', responses={404: {"description": "Not found
 async def draft_view(request: Request):
     #h, p = load_data()
     h = pd.read_sql('hitting', engine)
-    h['Primary_Pos'] = h['Pos'].apply(lambda x: find_primary_pos(x))
+    #h['Primary_Pos'] = h['Pos'].apply(lambda x: find_primary_pos(x))
     #p['Primary_Pos'] = p['Pos'].apply(lambda x: find_primary_pos(x))
     #h, pos_avg, pos_std = process_top_hitters(h)
     #h = process_rem_hitters(h, pos_avg, pos_std)
-    return templates.TemplateResponse('draft.html', {'request':request, 'hitters':h})
+    return templates.TemplateResponse('draft.html', {'request':request, 'hitters':h[h['Owner'].isna()], 'owned':h[h['Owner'].notna()]})
 
-@router.get("/draft/{a_thing}")
-async def update_db(a_thing: str):
-    
-    return a_thing
+@router.get("/draft/update_bid")
+async def update_db(playerid: str, price: str, owner: str):
+    conn = engine.connect()
+    t = text("UPDATE hitting SET Paid='"+price+"', Owner='"+owner+"' WHERE playerid='"+playerid+"'")
+    conn.execute(t)
+    return RedirectResponse('/fantasy/draft') #{'playerid':playerid, 'price':price, 'owner':owner}
+
+@router.get('/draft/reset_all')
+async def reset_all():
+    t = text("UPDATE hitting SET Paid=NULL, Owner=NULL")
+    conn = engine.connect()
+    conn.execute(t)
+    return RedirectResponse('/fantasy/draft')
