@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import functions
 
-df = pd.read_csv('Master_Hitting.csv', engine='python')
+df = pd.read_csv('Master_Hitting.csv', engine='python', encoding='cp1252')#encoding='utf-8
 maxYear = df['Year'].max()
 df.loc[df['Year']==maxYear-1, 'den'] = 4
 df.loc[df['Year']==maxYear-3, 'den'] = 3

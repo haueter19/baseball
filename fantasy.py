@@ -32,6 +32,7 @@ drafted_by_pos = {
     'P':9
 }
 
+
 def load_data():
     h = pd.read_csv('data/2022-fangraphs-proj-h.csv')
     h['sorter'] = h['HR']+h['R']+h['RBI']+h['H']+h['SB']
@@ -195,9 +196,11 @@ async def draft_view(request: Request):
     return templates.TemplateResponse('draft.html', {'request':request, 'hitters':h[h['Owner'].isna()], 'owned':h[h['Owner'].notna()]})
 
 @router.get("/draft/update_bid")
-async def update_db(playerid: str, price: str, owner: str):
+async def update_db(playerid: str, price: int, owner: str):
     conn = engine.connect()
-    t = text("UPDATE hitting SET Paid='"+price+"', Owner='"+owner+"' WHERE playerid='"+playerid+"'")
+    qry = "UPDATE hitting SET Paid="+price+", Owner='"+owner+"' WHERE playerid='"+playerid+"'"
+    print(qry)
+    t = text(qry)
     conn.execute(t)
     return RedirectResponse('/fantasy/draft') #{'playerid':playerid, 'price':price, 'owner':owner}
 
