@@ -1,12 +1,14 @@
 import math
 import pandas as pd
+from datetime import datetime
 from typing import Optional
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import text, Column, Integer, String, ForeignKey, Table, create_engine
+from sqlalchemy import MetaData, text, Column, Integer, String, ForeignKey, Table, create_engine
 from sqlalchemy.orm import relationship, backref, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.sql.sqltypes import DATETIME, TIMESTAMP
 from starlette.responses import RedirectResponse
 
 templates = Jinja2Templates(directory="templates")
@@ -187,21 +189,34 @@ router = APIRouter(prefix='/fantasy', responses={404: {"description": "Not found
 
 @router.get("/draft")
 async def draft_view(request: Request):
-    #h, p = load_data()
     h = pd.read_sql('hitting', engine)
-    #h['Primary_Pos'] = h['Pos'].apply(lambda x: find_primary_pos(x))
-    #p['Primary_Pos'] = p['Pos'].apply(lambda x: find_primary_pos(x))
-    #h, pos_avg, pos_std = process_top_hitters(h)
-    #h = process_rem_hitters(h, pos_avg, pos_std)
-    return templates.TemplateResponse('draft.html', {'request':request, 'hitters':h[h['Owner'].isna()], 'owned':h[h['Owner'].notna()]})
+    owners_df = h.groupby('Owner').agg({'Name':'count', 'Paid':'sum', 'z':'sum', 'H':'sum', 'AB':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'SB':'sum'}).reset_index()
+    owners_df.rename(columns={'Name':'Drafted'},inplace=True)
+    owners_df['$/unit'] = round(owners_df['Paid']/owners_df['z'],1)
+    owners_df['z'] = round(owners_df['z'],1)
+    owners_df['$ Left'] = 260 - owners_df['Paid']
+    owners_df['BA'] = round(owners_df['H']/owners_df['AB'],3)
+    owners_df['Pts'] = 0
+    for i in ['BA', 'HR', 'R', 'RBI', 'SB']:
+        owners_df['Pts'] += owners_df[i].rank()
+    return templates.TemplateResponse('draft.html', {'request':request, 'hitters':h[h['Owner'].isna()], 'owned':h[h['Owner'].notna()], 'owners_df':owners_df})
 
 @router.get("/draft/update_bid")
 async def update_db(playerid: str, price: int, owner: str):
     conn = engine.connect()
-    qry = "UPDATE hitting SET Paid="+price+", Owner='"+owner+"' WHERE playerid='"+playerid+"'"
-    print(qry)
-    t = text(qry)
-    conn.execute(t)
+    meta = MetaData()
+    hitters = Table('hitting', meta,
+                Column('playerid', String, primary_key=True),
+                Column('Paid', Integer),
+                Column('Owner', String(25)),
+                Column('Timestamp', DATETIME)
+    )
+    meta.create_all(engine)
+    #qry = "UPDATE hitting SET Paid="+price+", Owner='"+owner+"' WHERE playerid='"+playerid+"'"
+    #print(qry)
+    #t = text(qry)
+    conn.execute(hitters.update().values(Paid=price, Owner=owner, Timestamp=datetime.now()).where(hitters.c.playerid==playerid))
+    conn.close()
     return RedirectResponse('/fantasy/draft') #{'playerid':playerid, 'price':price, 'owner':owner}
 
 @router.get('/draft/reset_all')
