@@ -178,6 +178,7 @@
                         <th>RBI</th>
                         <th>SB</th>
                         <th>Pts</th>
+                        <th>Rank</th>
                     </thead>
                 {% for i, row in owners_df.iterrows() %}
                     <tr>
@@ -186,12 +187,13 @@
                         <td>{{ row['z'] }}</td>
                         <td>{{ row['$/unit'] }}</td>
                         <td>{{ row['Drafted'] }}</td>
-                        <td>{{ row['Pts'] }}</td>
                         <td>{{ row['BA'] }}</td>
                         <td>{{ row['HR'] }}</td>
                         <td>{{ row['R'] }}</td>
                         <td>{{ row['RBI'] }}</td>
                         <td>{{ row['SB'] }}</td>
+                        <td>{{ row['Pts'] }}</td>
+                        <td>{{ row['Rank'] }}</td>
                     </tr>
                 {% endfor %}
             </div>

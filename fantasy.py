@@ -199,6 +199,7 @@ async def draft_view(request: Request):
     owners_df['Pts'] = 0
     for i in ['BA', 'HR', 'R', 'RBI', 'SB']:
         owners_df['Pts'] += owners_df[i].rank()
+    owners_df['Rank'] = owners_df['Pts'].rank()
     return templates.TemplateResponse('draft.html', {'request':request, 'hitters':h[h['Owner'].isna()], 'owned':h[h['Owner'].notna()], 'owners_df':owners_df})
 
 @router.get("/draft/update_bid")
