@@ -150,10 +150,49 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="height:320px;">
+            <div class="col-md-3" style="height:320px; overflow-y:scroll;">
+                <h3>Draft Order</h3>
+                <table style="width:100%">
+                    {% for i, row in owned.sort_values('Timestamp', ascending=False).iterrows() %}
+                    <tr>
+                        <td>{{ row['Name'] }}</td>
+                        <td>${{ row['Paid'] }}</td>
+                        <td>{{ row['Owner'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                
+            </div>
             <div class="col-md-6">
-                {% for i, row in owned.iterrows() %}
-                    {{ row['Owner'] }}: {{ row['Name'] }} for ${{ row['Paid'] }}<br>
+                <table class="table table-condensed table-hover">
+                    <thead>
+                        <th>Owner</th>
+                        <th>$ Left</th>
+                        <th>Z Value</th>
+                        <th>$/Unit</th>
+                        <th>Count</th>
+                        <th>BA</th>
+                        <th>HR</th>
+                        <th>R</th>
+                        <th>RBI</th>
+                        <th>SB</th>
+                        <th>Pts</th>
+                    </thead>
+                {% for i, row in owners_df.iterrows() %}
+                    <tr>
+                        <td>{{ row['Owner'] }}</td>
+                        <td>{{ row['$ Left'] }}</td>
+                        <td>{{ row['z'] }}</td>
+                        <td>{{ row['$/unit'] }}</td>
+                        <td>{{ row['Drafted'] }}</td>
+                        <td>{{ row['Pts'] }}</td>
+                        <td>{{ row['BA'] }}</td>
+                        <td>{{ row['HR'] }}</td>
+                        <td>{{ row['R'] }}</td>
+                        <td>{{ row['RBI'] }}</td>
+                        <td>{{ row['SB'] }}</td>
+                    </tr>
                 {% endfor %}
             </div>
         </div>
