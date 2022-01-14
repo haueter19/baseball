@@ -109,10 +109,10 @@
                     <input type="text" name="price" id="price_entry" size="2" placeholder="Price" value=1>
                     <button id="button">Record Bid</button>
                     <button id="update_bid">Update Bid</button>
-                    <a href="/fantasy/draft/reset_all">Reset</a>
+                    <a href="/fantasy/draft/reset_all"><s>Reset</s></a>
                 </form>
             </div>
-            <div class='col-md-6'>
+            <div class='col-md-9'>
                 <table class='table' id="projected_stats_table">
                     <thead>
                         <th>#</th>
@@ -142,16 +142,9 @@
                     {% endfor %}
                 </table>
             </div>
-            <div class="col-md-3">
-                {% for i, row in owned.iterrows() %}
-                    {% if row['Owner']=='Lima Time' %}
-                        {{ row['Primary_Pos'] }}: {{ row['Name'] }} - ${{ row['Paid'] }}<br>
-                    {% endif %}
-                {% endfor %}
-            </div>
         </div>
         <div class="row" style="height:320px;">
-            <div class="col-md-3" style="height:320px; overflow-y:scroll;">
+            <div class="col-md-3" style="height:500px; overflow-y:scroll;">
                 <h3>Draft Order</h3>
                 <table style="width:100%">
                     {% for i, row in owned.sort_values('Timestamp', ascending=False).iterrows() %}
@@ -196,6 +189,41 @@
                         <td>{{ row['Rank'] }}</td>
                     </tr>
                 {% endfor %}
+                </table>
+            </div>
+            <div class="col-md-3">
+                <table>
+                    {% for i, row in roster.iterrows() %}
+                        <tr>
+                            <td>{{ i }}</td>
+                            <td>{{ row['Harvey'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class='row'>
+            <div class="col-md-3"></div>
+            <div class="col-md-9">
+                <table>
+                    {% for i, row in roster.iterrows() %}
+                        <tr>
+                            <td>{{ i }}</td>
+                            <td>{{ row['Avg Joes'] }}</td>
+                            <td>{{ row['Brewbirds'] }}</td>
+                            <td>{{ row['Dirty Birds'] }}</td>
+                            <td>{{ row['Charmer'] }}</td>
+                            <td>{{ row['Harvey'] }}</td>
+                            <td>{{ row['Lil Trump'] }}</td>
+                            <td>{{ row['Lima Time'] }}</td>
+                            <td>{{ row['Midnight'] }}</td>
+                            <td>{{ row['Moms Cookin'] }}</td>
+                            <td>{{ row['Roid Ragers'] }}</td>
+                            <td>{{ row['Trouble'] }}</td>
+                            <td>{{ row['Wu-Tang'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
             </div>
         </div>
     </body>

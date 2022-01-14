@@ -1,4 +1,5 @@
 import math
+import numpy as np
 import pandas as pd
 from datetime import datetime
 from typing import Optional
@@ -185,6 +186,32 @@ def process_rem_hitters(h, pos_avg, pos_std):
     h.loc[h['Used']==False, 'z'] = h['zBA'] + h['zHR'] + h['zRBI'] + h['zR'] + h['zSB']
     return h
 
+def check_roster_pos(roster, name, team_name, pos, eligible):
+    eligible_at = eligible.split(', ')
+    eligibility = []
+    for p in eligible.split(', '):
+        if p=='C':
+            eligibility.extend(['C'])
+        if p=='1B':
+            eligibility.extend(['1B', 'CI'])
+        if p=='2B':
+            eligibility.extend(['2B', 'MI'])
+        if p=='3B':
+            eligibility.extend(['3B', 'CI'])
+        if p=='SS':
+            eligibility.extend(['SS', 'MI'])
+        if p=='OF':
+            eligibility.extend(['OF1', 'OF2', 'OF3', 'OF4', 'OF5'])
+        
+    eligibility = list(dict.fromkeys(eligibility))
+    pos_list = eligibility+['DH1', 'DH2']
+    for p in pos_list:
+        if roster.loc[p, team_name]==0:
+            roster.loc[p, team_name] = name
+            return p
+    
+    return pos_list
+
 router = APIRouter(prefix='/fantasy', responses={404: {"description": "Not found"}})
 
 @router.get("/draft")
@@ -200,7 +227,11 @@ async def draft_view(request: Request):
     for i in ['BA', 'HR', 'R', 'RBI', 'SB']:
         owners_df['Pts'] += owners_df[i].rank()
     owners_df['Rank'] = owners_df['Pts'].rank()
-    return templates.TemplateResponse('draft.html', {'request':request, 'hitters':h[h['Owner'].isna()], 'owned':h[h['Owner'].notna()], 'owners_df':owners_df})
+    roster = pd.DataFrame(index=['C', '1B', '2B', '3B', 'SS', 'MI', 'CI', 'OF1', 'OF2', 'OF3', 'OF4', 'OF5', 'DH1', 'DH2'], data=np.zeros((14,12)), columns=owners_df.Owner.tolist())
+    for tm in owners_df.Owner.tolist():
+        for i, row in h[h['Owner']==tm][['Name', 'Owner', 'Primary_Pos', 'Pos', 'Timestamp']].sort_values("Timestamp").iterrows():
+            check_roster_pos(roster, h.loc[i]['Name'], h.loc[i]['Owner'], h.loc[i]['Primary_Pos'], h.loc[i]['Pos'])
+    return templates.TemplateResponse('draft.html', {'request':request, 'hitters':h[h['Owner'].isna()], 'owned':h[h['Owner'].notna()], 'owners_df':owners_df, 'roster':roster})
 
 @router.get("/draft/update_bid")
 async def update_db(playerid: str, price: int, owner: str):
