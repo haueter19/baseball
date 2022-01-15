@@ -1,4 +1,4 @@
-<html>
+<!DOCTYPE html>
     <head>
 	    <meta charset="UTF-8">
         <meta name="author" content="Daniel Haueter">
@@ -13,6 +13,9 @@
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
         <script src="/static/sort-table.js"></script>
         <script>
+            var data = {{ json|safe }};
+            console.log(data['Joey Gallo']['playerid']);
+            
             $(document).ready(function(){
                 $("#projected_stats_table tr").hide();
                 $("#projected_stats_table tr:first").show();
@@ -33,7 +36,14 @@
                     $.get("/fantasy/draft/"+v, function(data, status){
                         alert("Data: " + data + "\nStatus: " + status);
                     });
-                }); 
+                });
+                $("#rosterTable").find('td').click(function(){
+                    var p_name = $(this).text();
+                    //console.log(p_name, "#"+data[p_name]['playerid']);
+                    $("#projected_stats_table tr").hide();
+                    $("#projected_stats_table tr:first").show();
+                    $("#"+data[p_name]['playerid']).show();
+                });
             })
         </script>
     </head>
@@ -173,7 +183,7 @@
                   </ul>
                   <div class="tab-content">
                     <div class="tab-pane container active" id="summary">
-                        <table class="table table-condensed table-hover" id="myTable">
+                        <table class="table table-condensed table-hover" id="myTable" style="font-size:12px;">
                             <thead>
                                 <th onclick="sortTable(0)">Owner</th>
                                 <th onclick="sortTable(1)">$ Left</th>
@@ -207,7 +217,7 @@
                         </table>
                     </div>
                     <div class="tab-pane container fade" id="rosters">
-                        <table class='table table-condensed table-hover'>
+                        <table class='table table-condensed table-hover' id="rosterTable" style="font-size:10px;">
                             <thead>
                                 <th>Pos</th>
                                 <th>AvgJoes</th>
@@ -245,6 +255,9 @@
                     <div class="tab-pane container fade" id="chart">
                         <h3>Chart</h3>
                         <p>Add Plotly charts</p>
+                        <p>
+                            
+                        </p>
                     </div>
                 </div>
             </div>
