@@ -117,6 +117,7 @@
                     <thead>
                         <th>#</th>
                         <th>Name</th>
+                        <th>Pos</th>
                         <th>PA</th>
                         <th>BA</th>
                         <th>HR</th>
@@ -130,6 +131,7 @@
                         <tr id="{{ row['playerid'] }}">
                             <td>{{ row['playerid'] }}</td>
                             <td>{{ row['Name'] }}</td>
+                            <td>{{ row['Pos'] }}</td>
                             <td>{{ row['PA'] }}</td>
                             <td>{{ row['AVG'] }}</td>
                             <td>{{ row['HR'] }}</td>
@@ -157,73 +159,94 @@
                 </table>
                 
             </div>
-            <div class="col-md-6">
-                <table class="table table-condensed table-hover">
-                    <thead>
-                        <th>Owner</th>
-                        <th>$ Left</th>
-                        <th>Z Value</th>
-                        <th>$/Unit</th>
-                        <th>Count</th>
-                        <th>BA</th>
-                        <th>HR</th>
-                        <th>R</th>
-                        <th>RBI</th>
-                        <th>SB</th>
-                        <th>Pts</th>
-                        <th>Rank</th>
-                    </thead>
-                {% for i, row in owners_df.iterrows() %}
-                    <tr>
-                        <td>{{ row['Owner'] }}</td>
-                        <td>{{ row['$ Left'] }}</td>
-                        <td>{{ row['z'] }}</td>
-                        <td>{{ row['$/unit'] }}</td>
-                        <td>{{ row['Drafted'] }}</td>
-                        <td>{{ row['BA'] }}</td>
-                        <td>{{ row['HR'] }}</td>
-                        <td>{{ row['R'] }}</td>
-                        <td>{{ row['RBI'] }}</td>
-                        <td>{{ row['SB'] }}</td>
-                        <td>{{ row['Pts'] }}</td>
-                        <td>{{ row['Rank'] }}</td>
-                    </tr>
-                {% endfor %}
-                </table>
-            </div>
-            <div class="col-md-3">
-                <table>
-                    {% for i, row in roster.iterrows() %}
-                        <tr>
-                            <td>{{ i }}</td>
-                            <td>{{ row['Harvey'] }}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
-        <div class='row'>
-            <div class="col-md-3"></div>
             <div class="col-md-9">
-                <table>
-                    {% for i, row in roster.iterrows() %}
-                        <tr>
-                            <td>{{ i }}</td>
-                            <td>{{ row['Avg Joes'] }}</td>
-                            <td>{{ row['Brewbirds'] }}</td>
-                            <td>{{ row['Dirty Birds'] }}</td>
-                            <td>{{ row['Charmer'] }}</td>
-                            <td>{{ row['Harvey'] }}</td>
-                            <td>{{ row['Lil Trump'] }}</td>
-                            <td>{{ row['Lima Time'] }}</td>
-                            <td>{{ row['Midnight'] }}</td>
-                            <td>{{ row['Moms Cookin'] }}</td>
-                            <td>{{ row['Roid Ragers'] }}</td>
-                            <td>{{ row['Trouble'] }}</td>
-                            <td>{{ row['Wu-Tang'] }}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                      <a class="nav-link active" data-bs-toggle="tab" href="#summary">Summary</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" data-bs-toggle="tab" href="#rosters">Rosters</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" data-bs-toggle="tab" href="#chart">Chart</a>
+                    </li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane container active" id="summary">
+                        <table class="table table-condensed table-hover" id="myTable">
+                            <thead>
+                                <th onclick="sortTable(0)">Owner</th>
+                                <th onclick="sortTable(1)">$ Left</th>
+                                <th onclick="sortTable(2)">Z Value</th>
+                                <th onclick="sortTable(3)">$/Unit</th>
+                                <th onclick="sortTable(4)">Count</th>
+                                <th onclick="sortTable(5)">BA</th>
+                                <th onclick="sortTable(6)">HR</th>
+                                <th onclick="sortTable(7)">R</th>
+                                <th onclick="sortTable(8)">RBI</th>
+                                <th onclick="sortTable(9)">SB</th>
+                                <th onclick="sortTable(10)">Pts</th>
+                                <th onclick="sortTable(11)">Rank</th>
+                            </thead>
+                        {% for i, row in owners_df.iterrows() %}
+                            <tr>
+                                <td>{{ row['Owner'] }}</td>
+                                <td>{{ row['$ Left'] }}</td>
+                                <td>{{ row['z'] }}</td>
+                                <td>{{ row['$/unit'] }}</td>
+                                <td>{{ row['Drafted'] }}</td>
+                                <td>{{ row['BA'] }}</td>
+                                <td>{{ row['HR'] }}</td>
+                                <td>{{ row['R'] }}</td>
+                                <td>{{ row['RBI'] }}</td>
+                                <td>{{ row['SB'] }}</td>
+                                <td>{{ row['Pts'] }}</td>
+                                <td>{{ row['Rank'] }}</td>
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    </div>
+                    <div class="tab-pane container fade" id="rosters">
+                        <table class='table table-condensed table-hover'>
+                            <thead>
+                                <th>Pos</th>
+                                <th>AvgJoes</th>
+                                <th>Brewbirds</th>
+                                <th>DB's</th>
+                                <th>Charmer</th>
+                                <th>Harvey</th>
+                                <th>Lil T</th>
+                                <th>Lima</th>
+                                <th>Midnight</th>
+                                <th>Mother</th>
+                                <th>Ragers</th>
+                                <th>Trouble</th>
+                                <th>Wu-Tang</th>
+                            </thead>
+                            {% for i, row in roster.iterrows() %}
+                                <tr>
+                                    <td>{{ i }}</td>
+                                    <td>{{ row['Avg Joes'] }}</td>
+                                    <td>{{ row['Brewbirds'] }}</td>
+                                    <td>{{ row['Dirty Birds'] }}</td>
+                                    <td>{{ row['Charmer'] }}</td>
+                                    <td>{{ row['Harvey'] }}</td>
+                                    <td>{{ row['Lil Trump'] }}</td>
+                                    <td>{{ row['Lima Time'] }}</td>
+                                    <td>{{ row['Midnight'] }}</td>
+                                    <td>{{ row['Moms Cookin'] }}</td>
+                                    <td>{{ row['Roid Ragers'] }}</td>
+                                    <td>{{ row['Trouble'] }}</td>
+                                    <td>{{ row['Wu-Tang'] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                    <div class="tab-pane container fade" id="chart">
+                        <h3>Chart</h3>
+                        <p>Add Plotly charts</p>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
