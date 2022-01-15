@@ -217,8 +217,12 @@ router = APIRouter(prefix='/fantasy', responses={404: {"description": "Not found
 @router.get("/draft")
 async def draft_view(request: Request):
     h = pd.read_sql('hitting', engine)
+    h['Paid'] = h['Paid'].apply(lambda x: int(x) if x>0 else x)
+    for i in ['z', 'Dollars']:
+        h[i] = round(h[i],1)
     owners_df = h.groupby('Owner').agg({'Name':'count', 'Paid':'sum', 'z':'sum', 'H':'sum', 'AB':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'SB':'sum'}).reset_index()
     owners_df.rename(columns={'Name':'Drafted'},inplace=True)
+    owners_df['Paid'] = owners_df['Paid'].apply(lambda x: int(x) if x>0 else x)
     owners_df['$/unit'] = round(owners_df['Paid']/owners_df['z'],1)
     owners_df['z'] = round(owners_df['z'],1)
     owners_df['$ Left'] = 260 - owners_df['Paid']
@@ -231,7 +235,7 @@ async def draft_view(request: Request):
     for tm in owners_df.Owner.tolist():
         for i, row in h[h['Owner']==tm][['Name', 'Owner', 'Primary_Pos', 'Pos', 'Timestamp']].sort_values("Timestamp").iterrows():
             check_roster_pos(roster, h.loc[i]['Name'], h.loc[i]['Owner'], h.loc[i]['Primary_Pos'], h.loc[i]['Pos'])
-    return templates.TemplateResponse('draft.html', {'request':request, 'hitters':h[h['Owner'].isna()], 'owned':h[h['Owner'].notna()], 'owners_df':owners_df, 'roster':roster, 'json':h.set_index('Name').to_json(orient='index')})
+    return templates.TemplateResponse('draft.html', {'request':request, 'hitters':h, 'owned':h[h['Owner'].notna()], 'owners_df':owners_df, 'roster':roster, 'json':h.set_index('Name').to_json(orient='index')})
 
 @router.get("/draft/update_bid")
 async def update_db(playerid: str, price: int, owner: str):

@@ -14,7 +14,7 @@
         <script src="/static/sort-table.js"></script>
         <script>
             var data = {{ json|safe }};
-            console.log(data['Joey Gallo']['playerid']);
+            //console.log(data['Joey Gallo']['playerid']);
             
             $(document).ready(function(){
                 $("#projected_stats_table tr").hide();
@@ -24,12 +24,31 @@
                     $("#projected_stats_table tr").hide();
                     $("#projected_stats_table tr:first").show();
                     $("#"+selected).show();
-                });
-                $('#player_list').change(function(){
-                    var v = $("#player_list").val();
-                    $("#projected_stats_table tr").hide();
-                    $("#projected_stats_table tr:first").show();
-                    $("#"+v).show();
+                    $.each(data, function(i, v) {
+                        if (v.playerid == selected) {
+                            selected_name = i
+                            return;
+                        }
+                    });
+                    radar_data = [{
+                        type: 'scatterpolar',
+                        r: [data[selected_name]['zBA'], data[selected_name]['zHR'], data[selected_name]['zR'], data[selected_name]['zRBI'], data[selected_name]['zSB'], data[selected_name]['zBA']],
+                        theta: ['BA','HR','R', 'RBI', 'SB', 'BA'],
+                        fill: 'toself'
+                        }]
+
+                        layout = {
+                            height: 300,
+                            polar: {
+                                radialaxis: {
+                                visible: true,
+                                range: [-3, 3]
+                                },
+                            margin: { l:0, r:0, t:0, b:0, pad:0}
+                        },
+                        showlegend: false
+                    }
+                    Plotly.newPlot("radar_chart", radar_data, layout, {displayModeBar: false})
                 });
                 $("#button").click(function(){
                     var v = $("#player_list").val();
@@ -37,19 +56,23 @@
                         alert("Data: " + data + "\nStatus: " + status);
                     });
                 });
-                $("#rosterTable").find('td').click(function(){
+                
+                $("#rosterTable").on("click", "td", function() {
                     var p_name = $(this).text();
                     //console.log(p_name, "#"+data[p_name]['playerid']);
                     $("#projected_stats_table tr").hide();
                     $("#projected_stats_table tr:first").show();
-                    $("#"+data[p_name]['playerid']).show();
+                    var tr_id = data[p_name]['playerid'].toString();
+                    $("#player_select").val(tr_id);
+//                    alert(tr_id);
                 });
             })
+
         </script>
     </head>
     <body>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <form action="/fantasy/draft/update_bid" method="get">
                     <input id="player_select" list="player_list" name="playerid">
                     <datalist id="player_list">
@@ -58,7 +81,7 @@
                         {% endfor %}
                     </datalist>
                     <br><br>
-                    <table>
+                    <table style="font-size:12px">
                         <tr>
                             <td>
                                 <input type="radio" id="team1" name="owner" value="Avg Joes">
@@ -122,11 +145,16 @@
                     <a href="/fantasy/draft/reset_all"><s>Reset</s></a>
                 </form>
             </div>
-            <div class='col-md-9'>
+            <div class="col-md-2">
+                <b>Radar Chart</b>
+                <div id="radar_chart"></div>
+            </div>
+            <div class='col-md-6'>
                 <table class='table' id="projected_stats_table">
                     <thead>
                         <th>#</th>
                         <th>Name</th>
+                        <th>Team</th>
                         <th>Pos</th>
                         <th>PA</th>
                         <th>BA</th>
@@ -141,6 +169,7 @@
                         <tr id="{{ row['playerid'] }}">
                             <td>{{ row['playerid'] }}</td>
                             <td>{{ row['Name'] }}</td>
+                            <td>{{ row['Team'] }}</td>
                             <td>{{ row['Pos'] }}</td>
                             <td>{{ row['PA'] }}</td>
                             <td>{{ row['AVG'] }}</td>
@@ -155,10 +184,10 @@
                 </table>
             </div>
         </div>
-        <div class="row" style="height:320px;">
-            <div class="col-md-3" style="height:500px; overflow-y:scroll;">
+        <div class="row">
+            <div class="col-md-2" style="height:500px; overflow-y:scroll;">
                 <h3>Draft Order</h3>
-                <table style="width:100%">
+                <table style="width:100%; font-size:12px;">
                     {% for i, row in owned.sort_values('Timestamp', ascending=False).iterrows() %}
                     <tr>
                         <td>{{ row['Name'] }}</td>
@@ -167,7 +196,9 @@
                     </tr>
                     {% endfor %}
                 </table>
-                
+            </div>
+            <div class="col-md-1">
+                Meter
             </div>
             <div class="col-md-9">
                 <ul class="nav nav-tabs">
