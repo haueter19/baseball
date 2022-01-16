@@ -94,7 +94,27 @@ $(document).ready(function(){
         $.get("/fantasy/draft/"+v, function(data, status){
             alert("Data: " + data + "\nStatus: " + status);
         });
-    });                
+    });
+    $("#button-1").click(function(){
+        $.fn.owners_chart('Owner', 'Pts');
+        $(this).addClass('active').siblings().removeClass('active');
+    });
+    $("#button-2").click(function(){
+        $.fn.owners_chart('Owner', '$ Left');
+        $(this).addClass('active').siblings().removeClass('active');
+    });
+    $("#button-3").click(function(){
+        $.fn.owners_chart('Owner', 'z');
+        $(this).addClass('active').siblings().removeClass('active');
+    });
+    $("#button-4").click(function(){
+        $.fn.owners_chart('Owner', '$/unit');
+        $(this).addClass('active').siblings().removeClass('active');
+    });
+    $("#button-5").click(function(){
+        $.fn.owners_chart('Owner', 'Drafted');
+        $(this).addClass('active').siblings().removeClass('active');
+    }); 
     $("#rosterTable").on("click", "td", function() {
         var p_name = $(this).text();
         $.each(data, function(i, v) {
