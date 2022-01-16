@@ -11,67 +11,15 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-        <script src="/static/sort-table.js"></script>
         <script>
             var data = {{ json|safe }};
-            //console.log(data['Joey Gallo']['playerid']);
-            
-            $(document).ready(function(){
-                $("#projected_stats_table tr").hide();
-                $("#projected_stats_table tr:first").show();
-                $("input[name='playerid']").on('focusout', function(e){
-                    var selected = $(this).val();
-                    $("#projected_stats_table tr").hide();
-                    $("#projected_stats_table tr:first").show();
-                    $("#"+selected).show();
-                    $.each(data, function(i, v) {
-                        if (v.playerid == selected) {
-                            selected_name = i
-                            return;
-                        }
-                    });
-                    radar_data = [{
-                        type: 'scatterpolar',
-                        r: [data[selected_name]['zBA'], data[selected_name]['zHR'], data[selected_name]['zR'], data[selected_name]['zRBI'], data[selected_name]['zSB'], data[selected_name]['zBA']],
-                        theta: ['BA','HR','R', 'RBI', 'SB', 'BA'],
-                        fill: 'toself'
-                        }]
-
-                        layout = {
-                            height: 300,
-                            polar: {
-                                radialaxis: {
-                                visible: true,
-                                range: [-3, 3]
-                                },
-                            margin: { l:0, r:0, t:0, b:0, pad:0}
-                        },
-                        showlegend: false
-                    }
-                    Plotly.newPlot("radar_chart", radar_data, layout, {displayModeBar: false})
-                });
-                $("#button").click(function(){
-                    var v = $("#player_list").val();
-                    $.get("/fantasy/draft/"+v, function(data, status){
-                        alert("Data: " + data + "\nStatus: " + status);
-                    });
-                });
-                
-                $("#rosterTable").on("click", "td", function() {
-                    var p_name = $(this).text();
-                    //console.log(p_name, "#"+data[p_name]['playerid']);
-                    $("#projected_stats_table tr").hide();
-                    $("#projected_stats_table tr:first").show();
-                    var tr_id = data[p_name]['playerid'].toString();
-                    $("#player_select").val(tr_id);
-//                    alert(tr_id);
-                });
-            })
-
+            var owners = {{ owners_json|safe }};
         </script>
+        <script src="/static/js_functions.js"></script>
+        <script src="/static/sort-table.js"></script>
     </head>
     <body>
-        <div class="row">
+        <div class="row" style="box-shadow:0 4px 4px hsl(0deg 0% 0% / 0.3);">
             <div class="col-md-2">
                 <form action="/fantasy/draft/update_bid" method="get">
                     <input id="player_select" list="player_list" name="playerid">
@@ -146,7 +94,7 @@
                 </form>
             </div>
             <div class="col-md-2">
-                <b>Radar Chart</b>
+                <h5 id=radar_chart_player_name>Radar Chart</h5>
                 <div id="radar_chart"></div>
             </div>
             <div class='col-md-6'>
@@ -187,7 +135,7 @@
         <div class="row">
             <div class="col-md-2" style="height:500px; overflow-y:scroll;">
                 <h3>Draft Order</h3>
-                <table style="width:100%; font-size:12px;">
+                <table id="drafted_scroll" style="width:100%; font-size:12px;">
                     {% for i, row in owned.sort_values('Timestamp', ascending=False).iterrows() %}
                     <tr>
                         <td>{{ row['Name'] }}</td>
@@ -198,7 +146,11 @@
                 </table>
             </div>
             <div class="col-md-1">
-                Meter
+                <h4>Meter</h4>
+                Players Left:<br>
+                Dollars Left:<br>
+                Initial $/z:<br>
+                Current $/z:
             </div>
             <div class="col-md-9">
                 <ul class="nav nav-tabs">
@@ -206,10 +158,13 @@
                       <a class="nav-link active" data-bs-toggle="tab" href="#summary">Summary</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" data-bs-toggle="tab" href="#rosters">Rosters</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#rosters">Rosters</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" data-bs-toggle="tab" href="#chart">Chart</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#charts">Charts</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" data-bs-toggle="tab" href="#players">Players</a>
                     </li>
                   </ul>
                   <div class="tab-content">
@@ -283,12 +238,11 @@
                             {% endfor %}
                         </table>
                     </div>
-                    <div class="tab-pane container fade" id="chart">
-                        <h3>Chart</h3>
-                        <p>Add Plotly charts</p>
-                        <p>
-                            
-                        </p>
+                    <div class="tab-pane container fade" id="charts">
+                        <div id="owners_chart"></div>
+                    </div>
+                    <div class="tab-pane container fade" id="players">
+                        <div id="z_players_chart"></div>
                     </div>
                 </div>
             </div>
