@@ -19,17 +19,18 @@
         <script src="/static/sort-table.js"></script>
     </head>
     <body>
-        <div class="row" style="box-shadow:0 4px 4px hsl(0deg 0% 0% / 0.3);">
+        <div class="row border-bottom border-3 border-primary p-3" style="height:360px">
             <div class="col-md-2">
-                <form action="/fantasy/draft/update_bid" method="get">
-                    <input id="player_select" list="player_list" name="playerid">
+                <form action="/fantasy/draft/update_bid" onsubmit="return validateForm()" id="bid_form" method="get">
+                    <h3>Auction Bid Submit</h3>
+                    <input id="player_select" class="form-control" list="player_list" name="playerid">
                     <datalist id="player_list">
                         {% for i, row in hitters.iterrows() %}
                             <option value="{{ row['playerid'] }}">{{ row['Name'] }}</option>
                         {% endfor %}
                     </datalist>
-                    <br><br>
-                    <table style="font-size:12px">
+                    <br>
+                    <table style="font-size:12px" id="team_input">
                         <tr>
                             <td>
                                 <input type="radio" id="team1" name="owner" value="Avg Joes">
@@ -87,17 +88,22 @@
                     </table>
                     <br>
                     <label for="price">Auction Price</label>
-                    <input type="text" name="price" id="price_entry" size="2" placeholder="Price" value=1>
-                    <button id="button">Record Bid</button>
+                    <input type="text" name="price" id="price_entry" size="1" placeholder="Price" value=1>
+                    <button id="submit">Record Bid</button><br><br>
                     <button id="update_bid">Update Bid</button>
                     <a href="/fantasy/draft/reset_all"><s>Reset</s></a>
                 </form>
+                <div class="text-danger" id="error_msg" style="display:none;"></div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2 mb-3 border-start border-dark">
+                <h5>Similar Players</h5>
+                <div id="sims"></div>
+            </div>
+            <div class="col-md-2 border-start border-dark mb-2">
                 <h5 id=radar_chart_player_name>Radar Chart</h5>
                 <div id="radar_chart"></div>
             </div>
-            <div class='col-md-6'>
+            <div class='col-md-6 mb-2 border-start border-dark'>
                 <table class='table' id="projected_stats_table">
                     <thead>
                         <th>#</th>
@@ -132,7 +138,7 @@
                 </table>
             </div>
         </div>
-        <div class="row">
+        <div class="row p-3">
             <div class="col-md-2" style="height:500px; overflow-y:scroll;">
                 <h3>Draft Order</h3>
                 <table id="drafted_scroll" style="width:100%; font-size:12px;">
@@ -145,14 +151,14 @@
                     {% endfor %}
                 </table>
             </div>
-            <div class="col-md-1">
+            <div class="col-md-1 border-start border-dark">
                 <h4>Meter</h4>
-                Players Left:<br>
-                Dollars Left:<br>
-                Initial $/z:<br>
-                Current $/z:
+                Players Left:<br>{{ players_left }}<br><br>
+                Dollars Left:<br>{{ dollars_left }}<br><br>
+                Initial $/z:<br>{{ init_dollars_per_z }}<br><br>
+                Current $/z:<br>{{ current_dollars_per_z }}
             </div>
-            <div class="col-md-9">
+            <div class="col-md-9 border-start border-dark">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
                       <a class="nav-link active" data-bs-toggle="tab" href="#summary">Summary</a>
@@ -238,7 +244,7 @@
                             {% endfor %}
                         </table>
                     </div>
-                    <div class="tab-pane container fade" id="charts">
+                    <div class="tab-pane container fade pt-4" id="charts">
                         <button type="button" class="btn btn-primary" id="button-1">Pts</button>
                         <button type="button" class="btn btn-primary active" id="button-2">$ Left</button>
                         <button type="button" class="btn btn-primary" id="button-3">Total Z</button>

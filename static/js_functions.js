@@ -21,13 +21,14 @@ $.fn.z_players = function(){
     let x_data = [];
     let y_data = [];
     let hover_data = [];
+    let p_id = [];
     let color_map = [];
     var j = 0;
     $.each(data, function(i, v){
         if (j<175){
             x_data.push(j);
             y_data.push(data[i]['z']);
-            hover_data.push(data[i]['Name']);
+            hover_data.push(data[i]['Name']+'<br>ID: '+data[i]['playerid']+'<br>Value: $'+data[i]['Dollars']);
             if (data[i]['Owner']){
                 color_map.push('gray');
             } else {
@@ -44,11 +45,13 @@ $.fn.z_players = function(){
             y:y_data,
             text:hover_data,
             mode:'markers',
-            marker: { color: color_map }
+            customtext:p_id,
+            marker: { color: color_map },
+            hovertemplate: "%{text}"
             
         }
     ]
-    layout = {title: "Z List", height: 400, width: 1000, margin: {t:30}},
+    layout = {title: "Z List", height: 400, width: 1100, margin: {t:30}},
     Plotly.newPlot("z_players_chart", z_scatter_data, layout, {displayModeBar: false})
 }
 $.fn.create_radar_chart = function(selected){
@@ -82,13 +85,39 @@ $.fn.create_radar_chart = function(selected){
         }
     Plotly.newPlot("radar_chart", radar_data, layout, {displayModeBar: false})
 }
+
 $(document).ready(function(){
     $("#projected_stats_table tr").hide();
     $("#projected_stats_table tr:first").show();
+    $.fn.z_players();
+    $.fn.owners_chart('Owner', '$ Left');
     $("input[name='playerid']").on('focusout', function(e){
         var selected = $(this).val();
         $(this).create_radar_chart(selected);
+        $.get("/fantasy/draft/sims/"+selected, function(resp, status){
+            //alert("Data: " + resp + "\nStatus: " + status);
+            $("#sims").html(resp);
+        });
     });
+    $("#bid_form").submit(function(){
+        $("#error_msg").hide();
+        var player_id = $("input[name='playerid']").val();
+        var bid_winner = $('input[name="owner"]:checked').val();
+        var price_val = $("#price_entry").val();
+        if (player_id==""){
+            alert(player_id);
+            $("#error_msg").text('Choose a player').show();
+            return false;
+        }
+        if (!bid_winner){
+            $("#error_msg").text('Choose a team').show();
+            return false;
+        }
+        if (price_val<1) {
+            $("#error_msg").text('Enter a price').show();
+            return false;
+        }
+    })
     $("#button").click(function(){
         var v = $("#player_list").val();
         $.get("/fantasy/draft/"+v, function(data, status){
@@ -137,6 +166,11 @@ $(document).ready(function(){
             }
         });
     });
-    $.fn.z_players();
-    $.fn.owners_chart('Owner', '$ Left');
+    
+    document.getElementById("z_players_chart").on('plotly_click', function(data){
+        var txt = data.points[0].text.split("<br>")
+        $("#player_select").val(txt[1].substring(4));
+        $.fn.create_radar_chart(txt[1].substring(4));
+
+    });
 })

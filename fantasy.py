@@ -1,3 +1,4 @@
+import json
 import math
 import numpy as np
 import pandas as pd
@@ -11,16 +12,16 @@ from sqlalchemy.orm import relationship, backref, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql.sqltypes import DATETIME, TIMESTAMP
 from starlette.responses import RedirectResponse
+from sklearn.preprocessing import MinMaxScaler
 
 templates = Jinja2Templates(directory="templates")
-
-engine = create_engine('sqlite:///fantasy_data.db', echo=False)
 
 num_teams = 12
 num_dollars = 260
 player_split = .65
 pitcher_split = 1 - player_split
 tot_dollars = num_teams * num_dollars
+tot_players = num_teams * 23
 
 drafted_by_pos = {
     'C':12,
@@ -35,6 +36,41 @@ drafted_by_pos = {
     'P':9
 }
 
+meta = MetaData()
+engine = create_engine('sqlite:///fantasy_data.db', echo=False)
+Session = sessionmaker(bind=engine)
+session = Session()
+
+hitters = Table('hitting', meta,
+                Column('playerid', String, primary_key=True),
+                Column('Paid', Integer),
+                Column('Owner', String(25)),
+                Column('Timestamp', DATETIME)
+    )
+
+def scale_data(df, cols):
+    """
+    INPUT: 
+        df: original dataframe
+        list: subset of columns to scale
+    OUTPUT:
+        df: scaled data
+    """
+    scaler = MinMaxScaler()
+    scaler.fit(df[cols])
+    scaled_df = scaler.transform(df[cols])
+    scaled_df = pd.DataFrame(scaled_df, index=df.index)
+    scaled_df.columns=[df[cols].columns.tolist()]
+    return scaled_df
+
+def add_distance_metrics(h, player_id, col_list):
+    scaled_df = scale_data(h[h['Owner'].isna()].set_index('playerid'), col_list)
+    df2 = h[h['Owner'].isna()].loc[:,['playerid', 'Name', 'Pos']+col_list].set_index('playerid')
+    for j, row in scaled_df.iterrows():
+        #df2.at[j,'corr'] = pearsonr(scaled_df.loc[player_id,col_list],row[col_list])[0]
+        df2.at[j,'eucl_dist'] = np.linalg.norm(scaled_df.loc[player_id,col_list] - row[col_list])
+        #df2.at[j,'manh_dist']= sum(abs(e - s) for s, e in zip(scaled_df.loc[player_id,col_list], row[col_list]))
+    return df2.sort_values('eucl_dist').iloc[1:6]
 
 def load_data():
     h = pd.read_csv('data/2022-fangraphs-proj-h.csv')
@@ -235,25 +271,31 @@ async def draft_view(request: Request):
     for tm in owners_df.Owner.tolist():
         for i, row in h[h['Owner']==tm][['Name', 'Owner', 'Primary_Pos', 'Pos', 'Timestamp']].sort_values("Timestamp").iterrows():
             check_roster_pos(roster, h.loc[i]['Name'], h.loc[i]['Owner'], h.loc[i]['Primary_Pos'], h.loc[i]['Pos'])
-    return templates.TemplateResponse('draft.html', {'request':request, 'hitters':h.sort_values('z', ascending=False), 'owned':h[h['Owner'].notna()], 'owners_df':owners_df, 'owners_json':owners_df.to_json(orient='index'), 'roster':roster, 'json':h.sort_values('z', ascending=False).to_json(orient='records')})
+    return templates.TemplateResponse('draft.html', {'request':request, 'hitters':h.sort_values('z', ascending=False), 
+                                    'owned':h[h['Owner'].notna()], 'owners_df':owners_df, 'roster':roster, 
+                                    'owners_json':owners_df.to_json(orient='index'), 
+                                    'json':h.sort_values('z', ascending=False).to_json(orient='records'),
+                                    'players_left':(tot_players - owners_df.Drafted.sum()),
+                                    'dollars_left':(tot_dollars - owners_df.Paid.sum()), 
+                                    'init_dollars_per_z':round((tot_dollars/h[h['z']>=0]['z'].sum()*player_split),2),
+                                    'current_dollars_per_z':round(owners_df.Paid.sum() / owners_df.z.sum(),2)})
 
 @router.get("/draft/update_bid")
 async def update_db(playerid: str, price: int, owner: str):
     conn = engine.connect()
-    meta = MetaData()
-    hitters = Table('hitting', meta,
-                Column('playerid', String, primary_key=True),
-                Column('Paid', Integer),
-                Column('Owner', String(25)),
-                Column('Timestamp', DATETIME)
-    )
     meta.create_all(engine)
-    #qry = "UPDATE hitting SET Paid="+price+", Owner='"+owner+"' WHERE playerid='"+playerid+"'"
-    #print(qry)
-    #t = text(qry)
     conn.execute(hitters.update().values(Paid=price, Owner=owner, Timestamp=datetime.now()).where(hitters.c.playerid==playerid))
     conn.close()
     return RedirectResponse('/fantasy/draft') #{'playerid':playerid, 'price':price, 'owner':owner}
+
+@router.get("/draft/sims/{playerid}")
+async def sim_players(playerid: str):
+    h = pd.read_sql('hitting', engine)
+    if h[h['playerid']==playerid]['Owner'].any():
+        return '<br>sims unavailable for owned players'
+    else:
+        sims = add_distance_metrics(h, playerid, ['BA', 'R', 'RBI', 'HR', 'SB']).sort_values('eucl_dist')
+        return '<br>'.join(sims['Name'])
 
 @router.get('/draft/reset_all')
 async def reset_all():
