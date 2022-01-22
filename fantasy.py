@@ -70,7 +70,7 @@ def add_distance_metrics(h, player_id, col_list):
         #df2.at[j,'corr'] = pearsonr(scaled_df.loc[player_id,col_list],row[col_list])[0]
         df2.at[j,'eucl_dist'] = np.linalg.norm(scaled_df.loc[player_id,col_list] - row[col_list])
         #df2.at[j,'manh_dist']= sum(abs(e - s) for s, e in zip(scaled_df.loc[player_id,col_list], row[col_list]))
-    return df2.sort_values('eucl_dist').iloc[1:6]
+    return df2.sort_values('eucl_dist').iloc[1:11]
 
 def load_data():
     h = pd.read_csv('data/2022-fangraphs-proj-h.csv')
