@@ -25,7 +25,7 @@
                     <h3>Auction Bid Submit</h3>
                     <input id="player_select" class="form-control" list="player_list" name="playerid">
                     <datalist id="player_list">
-                        {% for i, row in hitters.iterrows() %}
+                        {% for i, row in players.iterrows() %}
                             <option value="{{ row['playerid'] }}">{{ row['Name'] }}</option>
                         {% endfor %}
                     </datalist>
@@ -119,21 +119,38 @@
                         <th>$</th>
                         <th>Z</th>
                     </thead>
-                    {% for i, row in hitters.iterrows() %}
+                    {% for i, row in players.iterrows() %}
+                        {% if row['Primary_Pos']=='SP' or row['Primary_Pos']=='RP' %}
+                        <tr id="{{ row['playerid'] }}">
+                            <td>{{ row['playerid'] }}</td>
+                            <td>{{ row['Name'] }}</td>
+                            <td>{{ row['Team'] }}</td>
+                            <td>{{ row['Pos'] }}</td>
+                            <td>{{ row['IP'] }}</td>
+                            <td>{{ row['ERA'] }}</td>
+                            <td>{{ row['WHIP'] }}</td>
+                            <td>{{ row['SO'] }}</td>
+                            <td>{{ row['W'] }}</td>
+                            <td>{{ row['Sv+Hld'] }}</td>
+                            <td>{{ row['Value'] }}</td>
+                            <td>{{ row['z'] }}</td>
+                        </tr>
+                        {% else %}
                         <tr id="{{ row['playerid'] }}">
                             <td>{{ row['playerid'] }}</td>
                             <td>{{ row['Name'] }}</td>
                             <td>{{ row['Team'] }}</td>
                             <td>{{ row['Pos'] }}</td>
                             <td>{{ row['PA'] }}</td>
-                            <td>{{ row['AVG'] }}</td>
+                            <td>{{ row['BA'] }}</td>
                             <td>{{ row['HR'] }}</td>
                             <td>{{ row['R'] }}</td>
                             <td>{{ row['RBI'] }}</td>
                             <td>{{ row['SB'] }}</td>
-                            <td>{{ row['Dollars'] }}</td>
+                            <td>{{ row['Value'] }}</td>
                             <td>{{ row['z'] }}</td>
                         </tr>
+                        {% endif %}
                     {% endfor %}
                 </table>
             </div>

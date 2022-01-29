@@ -16,12 +16,17 @@ from sklearn.preprocessing import MinMaxScaler
 
 templates = Jinja2Templates(directory="templates")
 
-num_teams = 12
-num_dollars = 260
+n_teams = 12
+tm_players = 23
+tm_dollars = 260
 player_split = .65
 pitcher_split = 1 - player_split
-tot_dollars = num_teams * num_dollars
-tot_players = num_teams * 23
+tot_dollars = n_teams * tm_dollars
+tot_players = n_teams * tm_players
+tot_hitters = n_teams * 14
+tot_pitchers = n_teams * 9
+
+owner_list = ['Avg Joes', 'Brewbirds', 'Charmer', 'Dirty Birds', 'Harvey', 'Lil Trump', 'Lima Time', 'Midnight', 'Moms Cookin', 'Roid Ragers', 'Trouble', 'Wu-Tang']
 
 drafted_by_pos = {
     'C':12,
@@ -33,7 +38,7 @@ drafted_by_pos = {
     'MI':12,
     'CI':12,
     'DH':12*2, 
-    'P':9
+    'P':12*9
 }
 
 meta = MetaData()
@@ -41,7 +46,7 @@ engine = create_engine('sqlite:///fantasy_data.db', echo=False)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-hitters = Table('hitting', meta,
+players = Table('players', meta,
                 Column('playerid', String, primary_key=True),
                 Column('Paid', Integer),
                 Column('Owner', String(25)),
@@ -208,7 +213,7 @@ def process_top_hitters(h):
     sub_mask = h.loc[h[mask].index[:24]].index
     h.loc[h[mask].index[:24], 'Used'] = True
     
-    if len(h[h['Used']==True])!=14*num_teams:
+    if len(h[h['Used']==True])!=14*n_teams:
         print('drafted list not right')
     return h, pos_avg, pos_std
 
@@ -252,26 +257,33 @@ router = APIRouter(prefix='/fantasy', responses={404: {"description": "Not found
 
 @router.get("/draft")
 async def draft_view(request: Request):
-    h = pd.read_sql('hitting', engine)
+    h = pd.read_sql('players', engine)
+    h['Paid'].fillna(0,inplace=True)
     h['Paid'] = h['Paid'].apply(lambda x: int(x) if x>0 else x)
-    for i in ['z', 'Dollars']:
+    for i in ['z', 'Dollars', 'Value', 'IP']:
         h[i] = round(h[i],1)
+    h['BA'] = round(h['BA'],3)
+    for i in ['ERA', 'WHIP']:
+        h[i] = round(h[i],2)
+    for i in ['SO', 'W', 'Sv+Hld', 'R', 'RBI', 'SB', 'HR']:
+        h[i].fillna(0,inplace=True)
+        h[i] = h[i].astype(int)
     owners_df = h.groupby('Owner').agg({'Name':'count', 'Paid':'sum', 'z':'sum', 'H':'sum', 'AB':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'SB':'sum'}).reset_index()
     owners_df.rename(columns={'Name':'Drafted'},inplace=True)
     owners_df['Paid'] = owners_df['Paid'].apply(lambda x: int(x) if x>0 else x)
     owners_df['$/unit'] = round(owners_df['Paid']/owners_df['z'],1)
     owners_df['z'] = round(owners_df['z'],1)
-    owners_df['$ Left'] = 260 - owners_df['Paid']
+    owners_df['$ Left'] = tm_dollars - owners_df['Paid']
     owners_df['BA'] = round(owners_df['H']/owners_df['AB'],3)
     owners_df['Pts'] = 0
     for i in ['BA', 'HR', 'R', 'RBI', 'SB']:
         owners_df['Pts'] += owners_df[i].rank()
     owners_df['Rank'] = owners_df['Pts'].rank()
-    roster = pd.DataFrame(index=['C', '1B', '2B', '3B', 'SS', 'MI', 'CI', 'OF1', 'OF2', 'OF3', 'OF4', 'OF5', 'DH1', 'DH2'], data=np.zeros((14,12)), columns=owners_df.Owner.tolist())
+    roster = pd.DataFrame(index=['C', '1B', '2B', '3B', 'SS', 'MI', 'CI', 'OF1', 'OF2', 'OF3', 'OF4', 'OF5', 'DH1', 'DH2'], data=np.zeros((14,12)), columns=owner_list)
     for tm in owners_df.Owner.tolist():
         for i, row in h[h['Owner']==tm][['Name', 'Owner', 'Primary_Pos', 'Pos', 'Timestamp']].sort_values("Timestamp").iterrows():
             check_roster_pos(roster, h.loc[i]['Name'], h.loc[i]['Owner'], h.loc[i]['Primary_Pos'], h.loc[i]['Pos'])
-    return templates.TemplateResponse('draft.html', {'request':request, 'hitters':h.sort_values('z', ascending=False), 
+    return templates.TemplateResponse('draft.html', {'request':request, 'players':h.sort_values('z', ascending=False), 
                                     'owned':h[h['Owner'].notna()], 'owners_df':owners_df, 'roster':roster, 
                                     'owners_json':owners_df.to_json(orient='index'), 
                                     'json':h.sort_values('z', ascending=False).to_json(orient='records'),
@@ -284,13 +296,13 @@ async def draft_view(request: Request):
 async def update_db(playerid: str, price: int, owner: str):
     conn = engine.connect()
     meta.create_all(engine)
-    conn.execute(hitters.update().values(Paid=price, Owner=owner, Timestamp=datetime.now()).where(hitters.c.playerid==playerid))
+    conn.execute(players.update().values(Paid=price, Owner=owner, Timestamp=datetime.now()).where(players.c.playerid==playerid))
     conn.close()
     return RedirectResponse('/fantasy/draft') #{'playerid':playerid, 'price':price, 'owner':owner}
 
 @router.get("/draft/sims/{playerid}")
 async def sim_players(playerid: str):
-    h = pd.read_sql('hitting', engine)
+    h = pd.read_sql('players', engine)
     if h[h['playerid']==playerid]['Owner'].any():
         return '<br>sims unavailable for owned players'
     else:
@@ -299,7 +311,7 @@ async def sim_players(playerid: str):
 
 @router.get('/draft/reset_all')
 async def reset_all():
-    t = text("UPDATE hitting SET Paid=NULL, Owner=NULL")
+    t = text("UPDATE players SET Paid=NULL, Owner=NULL")
     conn = engine.connect()
     conn.execute(t)
     return RedirectResponse('/fantasy/draft')

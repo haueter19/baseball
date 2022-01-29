@@ -25,14 +25,14 @@ $.fn.z_players = function(){
     let color_map = [];
     var j = 0;
     $.each(data, function(i, v){
-        if (j<175){
+        if (j<276){
             x_data.push(j);
             y_data.push(data[i]['z']);
-            hover_data.push(data[i]['Name']+'<br>ID: '+data[i]['playerid']+'<br>Value: $'+data[i]['Dollars']);
+            hover_data.push(data[i]['Name']+'<br>ID: '+data[i]['playerid']+'<br>Value: $'+data[i]['Value']);
             if (data[i]['Owner']){
                 color_map.push('gray');
             } else {
-                color_map.push('blue');
+                color_map.push('lightblue');
             }
         }
         j += 1
@@ -51,7 +51,7 @@ $.fn.z_players = function(){
             
         }
     ]
-    layout = {title: "Z List", height: 400, width: 1100, margin: {t:30}},
+    layout = {title: "Z List", height: 400, width: 1350, margin: {l:10, t:30}},
     Plotly.newPlot("z_players_chart", z_scatter_data, layout, {displayModeBar: false})
 }
 $.fn.create_radar_chart = function(selected){
