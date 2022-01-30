@@ -77,6 +77,15 @@ def add_distance_metrics(h, player_id, col_list):
         #df2.at[j,'manh_dist']= sum(abs(e - s) for s, e in zip(scaled_df.loc[player_id,col_list], row[col_list]))
     return df2.sort_values('eucl_dist').iloc[1:11]
 
+def next_closest_in_tier(df, pos, playerid):
+    try:
+        i = df[(df['Primary_Pos']==pos) & (df['playerid']==playerid) & (df['Owner'].isna())].index[0]
+        val = df[(df['Primary_Pos']==pos) & (df['Owner'].isna()) & (df['playerid']==playerid)]['Value'].iloc[0]
+        return round(df[df['playerid']==playerid]['Value'].iloc[0] - df[(df['Primary_Pos']==pos) & (df['Owner'].isna()) & (df['Value']<=val)].iloc[1]['Value'],1)
+    except:
+        return 0
+
+
 def load_data():
     h = pd.read_csv('data/2022-fangraphs-proj-h.csv')
     h['sorter'] = h['HR']+h['R']+h['RBI']+h['H']+h['SB']
@@ -228,9 +237,9 @@ def process_rem_hitters(h, pos_avg, pos_std):
     return h
 
 def check_roster_pos(roster, name, team_name, pos, eligible):
-    eligible_at = eligible.split(', ')
+    eligible_at = eligible.split('/')
     eligibility = []
-    for p in eligible.split(', '):
+    for p in eligible.split('/'):
         if p=='C':
             eligibility.extend(['C'])
         if p=='1B':
@@ -243,9 +252,14 @@ def check_roster_pos(roster, name, team_name, pos, eligible):
             eligibility.extend(['SS', 'MI'])
         if p=='OF':
             eligibility.extend(['OF1', 'OF2', 'OF3', 'OF4', 'OF5'])
+        if p in ['SP', 'RP']:
+            eligibility.extend(['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9'])
         
     eligibility = list(dict.fromkeys(eligibility))
-    pos_list = eligibility+['DH1', 'DH2']
+    if 'SP' in eligible_at or 'RP' in eligible_at: 
+        pos_list = eligibility
+    else:
+        pos_list = eligibility+['DH1', 'DH2']
     for p in pos_list:
         if roster.loc[p, team_name]==0:
             roster.loc[p, team_name] = name
@@ -281,7 +295,7 @@ async def draft_view(request: Request):
     for i in ['BA', 'HR', 'R', 'RBI', 'SB', 'ERA', 'WHIP', 'W', 'SO', 'Sv+Hld']:
         owners_df['Pts'] += owners_df[i].rank()
     owners_df['Rank'] = owners_df['Pts'].rank()
-    roster = pd.DataFrame(index=['C', '1B', '2B', '3B', 'SS', 'MI', 'CI', 'OF1', 'OF2', 'OF3', 'OF4', 'OF5', 'DH1', 'DH2'], data=np.zeros((14,12)), columns=owner_list)
+    roster = pd.DataFrame(index=['C', '1B', '2B', '3B', 'SS', 'MI', 'CI', 'OF1', 'OF2', 'OF3', 'OF4', 'OF5', 'DH1', 'DH2', 'P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9'], data=np.zeros((23,12)), columns=owner_list)
     for tm in owners_df.Owner.tolist():
         for i, row in h[h['Owner']==tm][['Name', 'Owner', 'Primary_Pos', 'Pos', 'Timestamp']].sort_values("Timestamp").iterrows():
             check_roster_pos(roster, h.loc[i]['Name'], h.loc[i]['Owner'], h.loc[i]['Primary_Pos'], h.loc[i]['Pos'])
@@ -289,6 +303,7 @@ async def draft_view(request: Request):
     z_rem = (h[h['z']>0]['z'].sum() - owners_df['z'].sum())
     conv_factor = dollars_rem / z_rem
     h['curValue'] = round(h['z']*conv_factor,1)
+    h['next_in_tier'] = h.apply(lambda x: next_closest_in_tier(h, x['Primary_Pos'], x['playerid']),axis=1)
     return templates.TemplateResponse('draft.html', {'request':request, 'players':h.sort_values('z', ascending=False), 
                                     'owned':h[h['Owner'].notna()], 'owners_df':owners_df, 'roster':roster, 
                                     'owners_json':owners_df.to_json(orient='index'), 
@@ -312,11 +327,13 @@ async def sim_players(playerid: str):
     if h[h['playerid']==playerid]['Owner'].any():
         return '<br>sims unavailable for owned players'
     else:
-        if h[h[['playerid']==playerid]]['Primary_Pos'] in ['C', '1B', '2B', '3B', 'SS', 'OF', 'DH']:
+        if h[h['playerid']==playerid]['Primary_Pos'].iloc[0] in ['C', '1B', '2B', '3B', 'SS', 'OF', 'DH']:
             sims = add_distance_metrics(h, playerid, ['BA', 'R', 'RBI', 'HR', 'SB']).sort_values('eucl_dist')
         else:
             sims = add_distance_metrics(h, playerid, ['ERA', 'WHIP', 'W', 'SO', 'Sv+Hld']).sort_values('eucl_dist')
-        return '<br>'.join(sims['Name'])
+        sims_data = h[h['playerid'].isin(sims['Name'].index)][['Name', 'Value']]
+        #print('<br>'.join(sims_data))
+        return sims_data.to_json(orient='records')#'<br>'.join(sims_data['Name'])
 
 @router.get('/draft/reset_all')
 async def reset_all():

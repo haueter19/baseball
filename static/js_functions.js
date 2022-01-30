@@ -27,8 +27,8 @@ $.fn.z_players = function(){
     $.each(data, function(i, v){
         if (j<276){
             x_data.push(j);
-            y_data.push(data[i]['z']);
-            hover_data.push(data[i]['Name']+'<br>ID: '+data[i]['playerid']+'<br>Value: $'+data[i]['Value']);
+            y_data.push(data[i]['Value']);
+            hover_data.push(data[i]['Name']+'<br>ID: '+data[i]['playerid']+'<br>Value: $'+data[i]['curValue']);
             if (data[i]['Owner']){
                 color_map.push('gray');
             } else {
@@ -51,7 +51,7 @@ $.fn.z_players = function(){
             
         }
     ]
-    layout = {title: "Z List", height: 400, width: 1350, margin: {l:10, t:30}},
+    layout = {title: "Z List", height: 400, width: 1350, margin: {l:15, t:30}},
     Plotly.newPlot("z_players_chart", z_scatter_data, layout, {displayModeBar: false})
 }
 
@@ -105,24 +105,33 @@ $.fn.create_radar_chart = function(selected){
             }
         });
     $("#radar_chart_player_name").text(data[selected_index]['Name']);
-    radar_data = [{
+    let position = data[selected_index]['Primary_Pos'];
+    if ((position == 'SP') | (position =='RP')){
+        radar_data = [{
+            type: 'scatterpolar',
+            r: [data[selected_index]['zERA'], data[selected_index]['zWHIP'], data[selected_index]['zW'], data[selected_index]['zSO'], data[selected_index]['zSv+Hld'], data[selected_index]['zERA']],
+            theta: ['ERA','WHIP','W', 'SO', 'Sv+Hold', 'ERA'],
+            fill: 'toself'
+            }]
+    } else {
+        radar_data = [{
             type: 'scatterpolar',
             r: [data[selected_index]['zBA'], data[selected_index]['zHR'], data[selected_index]['zR'], data[selected_index]['zRBI'], data[selected_index]['zSB'], data[selected_index]['zBA']],
             theta: ['BA','HR','R', 'RBI', 'SB', 'BA'],
             fill: 'toself'
             }]
-
-            layout = {
-                height: 300,
-                polar: {
-                    radialaxis: {
-                    visible: true,
-                    range: [-3, 3]
-                    },
-                margin: { l:0, r:0, t:0, b:0, pad:0}
+    }
+    layout = {
+        height: 300,
+        polar: {
+            radialaxis: {
+            visible: true,
+            range: [-3, 3]
             },
-            showlegend: false
-        }
+        margin: { l:0, r:0, t:0, b:0, pad:0}
+    },
+    showlegend: false
+    }
     Plotly.newPlot("radar_chart", radar_data, layout, {displayModeBar: false})
 }
 
@@ -138,7 +147,14 @@ $(document).ready(function(){
         $(this).create_radar_chart(selected);
         $.get("/fantasy/draft/sims/"+selected, function(resp, status){
             //alert("Data: " + resp + "\nStatus: " + status);
-            $("#sims").html('<font size="1">'+resp+'</font>');
+            resp = JSON.parse(resp);
+            let names = [];
+            let values = [];
+            let html_response = "";
+            $.each(resp, function(i, v){
+                values.push(v.Name +', '+ v.Value.toFixed(1).toString() + '<br>');
+            })
+            $("#sims").html('<font size="2">'+values+'</font>');
         });
     });
     $("#bid_form").submit(function(){

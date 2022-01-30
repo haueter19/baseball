@@ -96,7 +96,7 @@
                 <div class="text-danger" id="error_msg" style="display:none;"></div>
             </div>
             <div class="col-md-2 mb-3 border-start border-dark">
-                <h5>Similar Players</h5>
+                <h5>Similar Players by Projected Stats</h5>
                 <div id="sims"></div>
             </div>
             <div class="col-md-2 border-start border-dark mb-2">
@@ -118,6 +118,7 @@
                         <th>SB | Sv+Hld</th>
                         <th>Init $</th>
                         <th>Market $</th>
+                        <th>Next</th>
                     </thead>
                     {% for i, row in players.iterrows() %}
                         {% if row['Primary_Pos']=='SP' or row['Primary_Pos']=='RP' %}
@@ -134,6 +135,7 @@
                             <td>{{ row['Sv+Hld'] }}</td>
                             <td>{{ row['Value'] }}</td>
                             <td>{{ row['curValue'] }}</td>
+                            <td>{{ row['next_in_tier'] }}</td>
                         </tr>
                         {% else %}
                         <tr id="{{ row['playerid'] }}">
@@ -149,6 +151,7 @@
                             <td>{{ row['SB'] }}</td>
                             <td>{{ row['Value'] }}</td>
                             <td>{{ row['curValue'] }}</td>
+                            <td>{{ row['next_in_tier'] }}</td>
                         </tr>
                         {% endif %}
                     {% endfor %}
