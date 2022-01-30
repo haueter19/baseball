@@ -312,7 +312,10 @@ async def sim_players(playerid: str):
     if h[h['playerid']==playerid]['Owner'].any():
         return '<br>sims unavailable for owned players'
     else:
-        sims = add_distance_metrics(h, playerid, ['BA', 'R', 'RBI', 'HR', 'SB']).sort_values('eucl_dist')
+        if h[h[['playerid']==playerid]]['Primary_Pos'] in ['C', '1B', '2B', '3B', 'SS', 'OF', 'DH']:
+            sims = add_distance_metrics(h, playerid, ['BA', 'R', 'RBI', 'HR', 'SB']).sort_values('eucl_dist')
+        else:
+            sims = add_distance_metrics(h, playerid, ['ERA', 'WHIP', 'W', 'SO', 'Sv+Hld']).sort_values('eucl_dist')
         return '<br>'.join(sims['Name'])
 
 @router.get('/draft/reset_all')

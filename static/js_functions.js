@@ -54,6 +54,46 @@ $.fn.z_players = function(){
     layout = {title: "Z List", height: 400, width: 1350, margin: {l:10, t:30}},
     Plotly.newPlot("z_players_chart", z_scatter_data, layout, {displayModeBar: false})
 }
+
+$.fn.tiers = function(){
+    let x_data = [];
+    let y_data = [];
+    let hover_data = [];
+    let p_id = [];
+    let color_map = [];
+    var j = 0;
+    $.each(data, function(i, v){
+        if (v.z>0){
+            x_data.push(v.Primary_Pos);
+            y_data.push(data[i]['Value']);
+            hover_data.push(data[i]['Name']+'<br>ID: '+data[i]['playerid']+'<br>Market Value: $'+data[i]['curValue']);
+            if (data[i]['Owner']){
+                color_map.push('gray');
+            } else {
+                color_map.push('lightblue');
+            }
+        }
+        //j += 1
+    })
+
+    tiers_data = [
+        {
+            type: 'scatter',
+            x:x_data,
+            y:y_data,
+            text:hover_data,
+            //hovermode:'closest',
+            mode:'markers',
+            customtext:p_id,
+            marker: { color: color_map },
+            hovertemplate: "%{text}"
+            
+        }
+    ]
+    layout = {title: "Positional Tiers", hovermode:'closest', height: 400, width: 1050, margin: {l:20, t:30}},
+    Plotly.newPlot("tiers_chart", tiers_data, layout, {displayModeBar: false})
+}
+
 $.fn.create_radar_chart = function(selected){
     $("#projected_stats_table tr").hide();
     $("#projected_stats_table tr:first").show();
@@ -86,17 +126,19 @@ $.fn.create_radar_chart = function(selected){
     Plotly.newPlot("radar_chart", radar_data, layout, {displayModeBar: false})
 }
 
+
 $(document).ready(function(){
     $("#projected_stats_table tr").hide();
     $("#projected_stats_table tr:first").show();
     $.fn.z_players();
     $.fn.owners_chart('Owner', '$ Left');
+    $.fn.tiers();
     $("input[name='playerid']").on('focusout', function(e){
         var selected = $(this).val();
         $(this).create_radar_chart(selected);
         $.get("/fantasy/draft/sims/"+selected, function(resp, status){
             //alert("Data: " + resp + "\nStatus: " + status);
-            $("#sims").html(resp);
+            $("#sims").html('<font size="1">'+resp+'</font>');
         });
     });
     $("#bid_form").submit(function(){
@@ -171,6 +213,10 @@ $(document).ready(function(){
         var txt = data.points[0].text.split("<br>")
         $("#player_select").val(txt[1].substring(4));
         $.fn.create_radar_chart(txt[1].substring(4));
-
+    });
+    document.getElementById("tiers_chart").on('plotly_click', function(data){
+        var txt = data.points[0].text.split("<br>")
+        $("#player_select").val(txt[1].substring(4));
+        $.fn.create_radar_chart(txt[1].substring(4));
     });
 })
