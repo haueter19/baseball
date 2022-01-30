@@ -110,14 +110,14 @@
                         <th>Name</th>
                         <th>Team</th>
                         <th>Pos</th>
-                        <th>PA</th>
-                        <th>BA</th>
-                        <th>HR</th>
-                        <th>R</th>
-                        <th>RBI</th>
-                        <th>SB</th>
-                        <th>$</th>
-                        <th>Z</th>
+                        <th>PA | IP</th>
+                        <th>BA | ERA</th>
+                        <th>HR | WHIP</th>
+                        <th>R | SO</th>
+                        <th>RBI | W</th>
+                        <th>SB | Sv+Hld</th>
+                        <th>Init $</th>
+                        <th>Market $</th>
                     </thead>
                     {% for i, row in players.iterrows() %}
                         {% if row['Primary_Pos']=='SP' or row['Primary_Pos']=='RP' %}
@@ -133,7 +133,7 @@
                             <td>{{ row['W'] }}</td>
                             <td>{{ row['Sv+Hld'] }}</td>
                             <td>{{ row['Value'] }}</td>
-                            <td>{{ row['z'] }}</td>
+                            <td>{{ row['curValue'] }}</td>
                         </tr>
                         {% else %}
                         <tr id="{{ row['playerid'] }}">
@@ -148,7 +148,7 @@
                             <td>{{ row['RBI'] }}</td>
                             <td>{{ row['SB'] }}</td>
                             <td>{{ row['Value'] }}</td>
-                            <td>{{ row['z'] }}</td>
+                            <td>{{ row['curValue'] }}</td>
                         </tr>
                         {% endif %}
                     {% endfor %}
@@ -199,13 +199,19 @@
                                 <th onclick="sortTable(2)">Z Value</th>
                                 <th onclick="sortTable(3)">$/Unit</th>
                                 <th onclick="sortTable(4)">Count</th>
-                                <th onclick="sortTable(5)">BA</th>
-                                <th onclick="sortTable(6)">HR</th>
-                                <th onclick="sortTable(7)">R</th>
-                                <th onclick="sortTable(8)">RBI</th>
-                                <th onclick="sortTable(9)">SB</th>
-                                <th onclick="sortTable(10)">Pts</th>
-                                <th onclick="sortTable(11)">Rank</th>
+                                <th onclick="sortTable(5)">Pts</th>
+                                <th onclick="sortTable(6)">Rank</th>
+                                <th onclick="sortTable(7)">BA</th>
+                                <th onclick="sortTable(8)">HR</th>
+                                <th onclick="sortTable(9)">R</th>
+                                <th onclick="sortTable(10)">RBI</th>
+                                <th onclick="sortTable(11)">SB</th>
+                                <th onclick="sortTable(12)">ERA</th>
+                                <th onclick="sortTable(13)">WHIP</th>
+                                <th onclick="sortTable(14)">W</th>
+                                <th onclick="sortTable(15)">SO</th>
+                                <th onclick="sortTable(16)">Sv+Hld</th>
+                                
                             </thead>
                         {% for i, row in owners_df.iterrows() %}
                             <tr>
@@ -214,13 +220,18 @@
                                 <td>{{ row['z'] }}</td>
                                 <td>{{ row['$/unit'] }}</td>
                                 <td>{{ row['Drafted'] }}</td>
+                                <td>{{ row['Pts'] }}</td>
+                                <td>{{ row['Rank'] }}</td>
                                 <td>{{ row['BA'] }}</td>
                                 <td>{{ row['HR'] }}</td>
                                 <td>{{ row['R'] }}</td>
                                 <td>{{ row['RBI'] }}</td>
                                 <td>{{ row['SB'] }}</td>
-                                <td>{{ row['Pts'] }}</td>
-                                <td>{{ row['Rank'] }}</td>
+                                <td>{{ row['ERA'] }}</td>
+                                <td>{{ row['WHIP'] }}</td>
+                                <td>{{ row['W'] }}</td>
+                                <td>{{ row['SO'] }}</td>
+                                <td>{{ row['Sv+Hld'] }}</td>
                             </tr>
                         {% endfor %}
                         </table>

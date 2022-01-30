@@ -268,21 +268,27 @@ async def draft_view(request: Request):
     for i in ['SO', 'W', 'Sv+Hld', 'R', 'RBI', 'SB', 'HR']:
         h[i].fillna(0,inplace=True)
         h[i] = h[i].astype(int)
-    owners_df = h.groupby('Owner').agg({'Name':'count', 'Paid':'sum', 'z':'sum', 'H':'sum', 'AB':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'SB':'sum'}).reset_index()
+    owners_df = h.groupby('Owner').agg({'Name':'count', 'Paid':'sum', 'z':'sum', 'H':'sum', 'AB':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'SB':'sum', 'Outs':'sum', 'W':'sum', 'SO':'sum', 'Sv+Hld':'sum', 'ER':'sum', 'IP':'sum', 'BB':'sum', 'HA':'sum'}).reset_index()
     owners_df.rename(columns={'Name':'Drafted'},inplace=True)
     owners_df['Paid'] = owners_df['Paid'].apply(lambda x: int(x) if x>0 else x)
     owners_df['$/unit'] = round(owners_df['Paid']/owners_df['z'],1)
     owners_df['z'] = round(owners_df['z'],1)
     owners_df['$ Left'] = tm_dollars - owners_df['Paid']
     owners_df['BA'] = round(owners_df['H']/owners_df['AB'],3)
+    owners_df['ERA'] = round(owners_df['ER']/(owners_df['Outs']/3)*9,2)
+    owners_df['WHIP'] = round((owners_df['BB']+owners_df['HA'])/(owners_df['Outs']/3),2)
     owners_df['Pts'] = 0
-    for i in ['BA', 'HR', 'R', 'RBI', 'SB']:
+    for i in ['BA', 'HR', 'R', 'RBI', 'SB', 'ERA', 'WHIP', 'W', 'SO', 'Sv+Hld']:
         owners_df['Pts'] += owners_df[i].rank()
     owners_df['Rank'] = owners_df['Pts'].rank()
     roster = pd.DataFrame(index=['C', '1B', '2B', '3B', 'SS', 'MI', 'CI', 'OF1', 'OF2', 'OF3', 'OF4', 'OF5', 'DH1', 'DH2'], data=np.zeros((14,12)), columns=owner_list)
     for tm in owners_df.Owner.tolist():
         for i, row in h[h['Owner']==tm][['Name', 'Owner', 'Primary_Pos', 'Pos', 'Timestamp']].sort_values("Timestamp").iterrows():
             check_roster_pos(roster, h.loc[i]['Name'], h.loc[i]['Owner'], h.loc[i]['Primary_Pos'], h.loc[i]['Pos'])
+    dollars_rem = (tot_dollars - owners_df['Paid'].sum())
+    z_rem = (h[h['z']>0]['z'].sum() - owners_df['z'].sum())
+    conv_factor = dollars_rem / z_rem
+    h['curValue'] = round(h['z']*conv_factor,1)
     return templates.TemplateResponse('draft.html', {'request':request, 'players':h.sort_values('z', ascending=False), 
                                     'owned':h[h['Owner'].notna()], 'owners_df':owners_df, 'roster':roster, 
                                     'owners_json':owners_df.to_json(orient='index'), 
