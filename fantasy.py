@@ -288,6 +288,8 @@ async def draft_view(request: Request):
     owners_df['$/unit'] = round(owners_df['Paid']/owners_df['z'],1)
     owners_df['z'] = round(owners_df['z'],1)
     owners_df['$ Left'] = tm_dollars - owners_df['Paid']
+    owners_df['$ Left / Plyr'] = round(owners_df['$ Left'] / (tm_players -owners_df['Drafted']),1)
+    owners_df['Value'] = 0
     owners_df['BA'] = round(owners_df['H']/owners_df['AB'],3)
     owners_df['ERA'] = round(owners_df['ER']/(owners_df['Outs']/3)*9,2)
     owners_df['WHIP'] = round((owners_df['BB']+owners_df['HA'])/(owners_df['Outs']/3),2)
