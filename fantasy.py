@@ -25,7 +25,7 @@ tot_dollars = n_teams * tm_dollars
 tot_players = n_teams * tm_players
 tot_hitters = n_teams * 14
 tot_pitchers = n_teams * 9
-
+orig_conv =  (tm_dollars/tm_players)*(tot_players/591.1999720030974)
 owner_list = ['Avg Joes', 'Brewbirds', 'Charmer', 'Dirty Birds', 'Harvey', 'Lil Trump', 'Lima Time', 'Midnight', 'Moms Cookin', 'Roid Ragers', 'Trouble', 'Wu-Tang']
 
 drafted_by_pos = {
@@ -289,7 +289,7 @@ async def draft_view(request: Request):
     owners_df['z'] = round(owners_df['z'],1)
     owners_df['$ Left'] = tm_dollars - owners_df['Paid']
     owners_df['$ Left / Plyr'] = round(owners_df['$ Left'] / (tm_players -owners_df['Drafted']),1)
-    owners_df['Value'] = 0
+    owners_df['Value'] = round((owners_df['z']*orig_conv) - owners_df['Paid'],1)
     owners_df['BA'] = round(owners_df['H']/owners_df['AB'],3)
     owners_df['ERA'] = round(owners_df['ER']/(owners_df['Outs']/3)*9,2)
     owners_df['WHIP'] = round((owners_df['BB']+owners_df['HA'])/(owners_df['Outs']/3),2)

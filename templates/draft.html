@@ -204,19 +204,20 @@
                                 <th onclick="sortTable(1)">$ Left</th>
                                 <th onclick="sortTable(2)">$ Left/Plyr</th>
                                 <th onclick="sortTable(3)">Drafted</th>
-                                <th onclick="sortTable(4)">Pts</th>
-                                <th onclick="sortTable(5)">Rank</th>
-                                <th onclick="sortTable(6)">$/Unit</th>
-                                <th onclick="sortTable(7)">BA</th>
-                                <th onclick="sortTable(8)">HR</th>
-                                <th onclick="sortTable(9)">R</th>
-                                <th onclick="sortTable(10)">RBI</th>
-                                <th onclick="sortTable(11)">SB</th>
-                                <th onclick="sortTable(12)">ERA</th>
-                                <th onclick="sortTable(13)">WHIP</th>
-                                <th onclick="sortTable(14)">W</th>
-                                <th onclick="sortTable(15)">SO</th>
-                                <th onclick="sortTable(16)">Sv+Hld</th>
+                                <th onclick="sortTable(4)">Value+/-</th>
+                                <th onclick="sortTable(5)">Pts</th>
+                                <th onclick="sortTable(6)">Rank</th>
+                                <th onclick="sortTable(7)">$/Unit</th>
+                                <th onclick="sortTable(8)">BA</th>
+                                <th onclick="sortTable(9)">HR</th>
+                                <th onclick="sortTable(10)">R</th>
+                                <th onclick="sortTable(11)">RBI</th>
+                                <th onclick="sortTable(12)">SB</th>
+                                <th onclick="sortTable(13)">ERA</th>
+                                <th onclick="sortTable(14)">WHIP</th>
+                                <th onclick="sortTable(15)">W</th>
+                                <th onclick="sortTable(16)">SO</th>
+                                <th onclick="sortTable(17)">Sv+Hld</th>
                                 
                             </thead>
                         {% for i, row in owners_df.iterrows() %}
@@ -225,6 +226,7 @@
                                 <td>{{ row['$ Left'] }}</td>
                                 <td>{{ row['$ Left / Plyr'] }}</td>
                                 <td>{{ row['Drafted'] }}</td>
+                                <td>{{ row['Value'] }}</td>
                                 <td>{{ row['Pts'] }}</td>
                                 <td>{{ row['Rank'] }}</td>
                                 <td>{{ row['$/unit'] }}</td>
