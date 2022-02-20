@@ -172,11 +172,65 @@
                 </table>
             </div>
             <div class="col-md-1 border-start border-dark">
-                <h4>Meter</h4>
-                Players Left:<br>{{ players_left }}<br><br>
-                Dollars Left:<br>{{ dollars_left }}<br><br>
-                Initial $/z:<br>{{ init_dollars_per_z }}<br><br>
-                Current $/z:<br>{{ current_dollars_per_z }}
+                <h4>Cash Meter</h4>
+                Players Left:<br>{{ players_left }}<br>
+                Dollars Left:<br>{{ dollars_left }}<br>
+                Initial $/z:<br>{{ init_dollars_per_z }}<br>
+                Current $/z:<br>{{ current_dollars_per_z }}<br>
+                <table>
+                    <tr>
+                        <th>Team</th>
+                        <th>Cash+</th>
+                    </tr>
+                    <tr>
+                        <td>Avg Joes</td>
+                        <td id="joes_meter"></td>
+                    </tr>
+                    <tr>
+                        <td>Brewbirds</td>
+                        <td id="brewbirds_meter"></td>
+                    </tr>
+                    <tr>
+                        <td>Charmer</td>
+                        <td id="charmer_meter"></td>
+                    </tr>
+                    <tr>
+                        <td>Dirty Birds</td>
+                        <td id="dirtybirds_meter"></td>
+                    </tr>
+                    <tr>
+                        <td>Harvey</td>
+                        <td id="harvey_meter"></td>
+                    </tr>
+                    <tr>
+                        <td>Lil Trump</td>
+                        <td id="lilt_meter"></td>
+                    </tr>
+                    <tr>
+                        <td>Lima Time</td>
+                        <td id="lima_meter"></td>
+                    </tr>
+                    <tr>
+                        <td>Midnight</td>
+                        <td id="midnight_meter"></td>
+                    </tr>
+                    <tr>
+                        <td>Mother</td>
+                        <td id="mother_meter"></td>
+                    </tr>
+                    <tr>
+                        <td>Roiders</td>
+                        <td id="roiders_meter"></td>
+                    </tr>
+                    <tr>
+                        <td>Trouble</td>
+                        <td id="trouble_meter"></td>
+                    </tr>
+                    <tr>
+                        <td>Wu-Tang</td>
+                        <td id="wutang_meter"></td>
+                    </tr>
+                </table>
             </div>
             <div class="col-md-9 border-start border-dark">
                 <ul class="nav nav-tabs">
@@ -201,28 +255,30 @@
                         <table class="table table-condensed table-hover" id="myTable" style="font-size:12px;">
                             <thead>
                                 <th onclick="sortTable(0)">Owner</th>
-                                <th onclick="sortTable(1)">$ Left</th>
-                                <th onclick="sortTable(2)">$ Left/Plyr</th>
-                                <th onclick="sortTable(3)">Drafted</th>
-                                <th onclick="sortTable(4)">Value+/-</th>
-                                <th onclick="sortTable(5)">Pts</th>
-                                <th onclick="sortTable(6)">Rank</th>
-                                <th onclick="sortTable(7)">$/Unit</th>
-                                <th onclick="sortTable(8)">BA</th>
-                                <th onclick="sortTable(9)">HR</th>
-                                <th onclick="sortTable(10)">R</th>
-                                <th onclick="sortTable(11)">RBI</th>
-                                <th onclick="sortTable(12)">SB</th>
-                                <th onclick="sortTable(13)">ERA</th>
-                                <th onclick="sortTable(14)">WHIP</th>
-                                <th onclick="sortTable(15)">W</th>
-                                <th onclick="sortTable(16)">SO</th>
-                                <th onclick="sortTable(17)">Sv+Hld</th>
+                                <th onclick="sortTable(1)">Cash Sitch</th>
+                                <th onclick="sortTable(2)">$ Left</th>
+                                <th onclick="sortTable(3)">$ Left/Plyr</th>
+                                <th onclick="sortTable(4)">Drafted</th>
+                                <th onclick="sortTable(5)">Value+/-</th>
+                                <th onclick="sortTable(6)">Pts</th>
+                                <th onclick="sortTable(7)">Rank</th>
+                                <th onclick="sortTable(8)">$/Unit</th>
+                                <th onclick="sortTable(9)">BA</th>
+                                <th onclick="sortTable(10)">HR</th>
+                                <th onclick="sortTable(11)">R</th>
+                                <th onclick="sortTable(12)">RBI</th>
+                                <th onclick="sortTable(13)">SB</th>
+                                <th onclick="sortTable(14)">ERA</th>
+                                <th onclick="sortTable(15)">WHIP</th>
+                                <th onclick="sortTable(16)">W</th>
+                                <th onclick="sortTable(17)">SO</th>
+                                <th onclick="sortTable(18)">Sv+Hld</th>
                                 
                             </thead>
                         {% for i, row in owners_df.iterrows() %}
                             <tr>
                                 <td>{{ row['Owner'] }}</td>
+                                <td>{{ row['Cash'] }}</td>
                                 <td>{{ row['$ Left'] }}</td>
                                 <td>{{ row['$ Left / Plyr'] }}</td>
                                 <td>{{ row['Drafted'] }}</td>

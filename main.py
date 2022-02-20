@@ -1,3 +1,4 @@
+import uvicorn
 from typing import Optional
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
@@ -38,3 +39,7 @@ async def pid_list():
     df2 = df2.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index()
     df2 = df2.dropna()
     return {'PID':df2.PID.tolist(), 'First':df2.First.tolist(), 'Last':df2.Last.tolist()}
+
+if __name__=='__main__':
+    uvicorn.run('main:app', host='0.0.0.0', port=8001, reload=True)
+    

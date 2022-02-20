@@ -289,6 +289,7 @@ async def draft_view(request: Request):
     owners_df['z'] = round(owners_df['z'],1)
     owners_df['$ Left'] = tm_dollars - owners_df['Paid']
     owners_df['$ Left / Plyr'] = round(owners_df['$ Left'] / (tm_players -owners_df['Drafted']),1)
+    owners_df['Cash'] = round(owners_df['$ Left / Plyr'] / (((tot_dollars - owners_df.Paid.sum()) + owners_df['Paid']) / ((tot_players - owners_df.Drafted.sum()) + owners_df['Drafted'])),2)
     owners_df['Value'] = round((owners_df['z']*orig_conv) - owners_df['Paid'],1)
     owners_df['BA'] = round(owners_df['H']/owners_df['AB'],3)
     owners_df['ERA'] = round(owners_df['ER']/(owners_df['Outs']/3)*9,2)
@@ -311,7 +312,7 @@ async def draft_view(request: Request):
                                     'owners_json':owners_df.to_json(orient='index'), 
                                     'json':h.sort_values('z', ascending=False).to_json(orient='records'),
                                     'players_left':(tot_players - owners_df.Drafted.sum()),
-                                    'dollars_left':(tot_dollars - owners_df.Paid.sum()), 
+                                    'dollars_left':(tot_dollars - owners_df.Paid.sum()),
                                     'init_dollars_per_z':round((tot_dollars/h[h['z']>=0]['z'].sum()*player_split),2),
                                     'current_dollars_per_z':round(owners_df.Paid.sum() / owners_df.z.sum(),2)})
 

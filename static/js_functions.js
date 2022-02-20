@@ -1,4 +1,3 @@
-
 $.fn.owners_chart = function(x_var, y_var){
     let x_data = [];
     let y_data = [];
@@ -135,6 +134,26 @@ $.fn.create_radar_chart = function(selected){
     Plotly.newPlot("radar_chart", radar_data, layout, {displayModeBar: false})
 }
 
+function bid_amounts(val){
+    let v = $("#player_select").val();
+    console.log(v, val);
+    for (key in owners){
+        let bid = val*owners[key]["Cash"];
+        console.log(bid.toFixed(1));
+    }
+    $("#joes_meter").text(bid.toFixed(1));
+    $("#brewbirds_meter").text(bid.toFixed(1));
+    $("#charmer_meter").text(bid.toFixed(1));
+    $("#dirtybirds_meter").text(bid.toFixed(1));
+    $("#harvey_meter").text(bid.toFixed(1));
+    $("#lilt_meter").text(bid.toFixed(1));
+    $("#lima_meter").text(bid.toFixed(1));
+    $("#midnight_meter").text(bid.toFixed(1));
+    $("#mother_meter").text(bid.toFixed(1));
+    $("#roiders_meter").text(bid.toFixed(1));
+    $("#trouble_meter").text(bid.toFixed(1));
+    $("#wutang_meter").text(bid.toFixed(1));
+}
 
 $(document).ready(function(){
     $("#projected_stats_table tr").hide();
@@ -209,6 +228,7 @@ $(document).ready(function(){
                 var tr_id = v.playerid
                 $("#player_select").val(tr_id);
                 $(this).create_radar_chart(tr_id);
+                bid_amounts(v.Value);
                 return tr_id;
             }
         });
@@ -224,7 +244,7 @@ $(document).ready(function(){
             }
         });
     });
-    
+
     document.getElementById("z_players_chart").on('plotly_click', function(data){
         var txt = data.points[0].text.split("<br>")
         $("#player_select").val(txt[1].substring(4));
