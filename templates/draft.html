@@ -182,54 +182,12 @@
                         <th>Team</th>
                         <th>Cash+</th>
                     </tr>
+                    {% for i, row in owners_df.iterrows() %}
                     <tr>
-                        <td>Avg Joes</td>
-                        <td id="joes_meter"></td>
+                        <td>{{ row['Owner'] }}</td>
+                        <td id="{{ row['Owner']|replace(' ','_') }}_meter">{{ row['Cash'] }}</td>
                     </tr>
-                    <tr>
-                        <td>Brewbirds</td>
-                        <td id="brewbirds_meter"></td>
-                    </tr>
-                    <tr>
-                        <td>Charmer</td>
-                        <td id="charmer_meter"></td>
-                    </tr>
-                    <tr>
-                        <td>Dirty Birds</td>
-                        <td id="dirtybirds_meter"></td>
-                    </tr>
-                    <tr>
-                        <td>Harvey</td>
-                        <td id="harvey_meter"></td>
-                    </tr>
-                    <tr>
-                        <td>Lil Trump</td>
-                        <td id="lilt_meter"></td>
-                    </tr>
-                    <tr>
-                        <td>Lima Time</td>
-                        <td id="lima_meter"></td>
-                    </tr>
-                    <tr>
-                        <td>Midnight</td>
-                        <td id="midnight_meter"></td>
-                    </tr>
-                    <tr>
-                        <td>Mother</td>
-                        <td id="mother_meter"></td>
-                    </tr>
-                    <tr>
-                        <td>Roiders</td>
-                        <td id="roiders_meter"></td>
-                    </tr>
-                    <tr>
-                        <td>Trouble</td>
-                        <td id="trouble_meter"></td>
-                    </tr>
-                    <tr>
-                        <td>Wu-Tang</td>
-                        <td id="wutang_meter"></td>
-                    </tr>
+                    {% endfor %}
                 </table>
             </div>
             <div class="col-md-9 border-start border-dark">

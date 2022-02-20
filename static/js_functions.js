@@ -136,23 +136,12 @@ $.fn.create_radar_chart = function(selected){
 
 function bid_amounts(val){
     let v = $("#player_select").val();
-    console.log(v, val);
+    //console.log(v, val);
     for (key in owners){
         let bid = val*owners[key]["Cash"];
-        console.log(bid.toFixed(1));
+        let o = owners[key]['Owner'].replace(' ','_');
+        let id = $("#"+o+"_meter").text(bid.toFixed(0));
     }
-    $("#joes_meter").text(bid.toFixed(1));
-    $("#brewbirds_meter").text(bid.toFixed(1));
-    $("#charmer_meter").text(bid.toFixed(1));
-    $("#dirtybirds_meter").text(bid.toFixed(1));
-    $("#harvey_meter").text(bid.toFixed(1));
-    $("#lilt_meter").text(bid.toFixed(1));
-    $("#lima_meter").text(bid.toFixed(1));
-    $("#midnight_meter").text(bid.toFixed(1));
-    $("#mother_meter").text(bid.toFixed(1));
-    $("#roiders_meter").text(bid.toFixed(1));
-    $("#trouble_meter").text(bid.toFixed(1));
-    $("#wutang_meter").text(bid.toFixed(1));
 }
 
 $(document).ready(function(){
@@ -242,6 +231,7 @@ $(document).ready(function(){
                 $(this).create_radar_chart(tr_id);
                 return tr_id;
             }
+        bid_amounts(-1);
         });
     });
 
@@ -249,10 +239,12 @@ $(document).ready(function(){
         var txt = data.points[0].text.split("<br>")
         $("#player_select").val(txt[1].substring(4));
         $.fn.create_radar_chart(txt[1].substring(4));
+        bid_amounts(-1);
     });
     document.getElementById("tiers_chart").on('plotly_click', function(data){
         var txt = data.points[0].text.split("<br>")
         $("#player_select").val(txt[1].substring(4));
         $.fn.create_radar_chart(txt[1].substring(4));
+        bid_amounts(-1);
     });
 })
