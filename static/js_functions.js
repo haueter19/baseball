@@ -134,13 +134,19 @@ $.fn.create_radar_chart = function(selected){
     Plotly.newPlot("radar_chart", radar_data, layout, {displayModeBar: false})
 }
 
-function bid_amounts(val){
-    let v = $("#player_select").val();
-    //console.log(v, val);
+function bid_amounts(id){
+    //let p_id = $("#player_select").val();
+    alert(id);
+    data.forEach(function(v){
+        if (v.playerid==id){
+            let val = v.Value;
+        }
+    })
+    
     for (key in owners){
         let bid = val*owners[key]["Cash"];
         let o = owners[key]['Owner'].replace(' ','_');
-        let id = $("#"+o+"_meter").text(bid.toFixed(0));
+        $("#"+o+"_meter").text(bid.toFixed(0));
     }
 }
 
@@ -153,6 +159,7 @@ $(document).ready(function(){
     $("input[name='playerid']").on('focusout', function(e){
         var selected = $(this).val();
         $(this).create_radar_chart(selected);
+        bid_amounts(selected);
         $.get("/fantasy/draft/sims/"+selected, function(resp, status){
             //alert("Data: " + resp + "\nStatus: " + status);
             resp = JSON.parse(resp);
@@ -217,7 +224,7 @@ $(document).ready(function(){
                 var tr_id = v.playerid
                 $("#player_select").val(tr_id);
                 $(this).create_radar_chart(tr_id);
-                bid_amounts(v.Value);
+                bid_amounts(tr_id);
                 return tr_id;
             }
         });
@@ -229,9 +236,9 @@ $(document).ready(function(){
                 var tr_id = v.playerid
                 $("#player_select").val(tr_id);
                 $(this).create_radar_chart(tr_id);
+                bid_amounts(tr_id);
                 return tr_id;
             }
-        bid_amounts(-1);
         });
     });
 
@@ -239,12 +246,12 @@ $(document).ready(function(){
         var txt = data.points[0].text.split("<br>")
         $("#player_select").val(txt[1].substring(4));
         $.fn.create_radar_chart(txt[1].substring(4));
-        bid_amounts(-1);
+        bid_amounts(txt[1]);
     });
     document.getElementById("tiers_chart").on('plotly_click', function(data){
         var txt = data.points[0].text.split("<br>")
         $("#player_select").val(txt[1].substring(4));
         $.fn.create_radar_chart(txt[1].substring(4));
-        bid_amounts(-1);
+        bid_amounts(txt[1]);
     });
 })
