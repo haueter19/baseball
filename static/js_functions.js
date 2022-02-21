@@ -1,3 +1,12 @@
+function get_val_from_id(id){
+    for (const e of data) {
+      // ...use `element`...
+        if (e.playerid==id){
+            return e.Value;
+        };
+    };
+};
+
 $.fn.owners_chart = function(x_var, y_var){
     let x_data = [];
     let y_data = [];
@@ -24,10 +33,10 @@ $.fn.z_players = function(){
     let color_map = [];
     var j = 0;
     $.each(data, function(i, v){
-        if (j<276){
+        if (j<300){
             x_data.push(j);
             y_data.push(data[i]['Value']);
-            hover_data.push(data[i]['Name']+'<br>ID: '+data[i]['playerid']+'<br>Value: $'+data[i]['curValue']);
+            hover_data.push(data[i]['Name']+'<br>ID: '+data[i]['playerid']+'<br>Value: $'+data[i]['Value']);
             if (data[i]['Owner']){
                 color_map.push('gray');
             } else {
@@ -65,7 +74,7 @@ $.fn.tiers = function(){
         if (v.z>0){
             x_data.push(v.Primary_Pos);
             y_data.push(data[i]['Value']);
-            hover_data.push(data[i]['Name']+'<br>ID: '+data[i]['playerid']+'<br>Market Value: $'+data[i]['curValue']);
+            hover_data.push(data[i]['Name']+'<br>ID: '+data[i]['playerid']+'<br>Market Value: $'+data[i]['Value']);
             if (data[i]['Owner']){
                 color_map.push('gray');
             } else {
@@ -135,14 +144,7 @@ $.fn.create_radar_chart = function(selected){
 }
 
 function bid_amounts(id){
-    //let p_id = $("#player_select").val();
-    alert(id);
-    data.forEach(function(v){
-        if (v.playerid==id){
-            let val = v.Value;
-        }
-    })
-    
+    const val = get_val_from_id(id);
     for (key in owners){
         let bid = val*owners[key]["Cash"];
         let o = owners[key]['Owner'].replace(' ','_');
@@ -244,14 +246,15 @@ $(document).ready(function(){
 
     document.getElementById("z_players_chart").on('plotly_click', function(data){
         var txt = data.points[0].text.split("<br>")
+        console.log(txt);
         $("#player_select").val(txt[1].substring(4));
         $.fn.create_radar_chart(txt[1].substring(4));
-        bid_amounts(txt[1]);
+        bid_amounts(txt[1].substring(4));
     });
     document.getElementById("tiers_chart").on('plotly_click', function(data){
         var txt = data.points[0].text.split("<br>")
         $("#player_select").val(txt[1].substring(4));
         $.fn.create_radar_chart(txt[1].substring(4));
-        bid_amounts(txt[1]);
+        bid_amounts(txt[1].substring(4));
     });
 })
