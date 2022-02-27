@@ -282,7 +282,7 @@ async def draft_view(request: Request):
     for i in ['SO', 'W', 'Sv+Hld', 'R', 'RBI', 'SB', 'HR']:
         h[i].fillna(0,inplace=True)
         h[i] = h[i].astype(int)
-    owners_df = h.groupby('Owner').agg({'Name':'count', 'Paid':'sum', 'z':'sum', 'H':'sum', 'AB':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'SB':'sum', 'Outs':'sum', 'W':'sum', 'SO':'sum', 'Sv+Hld':'sum', 'ER':'sum', 'IP':'sum', 'BB':'sum', 'HA':'sum'}).reset_index()
+    owners_df = h.query('Paid>0').groupby('Owner').agg({'Name':'count', 'Paid':'sum', 'z':'sum', 'H':'sum', 'AB':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'SB':'sum', 'Outs':'sum', 'W':'sum', 'SO':'sum', 'Sv+Hld':'sum', 'ER':'sum', 'IP':'sum', 'BB':'sum', 'HA':'sum'}).reset_index()
     owners_df.rename(columns={'Name':'Drafted'},inplace=True)
     owners_df['Paid'] = owners_df['Paid'].apply(lambda x: int(x) if x>0 else x)
     owners_df['$/unit'] = round(owners_df['Paid']/owners_df['z'],1)
@@ -300,13 +300,16 @@ async def draft_view(request: Request):
     owners_df['Rank'] = owners_df['Pts'].rank()
     roster = pd.DataFrame(index=['C', '1B', '2B', '3B', 'SS', 'MI', 'CI', 'OF1', 'OF2', 'OF3', 'OF4', 'OF5', 'DH1', 'DH2', 'P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9'], data=np.zeros((23,12)), columns=owner_list)
     for tm in owners_df.Owner.tolist():
-        for i, row in h[h['Owner']==tm][['Name', 'Owner', 'Primary_Pos', 'Pos', 'Timestamp']].sort_values("Timestamp").iterrows():
-            check_roster_pos(roster, h.loc[i]['Name'], h.loc[i]['Owner'], h.loc[i]['Primary_Pos'], h.loc[i]['Pos'])
+        for i, row in h[h['Owner']==tm][['Name', 'Owner', 'Primary_Pos', 'Pos', 'Paid', 'Timestamp']].sort_values("Timestamp").iterrows():
+            if row['Paid']==0:
+                pass
+            else:
+                check_roster_pos(roster, h.loc[i]['Name'], h.loc[i]['Owner'], h.loc[i]['Primary_Pos'], h.loc[i]['Pos'])
     dollars_rem = (tot_dollars - owners_df['Paid'].sum())
     z_rem = (h[h['z']>0]['z'].sum() - owners_df['z'].sum())
     conv_factor = dollars_rem / z_rem
     h['curValue'] = round(h['z']*conv_factor,1)
-    h['next_in_tier'] = h.apply(lambda x: next_closest_in_tier(h, x['Primary_Pos'], x['playerid']),axis=1)
+    #h['next_in_tier'] = h.apply(lambda x: next_closest_in_tier(h, x['Primary_Pos'], x['playerid']),axis=1)
     return templates.TemplateResponse('draft.html', {'request':request, 'players':h.sort_values('z', ascending=False), 
                                     'owned':h[h['Owner'].notna()], 'owners_df':owners_df, 'roster':roster, 
                                     'owners_json':owners_df.to_json(orient='index'), 

@@ -188,7 +188,7 @@ $(document).ready(function(){
             $("#error_msg").text('Choose a team').show();
             return false;
         }
-        if (price_val<1) {
+        if (price_val<0) {
             $("#error_msg").text('Enter a price').show();
             return false;
         }
