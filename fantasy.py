@@ -16,7 +16,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 templates = Jinja2Templates(directory="templates")
 
-n_teams = 12
+n_teams = 13
 tm_players = 23
 tm_dollars = 260
 player_split = .65
@@ -25,7 +25,8 @@ tot_dollars = n_teams * tm_dollars
 tot_players = n_teams * tm_players
 tot_hitters = n_teams * 14
 tot_pitchers = n_teams * 9
-orig_conv =  (tm_dollars/tm_players)*(tot_players/591.1999720030974)
+total_z_over_0 = 591.1999720030974
+orig_conv =  (tm_dollars/tm_players)*(tot_players/total_z_over_0)
 owner_list = ['Avg Joes', 'Brewbirds', 'Charmer', 'Dirty Birds', 'Harvey', 'Lil Trump', 'Lima Time', 'Midnight', 'Moms Cookin', 'Roid Ragers', 'Trouble', 'Wu-Tang']
 
 drafted_by_pos = {
