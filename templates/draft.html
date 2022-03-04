@@ -44,12 +44,12 @@
                                 <input type="radio" id="team3" name="owner" value="Charmer">
                                 <label for="team3">Charmer</label>
                             </td>
+                        </tr>
+                        <tr>
                             <td>
                                 <input type="radio" id="team4" name="owner" value="Dirty Birds">
                                 <label for="team4">Dirty Birds</label>
                             </td>
-                        </tr>
-                        <tr>
                             <td>
                                 <input type="radio" id="team5" name="owner" value="Harvey">
                                 <label for="team5">Harvey</label>
@@ -58,6 +58,8 @@
                                 <input type="radio" id="team6" name="owner" value="Lil Trump">
                                 <label for="team6">Lil Trump</label>
                             </td>
+                        </tr>
+                        <tr>
                             <td>
                                 <input type="radio" id="team7" name="owner" value="Lima Time">
                                 <label for="team7">Lima Time</label>
@@ -66,12 +68,11 @@
                                 <input type="radio" id="team8" name="owner" value="Midnight">
                                 <label for="team8">Midnight</label>
                             </td>
-                        </tr>
-                        <tr>
                             <td>
                                 <input type="radio" id="team9" name="owner" value="Moms Cookin">
                                 <label for="team9">Mother</label>
                             </td>
+                        <tr>
                             <td>
                                 <input type="radio" id="team10" name="owner" value="Roid Ragers">
                                 <label for="team10">Roiders</label>
@@ -83,6 +84,12 @@
                             <td>
                                 <input type="radio" id="team12" name="owner" value="Wu-Tang">
                                 <label for="team12">Wu-Tang</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="radio" id="team13" name="owner" value="Young Guns">
+                                <label for="team13">Young Guns</label>
                             </td>
                         </tr>
                     </table>
@@ -173,10 +180,6 @@
             </div>
             <div class="col-md-1 border-start border-dark">
                 <h4>Cash Meter</h4>
-                Players Left:<br>{{ players_left }}<br>
-                Dollars Left:<br>{{ dollars_left }}<br>
-                Initial $/z:<br>{{ init_dollars_per_z }}<br>
-                Current $/z:<br>{{ current_dollars_per_z }}<br>
                 <table>
                     <tr>
                         <th>Team</th>
@@ -189,6 +192,10 @@
                     </tr>
                     {% endfor %}
                 </table>
+                Players Left:<br>{{ players_left }}<br>
+                Dollars Left:<br>{{ dollars_left }}<br>
+                Initial $/z:<br>{{ init_dollars_per_z }}<br>
+                Current $/z:<br>{{ current_dollars_per_z }}<br>
             </div>
             <div class="col-md-9 border-start border-dark">
                 <ul class="nav nav-tabs">
@@ -274,6 +281,7 @@
                                 <th>Ragers</th>
                                 <th>Trouble</th>
                                 <th>Wu-Tang</th>
+                                <th>Young Guns</th>
                             </thead>
                             {% for i, row in roster.iterrows() %}
                                 <tr>
@@ -290,6 +298,7 @@
                                     <td>{{ row['Roid Ragers'] }}</td>
                                     <td>{{ row['Trouble'] }}</td>
                                     <td>{{ row['Wu-Tang'] }}</td>
+                                    <td>{{ row['Young Guns'] }}</td>
                                 </tr>
                             {% endfor %}
                         </table>

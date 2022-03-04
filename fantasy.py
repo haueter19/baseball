@@ -25,21 +25,21 @@ tot_dollars = n_teams * tm_dollars
 tot_players = n_teams * tm_players
 tot_hitters = n_teams * 14
 tot_pitchers = n_teams * 9
-total_z_over_0 = 591.1999720030974
+total_z_over_0 = 701.39442#591.1999720030974
 orig_conv =  (tm_dollars/tm_players)*(tot_players/total_z_over_0)
-owner_list = ['Avg Joes', 'Brewbirds', 'Charmer', 'Dirty Birds', 'Harvey', 'Lil Trump', 'Lima Time', 'Midnight', 'Moms Cookin', 'Roid Ragers', 'Trouble', 'Wu-Tang']
+owner_list = ['Avg Joes', 'Brewbirds', 'Charmer', 'Dirty Birds', 'Harvey', 'Lil Trump', 'Lima Time', 'Midnight', 'Moms Cookin', 'Roid Ragers', 'Trouble', 'Wu-Tang', 'Young Guns']
 
 drafted_by_pos = {
-    'C':12,
-    '1B':12,
-    '2B':12,
-    '3B':12,
-    'SS':12,
-    'OF':5*12,
-    'MI':12,
-    'CI':12,
-    'DH':12*2, 
-    'P':12*9
+    'C':13,
+    '1B':13,
+    '2B':13,
+    '3B':13,
+    'SS':13,
+    'OF':5*13,
+    'MI':13,
+    'CI':13,
+    'DH':13*2, 
+    'P':13*9
 }
 
 meta = MetaData()
@@ -123,119 +123,6 @@ def find_primary_pos(p):
         if i in pos_list:
             return i
 
-def process_top_hitters(h):
-    # Define two empty dicts
-    pos_avg = {}
-    pos_std = {}
-    # Create Used field and set to False, for tracking which players are considered drafted
-    h['Used'] = False
-    # For each of these positions, define a mask to isolate the unused players who are eligible at that position
-    for position in ['C', '2B', '1B', 'OF', '3B', 'SS']:
-        mask = (h['Pos'].str.contains(position)) & (h['Used']==False)
-        pos_avg[position], pos_std[position] = {}, {}
-        
-        # Rate stats first
-        # Calculate the BA Z score. Because it is a rate, it takes a different formula: H - (AB * (lgH/lgAB))
-        pos_index_list = h[mask].index[:drafted_by_pos[position]]
-        h.loc[pos_index_list, 'BA'] = (h[mask]['H'] - (h[mask]['AB'] * (h[mask]['H'].sum()/h[mask]['AB'].sum())))
-        
-        # For each stat category, fill in the dictionaries with an average and standard deviation using the top N players
-        # where N is established by the number of drafted players at that position by the league (eg 1B = 12, OF=60)
-        for stat in ['PA', 'AB', 'BA', 'HR', 'RBI', 'R', 'SB']:
-            pos_avg[position][stat] = round(h.loc[h[mask].index[:drafted_by_pos[position]], stat].mean(),1)
-            pos_std[position][stat] = round(h.loc[h[mask].index[:drafted_by_pos[position]], stat].std(),1)
-            # Using the player's stat projection, calculate their Z score among the top players
-            for j in h[mask].index[:drafted_by_pos[position]]:
-                h.loc[j, 'z'+stat] = (h.loc[j][stat] - pos_avg[position][stat]) / pos_std[position][stat]
-        
-        # Sum the 5 stat category Z scores
-        h.loc[h[mask].index[:drafted_by_pos[position]], 'z'] = h['zR'] + h['zRBI'] + h['zHR'] + h['zBA'] + h['zSB']
-        # Make the last player's Z score equal 0, then adjust the rest by that same amount
-        if h.loc[h[mask].index[:drafted_by_pos[position]]].sort_values('z')['z'].iloc[0] < 0:
-            h.loc[h[mask].index[:drafted_by_pos[position]], 'z'] += abs(h.loc[h[mask].index[:drafted_by_pos[position]]].sort_values('z')['z'].iloc[0])
-        else:
-            h.loc[h[mask].index[:drafted_by_pos[position]], 'z'] -= h.loc[h[mask].index[:drafted_by_pos[position]]].sort_values('z')['z'].iloc[0]
-        # Assign the current position as the player's Primary_Pos
-        h.loc[h[mask].index[:drafted_by_pos[position]], 'Primary_Pos'] = position
-        #print(position+':\n',h.loc[h[mask].index[:drafted_by_pos[position]]]['Name'].unique())
-        # Mark these players as Used so they do not get used in another position
-        h.loc[h[mask].index[:drafted_by_pos[position]], 'Used'] = True
-
-    # This is the same process as above except it does it for the MI and CI categories which means you have to find the 
-    # top 12 middle/corner infielders available
-    for position in ['MI', 'CI']:
-        if position == 'MI':
-            pos_avg[position], pos_std[position] = {}, {}
-            mask = ((h['Pos'].str.contains('SS')) & (h['Used']==False)) | ((h['Pos'].str.contains('2B')) & (h['Used']==False))
-            
-            pos_index_list = h[mask].index[:drafted_by_pos[position]]
-            h.loc[pos_index_list, 'BA'] = (h[mask]['H'] - (h[mask]['AB'] * (h[mask]['H'].sum()/h[mask]['AB'].sum())))
-        
-            for stat in ['PA', 'AB', 'BA', 'HR', 'RBI', 'R', 'SB']:
-                pos_avg[position][stat] = round(h.loc[h[mask].index[:drafted_by_pos[position]], stat].mean(),1)
-                pos_std[position][stat] = round(h.loc[h[mask].index[:drafted_by_pos[position]], stat].std(),1)
-                for j in h[mask].index[:drafted_by_pos[position]]:
-                    h.loc[j, 'z'+stat] = (h.loc[j][stat] - pos_avg[position][stat]) / pos_std[position][stat]
-
-            h.loc[h[mask].index[:drafted_by_pos[position]], 'z'] = h['zR'] + h['zRBI'] + h['zHR'] + h['zBA'] + h['zSB']
-            h.loc[h[mask].index[:drafted_by_pos[position]], 'z'] += abs(h.loc[h[mask].index[:drafted_by_pos[position]]].sort_values('z')['z'].iloc[0])
-            h.loc[h[mask].index[:drafted_by_pos[position]], 'Primary_Pos'] = position
-            #print(position+':\n',h.loc[h[mask].index[:12]]['Name'].unique())
-            h.loc[h[mask].index[:drafted_by_pos[position]], 'Used'] = True
-
-        elif position == 'CI':
-            pos_avg[position], pos_std[position] = {}, {}
-            mask = ((h['Pos'].str.contains('1B')) & (h['Used']==False)) | ((h['Pos'].str.contains('3B')) & (h['Used']==False))
-            
-            pos_index_list = h[mask].index[:drafted_by_pos[position]]
-            h.loc[pos_index_list, 'BA'] = (h[mask]['H'] - (h[mask]['AB'] * (h[mask]['H'].sum()/h[mask]['AB'].sum())))
-            
-            for stat in ['PA', 'AB', 'BA', 'HR', 'RBI', 'R', 'SB']:
-                pos_avg[position][stat] = round(h.loc[h[mask].index[:drafted_by_pos[position]], stat].mean(),1)
-                pos_std[position][stat] = round(h.loc[h[mask].index[:drafted_by_pos[position]], stat].std(),1)
-                for j in h[mask].index[:drafted_by_pos[position]]:
-                    h.loc[j, 'z'+stat] = (h.loc[j][stat] - pos_avg[position][stat]) / pos_std[position][stat]
-
-            h.loc[h[mask].index[:drafted_by_pos[position]], 'z'] = h['zR'] + h['zRBI'] + h['zHR'] + h['zBA'] + h['zSB']
-            h.loc[h[mask].index[:drafted_by_pos[position]], 'z'] += abs(h.loc[h[mask].index[:drafted_by_pos[position]]].sort_values('z')['z'].iloc[0])
-            h.loc[h[mask].index[:drafted_by_pos[position]], 'Primary_Pos'] = position
-            #print(position+':\n',h.loc[h[mask].index[:12]]['Name'].unique())
-            h.loc[h[mask].index[:drafted_by_pos[position]], 'Used'] = True
-
-    # Same process again but uses all remaining hitters and takes the top 12. Expect to see the true DHs at the top
-    pos_avg['DH'], pos_std['DH'] = {}, {}
-    mask = (h['Used']==False)
-    
-    pos_index_list = h[mask].index[:drafted_by_pos[position]]
-    h.loc[pos_index_list, 'BA'] = (h[mask]['H'] - (h[mask]['AB'] * (h[mask]['H'].sum()/h[mask]['AB'].sum())))
-        
-    for stat in ['PA', 'AB', 'BA', 'HR', 'RBI', 'R', 'SB']:
-        pos_avg['DH'][stat] = round(h.loc[h[mask].index[:24], stat].mean(),1)
-        pos_std['DH'][stat] = round(h.loc[h[mask].index[:24], stat].std(),1)
-        for j in h[mask].index[:24]:
-                h.loc[j, 'z'+stat] = (h.loc[j][stat] - pos_avg['DH'][stat]) / pos_std['DH'][stat]
-
-    h.loc[h[mask].index[:24], 'z'] = h['zR'] + h['zRBI'] + h['zHR'] + h['zBA'] + h['zSB']
-    h.loc[h[mask].index[:24], 'z'] += abs(h.loc[h[mask].index[:24]].sort_values('z')['z'].iloc[0])
-    h.loc[h[mask].index[:24], 'Primary_Pos'] = 'DH'
-    #print('DH:\n',h.loc[h[mask].index[:24]]['Name'].unique())
-    #print('DH:\n',h.loc[h[mask].index[:24]].index)
-    sub_mask = h.loc[h[mask].index[:24]].index
-    h.loc[h[mask].index[:24], 'Used'] = True
-    
-    if len(h[h['Used']==True])!=14*n_teams:
-        print('drafted list not right')
-    return h, pos_avg, pos_std
-
-def process_rem_hitters(h, pos_avg, pos_std):
-    for position in ['C', '2B', '1B', 'OF', '3B', 'SS']:
-        mask = (h['Used']==False) & (h['Primary_Pos']==position)
-        h.loc[mask, 'BA'] = (h[mask]['H'] - (h[mask]['AB'] * (h[(h['Used']==True) & (h['Primary_Pos']==position)]['H'].sum()/h[(h['Used']==True) & (h['Primary_Pos']==position)]['AB'].sum())))
-        for stat in ['PA', 'AB', 'BA', 'HR', 'RBI', 'R', 'SB']:
-            h.loc[mask, 'z'+stat] = (h[stat] - pos_avg[position][stat]) / pos_std[position][stat]
-
-    h.loc[h['Used']==False, 'z'] = h['zBA'] + h['zHR'] + h['zRBI'] + h['zR'] + h['zSB']
-    return h
 
 def check_roster_pos(roster, name, team_name, pos, eligible):
     eligible_at = eligible.split('/')
@@ -299,7 +186,7 @@ async def draft_view(request: Request):
     for i in ['BA', 'HR', 'R', 'RBI', 'SB', 'ERA', 'WHIP', 'W', 'SO', 'Sv+Hld']:
         owners_df['Pts'] += owners_df[i].rank()
     owners_df['Rank'] = owners_df['Pts'].rank()
-    roster = pd.DataFrame(index=['C', '1B', '2B', '3B', 'SS', 'MI', 'CI', 'OF1', 'OF2', 'OF3', 'OF4', 'OF5', 'DH1', 'DH2', 'P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9'], data=np.zeros((23,12)), columns=owner_list)
+    roster = pd.DataFrame(index=['C', '1B', '2B', '3B', 'SS', 'MI', 'CI', 'OF1', 'OF2', 'OF3', 'OF4', 'OF5', 'DH1', 'DH2', 'P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9'], data=np.zeros((23,n_teams)), columns=owner_list)
     for tm in owners_df.Owner.tolist():
         for i, row in h[h['Owner']==tm][['Name', 'Owner', 'Primary_Pos', 'Pos', 'Paid', 'Timestamp']].sort_values("Timestamp").iterrows():
             if row['Paid']==0:
