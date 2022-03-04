@@ -125,7 +125,7 @@
                         <th>SB | Sv+Hld</th>
                         <th>Init $</th>
                         <th>Market $</th>
-                        <th>Next</th>
+                        <th>CBS</th>
                     </thead>
                     {% for i, row in players.iterrows() %}
                         {% if row['Primary_Pos']=='SP' or row['Primary_Pos']=='RP' %}
@@ -142,7 +142,7 @@
                             <td>{{ row['Sv+Hld'] }}</td>
                             <td>{{ row['Value'] }}</td>
                             <td>{{ row['curValue'] }}</td>
-                            <td>{{ row['next_in_tier'] }}</td>
+                            <td>{{ row['Dollars'] }}</td>
                         </tr>
                         {% else %}
                         <tr id="{{ row['playerid'] }}">
@@ -158,7 +158,7 @@
                             <td>{{ row['SB'] }}</td>
                             <td>{{ row['Value'] }}</td>
                             <td>{{ row['curValue'] }}</td>
-                            <td>{{ row['next_in_tier'] }}</td>
+                            <td>{{ row['Dollars'] }}</td>
                         </tr>
                         {% endif %}
                     {% endfor %}
