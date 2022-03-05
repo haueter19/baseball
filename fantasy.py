@@ -18,7 +18,7 @@ templates = Jinja2Templates(directory="templates")
 
 n_teams = 13
 tm_players = 23
-tm_dollars = 260
+tm_dollars = 263
 player_split = .65
 pitcher_split = 1 - player_split
 tot_dollars = n_teams * tm_dollars

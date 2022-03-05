@@ -33,7 +33,7 @@ $.fn.z_players = function(){
     let color_map = [];
     var j = 0;
     $.each(data, function(i, v){
-        if (j<350){
+        if (j<440){
             x_data.push(j);
             y_data.push(data[i]['Value']);
             hover_data.push(data[i]['Name']+'<br>ID: '+data[i]['playerid']+'<br>Value: $'+data[i]['Value']);
@@ -71,7 +71,7 @@ $.fn.tiers = function(){
     let color_map = [];
     var j = 0;
     $.each(data, function(i, v){
-        if (v.z>-1){
+        if (v.z>-1.5){
             x_data.push(v.Primary_Pos);
             y_data.push(data[i]['Value']);
             hover_data.push(data[i]['Name']+'<br>ID: '+data[i]['playerid']+'<br>Market Value: $'+data[i]['Value']);
