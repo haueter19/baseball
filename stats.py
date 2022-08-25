@@ -13,7 +13,8 @@ router = APIRouter(prefix='/stats', responses={404: {"description": "Not found"}
 
 @router.get("/hitting/{org}/{lg}/{tm}/projections")
 async def league(request: Request, org: str, lg: str, tm: str):
-    df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm) & (df['Year'].isin([2019, 2018, 2017, 2016]))]
+    yr = df.Year.max()
+    df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm) & (df['Year'].isin(list(range(yr-5,yr+1))))]
     from projections import make_projections
     pa = 50
     df2 = make_projections(df2, pa)

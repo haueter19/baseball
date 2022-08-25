@@ -4,10 +4,9 @@ import functions
 
 df = pd.read_csv('Master_Hitting.csv', engine='python', encoding='cp1252')#encoding='utf-8
 maxYear = df['Year'].max()
-df.loc[df['Year']==maxYear-1, 'den'] = 4
-df.loc[df['Year']==maxYear-3, 'den'] = 3
-df.loc[df['Year']==maxYear-4, 'den'] = 2
-df.loc[df['Year']==maxYear-5, 'den'] = 1
+for i, yr in enumerate(range(maxYear-5, maxYear+1)):
+    df.loc[df['Year']==yr, 'den'] = i+1
+
 common_stat_list = ['GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 
                     'SF', 'SH', 'TB', 'wRAA']
 
