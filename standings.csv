@@ -519,22 +519,22 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 ,MABL,17+,2021,Mad City Labs,6,6,0,0.5,6,66,98,0.312,3.7,2.3,0,0
 ,MABL,17+,2021,Village Bar,3,7,0,0.3,8,53,67,0.385,3.8,-0.8,0,0
 ,MABL,17+,2021,Buschmen,1,9,0,0.1,10,40,97,0.145,1.5,-0.5,0,0
-,RRL,Southern,2021,Rubicon,14,0,0,1,0,,,#DIV/0!,#DIV/0!,#DIV/0!,1,0
-,RRL,Southern,2021,Neosho,10,3,0,0.769,3.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
-,RRL,Southern,2021,Clyman,10,4,0,0.714,4,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
-,RRL,Southern,2021,Johnson Creek,8,6,0,0.571,0,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
-,RRL,Southern,2021,Lebanon,6,8,0,0.429,8,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
-,RRL,Southern,2021,Helenville,3,11,0,0.214,10.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
-,RRL,Southern,2021,Watertown,3,11,0,0.214,11,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
-,RRL,Southern,2021,Ashippun,1,12,0,0.077,11.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
-,RRL,Northern,2021,Hartford,10,3,0,0.769,0,,,#DIV/0!,#DIV/0!,#DIV/0!,1,1
-,RRL,Northern,2021,Hustisford,10,4,0,0.714,0.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
-,RRL,Northern,2021,Kewaskum,10,4,0,0.714,0.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
-,RRL,Northern,2021,Brownsville,7,7,0,0.5,3.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
-,RRL,Northern,2021,Cedarburg,6,8,0,0.429,4.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
-,RRL,Northern,2021,Thiensville-Mequon,5,7,0,0.417,5.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
-,RRL,Northern,2021,Oakfield,3,9,0,0.25,6.5,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
-,RRL,Northern,2021,Saukville,2,11,0,0.154,8,,,#DIV/0!,#DIV/0!,#DIV/0!,0,0
+,RRL,Southern,2021,Rubicon,14,0,0,1,0,97,22,0.951,13.3,0.7,1,0
+,RRL,Southern,2021,Neosho,10,3,0,0.769,3.5,104,40,0.871,11.3,-1.3,0,0
+,RRL,Southern,2021,Clyman,10,4,0,0.714,4,104,51,0.806,11.3,-1.3,0,0
+,RRL,Southern,2021,Johnson Creek,8,6,0,0.571,0,94,73,0.624,8.7,-0.7,0,0
+,RRL,Southern,2021,Lebanon,6,8,0,0.429,8,82,59,0.659,9.2,-3.2,0,0
+,RRL,Southern,2021,Helenville,3,11,0,0.214,10.5,60,125,0.187,2.6,0.4,0,0
+,RRL,Southern,2021,Watertown,3,11,0,0.214,11,49,109,0.168,2.4,0.6,0,0
+,RRL,Southern,2021,Ashippun,1,12,0,0.077,11.5,32,137,0.052,0.7,0.3,0,0
+,RRL,Northern,2021,Hartford,10,3,0,0.769,0,112,43,0.872,11.3,-1.3,1,1
+,RRL,Northern,2021,Hustisford,10,4,0,0.714,0.5,106,49,0.824,11.5,-1.5,0,0
+,RRL,Northern,2021,Kewaskum,10,4,0,0.714,0.5,89,74,0.591,8.3,1.7,0,0
+,RRL,Northern,2021,Brownsville,7,7,0,0.5,3.5,65,71,0.456,6.4,0.6,0,0
+,RRL,Northern,2021,Cedarburg,6,8,0,0.429,4.5,93,108,0.426,6.0,0.0,0,0
+,RRL,Northern,2021,Thiensville-Mequon,5,7,0,0.417,5.5,56,90,0.279,3.3,1.7,0,0
+,RRL,Northern,2021,Oakfield,3,9,0,0.25,6.5,57,67,0.420,5.0,-2.0,0,0
+,RRL,Northern,2021,Saukville,2,11,0,0.154,8,43,119,0.115,1.5,0.5,0,0
 ,MABL,18+,2022,Athletics,12,1,0,0.923,0,135,49,0.884,11.5,0.5,1,0
 ,MABL,18+,2022,Muskies,9,6,0,0.600,4,142,55,0.870,13.0,-4.0,0,0
 ,MABL,18+,2022,Blue Jays,8,6,0,0.571,5.5,114,61,0.777,10.9,-2.9,0,0
