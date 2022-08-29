@@ -76,7 +76,8 @@
                 <th onclick="sortTable(8)">Pyth</th>
                 <th onclick="sortTable(9)">xWins</th>
                 <th onclick="sortTable(10)">Champs</th>
-                <th onclick="sortTable(11">wRAA</th>
+                <th onclick="sortTable(11)">Off-wRAA</th>
+                <th onclick="sortTable(12)">Pit-WAR</th>
             </tr>
                 {% for key,val in st.iterrows() %}
                 <tr align="center">
@@ -92,6 +93,7 @@
                     <td>{{ val['xW'] }}</td>
                     <td>{{ val['Postseason'] }}</td>
                     <td>{{ val['wRAAc'] }}</td>
+                    <td>{{ val['WAR'] }}</td>
                 </tr>
                 {% endfor %}
         </table>
