@@ -53,6 +53,7 @@
                 <th onclick="sortTable(19)">K/9</th>
                 <th onclick="sortTable(20)">BB/9</th>
                 <th onclick="sortTable(21)">H/9</th>
+                <th onclick="sortTable(22)">WAR</th>
             </tr>
                 {% for key,val in df2.iterrows() %}
                 <tr align='center'>
@@ -78,6 +79,7 @@
                     <td>{{ val['Kper9'] }}</td>
                     <td>{{ val['BBper9'] }}</td>
                     <td>{{ val['Hper9'] }}</td>
+                    <td>{{ val['WAR'] }}</td>
                 </tr>
                 {% endfor %}
         </table>
