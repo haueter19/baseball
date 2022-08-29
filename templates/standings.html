@@ -12,19 +12,24 @@
 <script>
     var d = {{ df|safe }};
     //d = JSON.parse(d);
-    let x = [];
-    let y = [];
+    let rf = [];
+    let ra = [];
+    let owar = [];
+    let pwar = [];
     let z = [];
     let t = [];
-    d.forEach(val => x.push(val['RF']));
-    d.forEach(val => y.push(val['RA']));
+    d.forEach(val => rf.push(val['RF']));
+    d.forEach(val => ra.push(val['RA']));
+    d.forEach(val => owar.push(val['oWAR']));
+    d.forEach(val => pwar.push(val['pWAR']));
     d.forEach(val => z.push(val['W']));
     d.forEach(val => t.push(val['Team']));
     //Object.values(d).forEach(val => x.push(val));
-    var data = [
+    function plotly_chart_maker(xaxis, yaxis, t, z){
+        var data = [
         {
-            y: x,
-            x: y,
+            x: xaxis,
+            y: yaxis,
             mode: 'markers',
             type: 'scatter',
             name: 'Team',
@@ -35,14 +40,20 @@
             marker: { size: z, sizemin: 3, sizeref: .2, 
                 line: { color: "black", width: 3 }}
         }
-    ];
-    var layout = {
-        title: "Wins by RF and RA",
-        xaxis: {
-            title: 'RA'
-        },
-        yaxis: { title: 'RF' },
+        ];
+        return data
     }
+    $(document).ready(function(){
+        $("#chart_toggle").click(function(){
+            if ($("#myDiv2").is(":visible")){
+                $("#myDiv2").hide();
+                $("#myDiv").show();
+            } else {
+                $("#myDiv2").show();
+                $("#myDiv").hide();
+            }
+        })
+    })
 </script>
 <div class="row">
     <div class="col-lg-4">
@@ -76,7 +87,7 @@
                 <th onclick="sortTable(8)">Pyth</th>
                 <th onclick="sortTable(9)">xWins</th>
                 <th onclick="sortTable(10)">Champs</th>
-                <th onclick="sortTable(11)">Off-wRAA</th>
+                <th onclick="sortTable(11)">Off-WAR</th>
                 <th onclick="sortTable(12)">Pit-WAR</th>
             </tr>
                 {% for key,val in st.iterrows() %}
@@ -92,21 +103,30 @@
                     <td>{{ val['Pyth'] }}</td>
                     <td>{{ val['xW'] }}</td>
                     <td>{{ val['Postseason'] }}</td>
-                    <td>{{ val['wRAAc'] }}</td>
-                    <td>{{ val['WAR'] }}</td>
+                    <td>{{ val['oWAR'] }}</td>
+                    <td>{{ val['pWAR'] }}</td>
                 </tr>
                 {% endfor %}
         </table>
     </div>
 </div>
 <div class="row">
-    <div class="col-lg-12">
+    <button id="chart_toggle">Change Chart</button>
+    <div class="col-lg-6">
         <div id='myDiv'></div>
+    </div>
+    <div class="col-lg-6">
+        <div id='myDiv2'></div>
     </div>
 </div>
 
 <script>
-    Plotly.newPlot('myDiv', data, layout);
+    chart_info = plotly_chart_maker(ra, rf, t, z);
+    chart_info2 = plotly_chart_maker(owar, pwar, t, z);
+    
+    Plotly.newPlot('myDiv', chart_info, {title: "Wins by RF and RA", xaxis: {title: 'RA'}, yaxis: { title: 'RF' },});
+    Plotly.newPlot('myDiv2', chart_info2, {title: "Wins by oWAR and pWAR", xaxis: {title: 'oWAR'}, yaxis: { title: 'pWAR' }});
+    
     var url_string = window.location.href;
     var url = new URL(url_string);
      
