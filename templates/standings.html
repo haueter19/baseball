@@ -43,17 +43,7 @@
         ];
         return data
     }
-    $(document).ready(function(){
-        $("#chart_toggle").click(function(){
-            if ($("#myDiv2").is(":visible")){
-                $("#myDiv2").hide();
-                $("#myDiv").show();
-            } else {
-                $("#myDiv2").show();
-                $("#myDiv").hide();
-            }
-        })
-    })
+    
 </script>
 <div class="row">
     <div class="col-lg-4">
@@ -111,7 +101,6 @@
     </div>
 </div>
 <div class="row">
-    <button id="chart_toggle">Change Chart</button>
     <div class="col-lg-6">
         <div id='myDiv'></div>
     </div>
