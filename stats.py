@@ -109,9 +109,10 @@ async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort
 async def stats_by_league(request: Request, org: str, lg: str, yr: int):
     df2 = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Year']==yr)].sort_values('Outs', ascending=False)
     df2['IP'] = df2['Outs'].apply(lambda x: str(math.floor(x/3))+"."+str(x % 3))
+    df2['WAR'] = round(df2['WAR'],2)
     df2['BAA'] = round(df2['BAA'],3)
     yrs = pit[(pit['Org']==org) & (pit['League']==lg)].sort_values('Year', ascending=False)['Year'].unique().tolist()
-    return templates.TemplateResponse('league_stats_pitching.html', {"request": request, 'org':org, 'lg':lg, 'yr':yr, 'yrs':yrs, 'df':df2.to_html(index=False, justify='right'), 'df2':df2, 'pid':df2['PID']})
+    return templates.TemplateResponse('league_stats_pitching.html', {"request": request, 'org':org, 'lg':lg, 'yr':yr, 'yrs':yrs, 'df':df2.to_html(index=False, justify='right'), 'df2':df2.sort_values('WAR', ascending=False), 'pid':df2['PID']})
 
 @router.get("/pitching/{org}/{lg}/{tm}/{yr}")
 async def team_stats_year(request: Request, org: str, lg: str, tm: str, yr: int):
@@ -119,5 +120,6 @@ async def team_stats_year(request: Request, org: str, lg: str, tm: str, yr: int)
     #df2 = df2.groupby('Team').agg({'Org':'first', 'League':'first', 'Year':'first', 'First':'first', 'Last':'first', 'GP':'sum', 'IP':'sum', 'Outs':'sum', 'R':'sum', 'ER':'sum', 'H':'sum', 'BB':'sum', 'K':'sum', 'HBP':'sum', 'CG':'sum', 'W':'sum', 'L':'sum', 'Sv':'sum', 'HR':'sum', 'IBB':'sum', 'AB':'sum', 'BAA':'sum', 'HLD':'sum'}).reset_index()
     df2['IP'] = df2['Outs'].apply(lambda x: str(math.floor(x/3))+"."+str(x % 3))
     df2['BAA'] = df2['BAA'].apply(lambda x: round(x,3))
+    df2['WAR'] = round(df2['WAR'],2)
     yrs = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Team']==tm)].sort_values('Year', ascending=False)['Year'].unique().tolist()
-    return templates.TemplateResponse("team_pitching.html", {'request': request, 'df2':df2, 'org':org, 'lg':lg, 'tm':tm, 'yr':yr, 'yrs':yrs})
+    return templates.TemplateResponse("team_pitching.html", {'request': request, 'df2':df2.sort_values('Outs', ascending=False), 'org':org, 'lg':lg, 'tm':tm, 'yr':yr, 'yrs':yrs})
