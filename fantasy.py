@@ -16,30 +16,32 @@ from sklearn.preprocessing import MinMaxScaler
 
 templates = Jinja2Templates(directory="templates")
 
-n_teams = 13
+n_teams = 12
 tm_players = 23
-tm_dollars = 263
-player_split = .65
+tm_dollars = 260
+player_split = .67
 pitcher_split = 1 - player_split
 tot_dollars = n_teams * tm_dollars
 tot_players = n_teams * tm_players
 tot_hitters = n_teams * 14
 tot_pitchers = n_teams * 9
-total_z_over_0 = 701.39442#591.1999720030974
+total_z_over_0 = 630.75#701.39442#591.1999720030974
 orig_conv =  (tm_dollars/tm_players)*(tot_players/total_z_over_0)
-owner_list = ['Avg Joes', 'Brewbirds', 'Charmer', 'Dirty Birds', 'Harvey', 'Lil Trump', 'Lima Time', 'Midnight', 'Moms Cookin', 'Roid Ragers', 'Trouble', 'Wu-Tang', 'Young Guns']
+owner_list = ['Brewbirds', 'Charmer', 'Dirty Birds', 'Harvey', 'Lil Trump', 'Lima Time', 'Madness', 'Roid Ragers', 'Trouble', 'Ugly Spuds', 'Wu-Tang', 'Young Guns']
 
 drafted_by_pos = {
-    'C':13,
-    '1B':13,
-    '2B':13,
-    '3B':13,
-    'SS':13,
-    'OF':5*13,
-    'MI':13,
-    'CI':13,
-    'DH':13*2, 
-    'P':13*9
+    'C':n_teams,
+    '1B':round(n_teams*1.5),
+    '2B':round(n_teams*1.5),
+    '3B':math.floor(n_teams*1.5),
+    'SS':math.floor(n_teams*1.5),
+    'OF':n_teams*5,
+    'MI':n_teams,
+    'CI':n_teams,
+    'DH':n_teams*2, 
+    'P':n_teams*9,
+    'SP':round(n_teams*6.5),
+    'RP':math.floor(n_teams*2.5),
 }
 
 meta = MetaData()
@@ -85,43 +87,6 @@ def next_closest_in_tier(df, pos, playerid):
         return round(df[df['playerid']==playerid]['Value'].iloc[0] - df[(df['Primary_Pos']==pos) & (df['Owner'].isna()) & (df['Value']<=val)].iloc[1]['Value'],1)
     except:
         return 0
-
-
-def load_data():
-    h = pd.read_csv('data/2022-fangraphs-proj-h.csv')
-    h['sorter'] = h['HR']+h['R']+h['RBI']+h['H']+h['SB']
-    
-    p = pd.read_csv('data/2022-fangraphs-proj-p.csv')
-    val_h = pd.read_csv('data/2022-fangraphs-auction-calculator-h.csv')
-    val_h.rename(columns={'PlayerId':'playerid', 'POS':'Pos'},inplace=True)
-    val_p = pd.read_csv('data/2022-fangraphs-auction-calculator-p.csv')
-    val_p.rename(columns={'PlayerId':'playerid', 'POS':'Pos'},inplace=True)
-    
-    h = h.merge(val_h[['playerid', 'Pos', 'Dollars']])
-    h.drop(columns=['wOBA', 'CS', 'Fld', 'BsR', 'ADP'],inplace=True)
-    h['Pos'] = h['Pos'].apply(lambda x: ', '.join(x.split('/')))
-    h.sort_values('sorter', ascending=False, inplace=True)
-    h.reset_index(drop=True)
-    
-    p = p.merge(val_p[['playerid', 'Pos', 'Dollars']])
-    p.drop(columns=['ADP'],inplace=True)
-    p['Sv+Hld'] = p['SV']+p['HLD']
-    p['Pos'] = p['Pos'].apply(lambda x: ', '.join(x.split('/')))
-    p['sorter'] = p['SO']+(p['Sv+Hld']*4)+p['W']
-    p.sort_values('sorter', ascending=False, inplace=True)
-    p.reset_index(drop=True)
-    return h, p
-
-def calc_z(x, stat):
-    z = (x - drafted[stat].mean()) / drafted[stat].std()
-    return z
-
-def find_primary_pos(p):
-    pos_list = p.split(', ')
-    pos_hierarchy = ['C', '2B', '1B', 'OF', '3B', 'SS', 'DH', 'SP', 'RP', 'P']
-    for i in pos_hierarchy:
-        if i in pos_list:
-            return i
 
 
 def check_roster_pos(roster, name, team_name, pos, eligible):
