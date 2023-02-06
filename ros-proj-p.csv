@@ -1,0 +1,167 @@
+,Pos,Players,INNs,GS,QS,CG,W,L,S,BS,K,BBI,HA,ERA,WHIP,Roto Rank,ER,Status,Name,Elig,Team,Owner
+0,SP,Shane Bieber SP | CLE,105,17,13,0,5,5,0,0,109,29,102,3.94,1.25,294,45.96666666666667,Start,Shane Bieber,SP,CLE,Brewbirds
+1,SP,"Luis Garcia RP,SP | HOU",44,9,3,0,4,3,0,0,42,13,34,3.27,1.07,446,15.986666666666666,Start,Luis Garcia,"RP,SP",HOU,Brewbirds
+2,SP,Lance Lynn SP | CHW,98,17,9,1,6,4,0,0,96,28,85,3.21,1.15,164,34.95333333333333,Start,Lance Lynn,SP,CHW,Brewbirds
+3,SP,Aaron Nola SP | PHI,115,18,10,0,7,4,0,0,118,24,93,3.21,1.02,57,41.016666666666666,Start,Aaron Nola,SP,PHI,Brewbirds
+4,SP,Noah Syndergaard SP | LAA,69,13,5,0,6,5,0,0,55,21,66,3.91,1.26,413,29.976666666666667,Start,Noah Syndergaard,SP,LAA,Brewbirds
+5,SP,"Logan Webb RP,SP | SF",108,18,11,0,7,4,0,0,104,32,94,3.00,1.17,106,36.0,Start,Logan Webb,"RP,SP",SF,Brewbirds
+6,RP,Craig Kimbrel RP | LAD,37,0,0,0,1,1,24,3,56,17,28,3.16,1.22,171,12.991111111111113,Start,Craig Kimbrel,RP,LAD,Brewbirds
+7,RP,Jordan Romano RP | TOR,38,0,0,0,1,2,21,2,48,14,26,2.13,1.05,165,8.993333333333334,Start,Jordan Romano,RP,TOR,Brewbirds
+8,RP,Gregory Soto RP | DET,43,0,0,0,1,2,12,2,49,25,33,3.35,1.35,427,16.005555555555556,Start,Gregory Soto,RP,DET,Brewbirds
+9,SP,Kyle Hendricks SP | CHC,100,17,7,0,4,7,0,0,64,26,98,4.14,1.24,497,46.0,Bench,Kyle Hendricks,SP,CHC,Brewbirds
+10,SP,Max Scherzer SP | NYM,92,15,10,0,7,3,0,0,97,23,78,3.03,1.10,107,30.973333333333333,Bench,Max Scherzer,SP,NYM,Brewbirds
+11,RP,"Adrian Houser RP,SP | MIL",87,16,6,0,6,6,0,0,74,31,75,3.52,1.22,305,34.02666666666667,Bench,Adrian Houser,"RP,SP",MIL,Brewbirds
+12,RP,Dany Jimenez RP | OAK,39,0,0,0,1,2,15,3,38,21,30,4.62,1.31,467,20.02,Bench,Dany Jimenez,RP,OAK,Brewbirds
+0,SP,"Tyler Anderson RP,SP | LAD",95,17,8,0,9,3,0,0,88,23,83,3.13,1.12,92,33.038888888888884,Start,Tyler Anderson,"RP,SP",LAD,Charmer
+1,SP,"Andrew Heaney RP,SP | LAD",63,13,4,0,6,2,0,0,66,19,58,3.71,1.22,338,25.97,Start,Andrew Heaney,"RP,SP",LAD,Charmer
+2,SP,Joe Ryan SP | MIN,101,19,8,0,8,7,0,0,84,29,95,4.10,1.23,265,46.011111111111106,Start,Joe Ryan,SP,MIN,Charmer
+3,SP,Jameson Taillon SP | NYY,94,17,6,0,7,3,0,0,81,23,83,3.64,1.13,200,38.01777777777778,Start,Jameson Taillon,SP,NYY,Charmer
+4,RP,Scott Barlow RP | KC,51,0,0,0,1,0,15,2,62,19,44,2.47,1.24,254,13.99666666666667,Start,Scott Barlow,RP,KC,Charmer
+5,RP,Emmanuel Clase RP | CLE,38,0,0,0,1,1,20,3,38,7,26,1.42,0.87,143,5.995555555555555,Start,Emmanuel Clase,RP,CLE,Charmer
+6,RP,"Jhoan Duran RP,SP | MIN",50,0,0,0,1,4,4,1,69,9,35,2.52,0.88,290,14.000000000000002,Start,Jhoan Duran,"RP,SP",MIN,Charmer
+7,RP,"Eric Lauer RP,SP | MIL",88,16,8,0,7,3,0,0,86,28,74,3.48,1.16,188,34.026666666666664,Start,Eric Lauer,"RP,SP",MIL,Charmer
+8,RP,"Elijah Morgan RP,SP | CLE",30,6,1,0,3,3,0,0,32,6,20,3.30,0.87,492,11.0,Start,Elijah Morgan,"RP,SP",CLE,Charmer
+9,SP,"Jesus Luzardo RP,SP | MIA",57,11,3,0,4,4,0,0,57,21,49,4.11,1.23,485,26.030000000000005,Bench,Jesus Luzardo,"RP,SP",MIA,Charmer
+10,SP,Stephen Strasburg SP | WAS,64,13,3,0,2,5,0,0,56,24,63,4.92,1.36,782,34.986666666666665,Bench,Stephen Strasburg,SP,WAS,Charmer
+11,SP,Framber Valdez SP | HOU,107,17,14,1,9,4,0,0,91,37,92,3.37,1.21,128,40.065555555555555,Bench,Framber Valdez,SP,HOU,Charmer
+12,SP,"Garrett Whitlock RP,SP | BOS",45,10,3,0,3,2,0,0,45,11,42,3.40,1.18,511,17.0,Bench,Garrett Whitlock,"RP,SP",BOS,Charmer
+13,RP,Tanner Rainey RP | WAS,35,0,0,0,1,1,11,3,52,19,33,5.14,1.49,537,19.98888888888889,Bench,Tanner Rainey,RP,WAS,Charmer
+14,RP,"Eduardo Rodriguez RP,SP | DET",72,14,6,0,3,5,0,0,58,22,68,4.12,1.25,553,32.96,Bench,Eduardo Rodriguez,"RP,SP",DET,Charmer
+0,SP,"Jack Flaherty RP,SP | STL",80,16,8,0,8,3,0,0,75,28,65,3.71,1.16,214,32.977777777777774,Start,Jack Flaherty,"RP,SP",STL,Dirty Birds
+1,SP,Max Fried SP | ATL,103,17,13,0,9,4,0,0,89,30,94,2.97,1.20,104,33.99,Start,Max Fried,SP,ATL,Dirty Birds
+2,SP,Kevin Gausman SP | TOR,101,17,11,0,7,6,0,0,105,24,92,3.21,1.15,115,36.02333333333333,Start,Kevin Gausman,SP,TOR,Dirty Birds
+3,SP,Brad Keller SP | KC,102,17,9,0,5,8,0,0,71,32,98,3.71,1.27,401,42.04666666666667,Start,Brad Keller,SP,KC,Dirty Birds
+4,SP,Corey Kluber SP | TB,87,16,8,0,5,3,0,0,81,22,76,3.62,1.13,280,34.99333333333334,Start,Corey Kluber,SP,TB,Dirty Birds
+5,SP,"Martin Perez RP,SP | TEX",103,18,11,1,5,5,0,0,75,28,99,3.23,1.23,313,36.965555555555554,Start,Martin Perez,"RP,SP",TEX,Dirty Birds
+6,RP,Giovanny Gallegos RP | STL,40,0,0,0,2,1,6,1,50,11,29,2.92,1.00,354,12.977777777777778,Start,Giovanny Gallegos,RP,STL,Dirty Birds
+7,RP,"Dakota Hudson RP,SP | STL",105,19,8,0,8,4,0,0,71,41,85,3.09,1.20,172,36.05,Start,Dakota Hudson,"RP,SP",STL,Dirty Birds
+8,RP,A.J. Minter RP | ATL,35,0,0,0,1,1,0,0,43,9,24,2.06,0.94,487,8.011111111111111,Start,A.J. Minter,RP,ATL,Dirty Birds
+9,SP,Edward Cabrera SP | MIA,72,14,6,0,5,5,0,0,63,29,55,3.50,1.17,344,28.0,Bench,Edward Cabrera,SP,MIA,Dirty Birds
+10,SP,Steven Matz SP | STL,50,10,3,0,4,3,0,0,45,14,51,3.96,1.30,543,22.0,Bench,Steven Matz,SP,STL,Dirty Birds
+11,SP,Mike Soroka SP | ATL,18,5,1,0,1,1,0,0,15,7,15,4.00,1.22,830,8.0,Bench,Mike Soroka,SP,ATL,Dirty Birds
+12,RP,Aroldis Chapman RP | NYY,27,0,0,0,2,3,5,1,37,17,19,3.33,1.33,530,9.99,Bench,Aroldis Chapman,RP,NYY,Dirty Birds
+13,RP,Ken Giles RP | SEA,29,0,0,0,2,1,0,0,31,14,26,4.97,1.38,797,16.014444444444443,Bench,Ken Giles,RP,SEA,Dirty Birds
+0,SP,"Tony Gonsolin RP,SP | LAD",82,17,8,0,9,1,0,0,81,28,58,2.63,1.05,75,23.962222222222223,Start,Tony Gonsolin,"RP,SP",LAD,Harvey
+1,SP,Hunter Greene SP | CIN,87,16,5,1,6,6,0,0,91,30,73,4.14,1.18,289,40.019999999999996,Start,Hunter Greene,SP,CIN,Harvey
+2,SP,Charlie Morton SP | ATL,94,17,6,0,7,3,0,0,94,31,77,3.64,1.15,170,38.01777777777778,Start,Charlie Morton,SP,ATL,Harvey
+3,SP,Kyle Wright SP | ATL,101,17,12,0,9,5,0,0,91,38,89,3.74,1.26,180,41.971111111111114,Start,Kyle Wright,SP,ATL,Harvey
+4,RP,"Aaron Ashby RP,SP | MIL",49,10,2,0,3,3,0,0,53,20,45,4.04,1.33,586,21.995555555555555,Start,Aaron Ashby,"RP,SP",MIL,Harvey
+5,RP,David Bednar RP | PIT,66,0,0,0,1,1,13,3,99,20,47,2.05,1.02,82,15.033333333333331,Start,David Bednar,RP,PIT,Harvey
+6,RP,Seranthony Dominguez RP | PHI,33,0,0,0,1,1,11,3,50,10,23,1.91,1.00,304,7.003333333333333,Start,Seranthony Dominguez,RP,PHI,Harvey
+7,RP,Ryan Helsley RP | STL,42,0,0,0,1,1,15,4,56,19,22,2.36,0.98,206,11.013333333333332,Start,Ryan Helsley,RP,STL,Harvey
+8,RP,Clay Holmes RP | NYY,41,0,0,0,1,1,18,2,45,10,28,1.76,0.93,163,8.017777777777779,Start,Clay Holmes,RP,NYY,Harvey
+9,SP,Madison Bumgarner SP | ARI,97,17,5,0,4,7,0,0,70,28,91,3.90,1.23,450,42.03333333333333,Bench,Madison Bumgarner,SP,ARI,Harvey
+10,SP,Jon Gray SP | TEX,98,18,8,0,5,5,0,0,87,32,88,3.86,1.22,330,42.03111111111111,Bench,Jon Gray,SP,TEX,Harvey
+11,SP,"Josiah Gray RP,SP | WAS",39,7,3,0,3,2,0,0,36,13,34,4.15,1.21,605,17.983333333333334,Bench,Josiah Gray,"RP,SP",WAS,Harvey
+12,SP,Sonny Gray SP | MIN,90,17,7,0,5,5,0,0,80,23,76,3.30,1.10,237,33.0,Bench,Sonny Gray,SP,MIN,Harvey
+13,SP,George Kirby SP | SEA,100,19,8,0,5,5,0,0,84,24,89,3.24,1.13,227,36.00000000000001,Bench,George Kirby,SP,SEA,Harvey
+14,SP,Bailey Ober SP | MIN,72,14,2,0,2,4,0,0,61,12,66,3.38,1.08,433,27.04,Bench,Bailey Ober,SP,MIN,Harvey
+15,SP,"Freddy Peralta RP,SP | MIL",53,10,4,0,4,2,0,0,60,18,40,3.23,1.09,360,19.02111111111111,Bench,Freddy Peralta,"RP,SP",MIL,Harvey
+0,SP,Jose Berrios SP | TOR,103,17,10,0,6,5,0,0,97,28,93,3.76,1.17,229,43.03111111111111,Start,Jose Berrios,SP,TOR,Lil Trump
+1,SP,Paul Blackburn SP | OAK,96,17,4,0,5,5,0,0,63,21,83,2.53,1.08,191,26.986666666666665,Start,Paul Blackburn,SP,OAK,Lil Trump
+2,SP,Gerrit Cole SP | NYY,114,19,13,1,9,4,0,0,133,30,91,3.08,1.06,32,39.01333333333333,Start,Gerrit Cole,SP,NYY,Lil Trump
+3,SP,Logan Gilbert SP | SEA,90,16,8,0,6,4,0,0,81,27,76,3.30,1.14,219,33.0,Start,Logan Gilbert,SP,SEA,Lil Trump
+4,SP,"Triston McKenzie RP,SP | CLE",97,17,10,0,6,5,0,0,96,32,77,3.62,1.12,185,39.01555555555556,Start,Triston McKenzie,"RP,SP",CLE,Lil Trump
+5,SP,"Tarik Skubal RP,SP | DET",101,18,9,0,5,7,0,0,88,25,91,3.48,1.15,247,39.053333333333335,Start,Tarik Skubal,"RP,SP",DET,Lil Trump
+6,SP,Blake Snell SP | SD,33,8,2,0,3,2,0,0,39,17,26,4.36,1.30,632,15.986666666666666,Start,Blake Snell,SP,SD,Lil Trump
+7,RP,Joe Barlow RP | TEX,42,0,0,0,1,2,17,1,36,15,25,2.57,0.95,246,11.993333333333334,Start,Joe Barlow,RP,TEX,Lil Trump
+8,RP,Camilo Doval RP | SF,38,0,0,0,1,1,20,5,46,13,27,2.60,1.05,202,10.97777777777778,Start,Camilo Doval,RP,SF,Lil Trump
+9,SP,Zach Eflin SP | PHI,87,15,7,0,4,5,0,0,74,17,79,3.52,1.10,315,34.02666666666667,Bench,Zach Eflin,SP,PHI,Lil Trump
+10,SP,Yusei Kikuchi SP | TOR,80,16,5,0,5,3,0,0,74,28,64,3.38,1.15,298,30.044444444444444,Bench,Yusei Kikuchi,SP,TOR,Lil Trump
+11,SP,Grayson Rodriguez SP | BAL,0,0,0,0,0,0,0,0,0,0,0,0.00,0.00,9999,0.0,Bench,Grayson Rodriguez,SP,BAL,Lil Trump
+12,SP,"Ranger Suarez RP,SP | PHI",88,17,7,0,6,5,0,0,73,27,89,3.78,1.32,374,36.96,Bench,Ranger Suarez,"RP,SP",PHI,Lil Trump
+13,SP,Jose Urquidy SP | HOU,89,17,7,0,6,4,0,0,76,19,87,3.94,1.19,319,38.96222222222222,Bench,Jose Urquidy,SP,HOU,Lil Trump
+14,SP,Jacob deGrom SP | NYM,76,12,10,1,5,2,0,0,84,15,51,2.25,0.87,90,19.0,Bench,Jacob deGrom,SP,NYM,Lil Trump
+0,SP,Carlos Carrasco SP | NYM,97,17,7,0,8,4,0,0,89,25,88,3.62,1.16,162,39.01555555555556,Start,Carlos Carrasco,SP,NYM,Lima Time
+1,SP,Dylan Cease SP | CHW,96,18,5,0,7,5,0,0,106,37,76,3.09,1.18,119,32.96,Start,Dylan Cease,SP,CHW,Lima Time
+2,SP,Sean Manaea SP | SD,103,17,11,0,6,5,0,0,102,34,93,3.41,1.23,205,39.025555555555556,Start,Sean Manaea,SP,SD,Lima Time
+3,SP,Jordan Montgomery SP | NYY,95,17,8,0,4,2,0,0,84,20,83,3.32,1.08,248,35.044444444444444,Start,Jordan Montgomery,SP,NYY,Lima Time
+4,SP,Justin Verlander SP | HOU,102,17,11,0,9,4,0,0,102,31,91,3.71,1.20,124,42.04666666666667,Start,Justin Verlander,SP,HOU,Lima Time
+5,SP,Alex Wood SP | SF,92,17,4,0,7,5,0,0,88,27,83,3.42,1.20,194,34.96,Start,Alex Wood,SP,SF,Lima Time
+6,RP,"Jorge Lopez RP,SP | BAL",17,0,0,0,1,1,13,3,19,8,17,4.76,1.47,552,8.99111111111111,Start,Jorge Lopez,"RP,SP",BAL,Lima Time
+7,RP,Taylor Rogers RP | SD,35,0,0,0,1,1,20,4,43,8,26,3.09,0.97,223,12.016666666666666,Start,Taylor Rogers,RP,SD,Lima Time
+8,RP,Paul Sewald RP | SEA,36,0,0,0,1,1,14,4,45,12,22,3.25,0.94,307,13.0,Start,Paul Sewald,RP,SEA,Lima Time
+9,SP,Nathan Eovaldi SP | BOS,95,16,8,1,5,4,0,0,89,21,87,3.50,1.14,245,36.94444444444444,Bench,Nathan Eovaldi,SP,BOS,Lima Time
+10,SP,Lance McCullers SP | HOU,71,12,7,0,5,2,0,0,68,24,59,3.30,1.17,318,26.03333333333333,Bench,Lance McCullers,SP,HOU,Lima Time
+11,SP,Max Meyer SP | MIA,0,0,0,0,0,0,0,0,0,0,0,0.00,0.00,9999,0.0,Bench,Max Meyer,SP,MIA,Lima Time
+12,SP,Marcus Stroman SP | CHC,82,14,7,0,4,6,0,0,64,24,77,4.17,1.23,484,37.99333333333333,Bench,Marcus Stroman,SP,CHC,Lima Time
+13,RP,Hector Neris RP | HOU,37,0,0,0,1,2,4,1,43,12,26,3.89,1.03,524,15.992222222222223,Bench,Hector Neris,RP,HOU,Lima Time
+0,SP,Zac Gallen SP | ARI,98,17,9,0,4,5,0,0,88,34,84,3.58,1.20,323,38.98222222222222,Start,Zac Gallen,SP,ARI,Midnight
+1,SP,Lucas Giolito SP | CHW,107,18,9,0,8,4,0,0,112,33,84,3.20,1.09,66,38.044444444444444,Start,Lucas Giolito,SP,CHW,Midnight
+2,SP,"Cristian Javier RP,SP | HOU",82,16,5,0,8,4,0,0,88,29,67,3.40,1.17,152,30.977777777777778,Start,Cristian Javier,"RP,SP",HOU,Midnight
+3,SP,Robbie Ray SP | SEA,107,17,10,0,8,5,0,0,99,32,93,3.45,1.17,123,41.01666666666667,Start,Robbie Ray,SP,SEA,Midnight
+4,SP,"Jeffrey Springs RP,SP | TB",95,19,6,0,5,6,0,0,87,23,83,3.32,1.12,218,35.044444444444444,Start,Jeffrey Springs,"RP,SP",TB,Midnight
+5,SP,Julio Urias SP | LAD,101,17,8,0,9,4,0,0,96,25,82,3.03,1.06,63,34.00333333333333,Start,Julio Urias,SP,LAD,Midnight
+6,RP,"Nestor Cortes RP,SP | NYY",102,17,7,0,6,5,0,0,96,26,81,2.65,1.05,86,30.033333333333335,Start,Nestor Cortes,"RP,SP",NYY,Midnight
+7,RP,Kenley Jansen RP | ATL,39,0,0,0,1,1,22,3,48,14,21,2.54,0.90,136,11.006666666666666,Start,Kenley Jansen,RP,ATL,Midnight
+8,RP,Ryan Pressly RP | HOU,36,0,0,0,1,1,24,3,37,9,28,2.25,1.03,157,9.0,Start,Ryan Pressly,RP,HOU,Midnight
+9,SP,Graham Ashcraft SP | CIN,96,18,7,0,5,6,0,0,80,29,88,3.84,1.22,346,40.959999999999994,Bench,Graham Ashcraft,SP,CIN,Midnight
+10,SP,"Roansy Contreras RP,SP | PIT",102,20,5,0,3,6,0,0,84,36,102,4.76,1.35,654,53.946666666666665,Bench,Roansy Contreras,"RP,SP",PIT,Midnight
+11,SP,Tylor Megill SP | NYM,23,5,1,0,2,2,0,0,23,6,21,4.70,1.17,751,12.011111111111111,Bench,Tylor Megill,SP,NYM,Midnight
+12,SP,Brandon Woodruff SP | MIL,96,17,9,0,7,6,0,0,102,26,77,3.28,1.07,103,34.986666666666665,Bench,Brandon Woodruff,SP,MIL,Midnight
+0,SP,Sandy Alcantara SP | MIA,117,17,14,1,7,5,0,0,99,31,93,3.08,1.06,80,40.04,Start,Sandy Alcantara,SP,MIA,Ugly Spuds
+1,SP,Shane Baz SP | TB,80,16,6,0,5,4,0,0,72,22,63,3.49,1.06,274,31.022222222222222,Start,Shane Baz,SP,TB,Ugly Spuds
+2,SP,Luis Castillo SP | CIN,106,17,11,0,6,6,0,0,97,38,93,3.57,1.24,243,42.04666666666667,Start,Luis Castillo,SP,CIN,Ugly Spuds
+3,SP,"MacKenzie Gore RP,SP | SD",82,16,5,0,7,4,0,0,80,32,71,3.51,1.26,266,31.979999999999997,Start,MacKenzie Gore,"RP,SP",SD,Ugly Spuds
+4,SP,"Michael Kopech RP,SP | CHW",78,17,6,0,4,3,0,0,81,26,52,2.77,1.00,186,24.006666666666664,Start,Michael Kopech,"RP,SP",CHW,Ugly Spuds
+5,RP,Kendall Graveman RP | CHW,17,0,0,0,1,0,6,1,16,6,13,2.12,1.12,595,4.004444444444445,Start,Kendall Graveman,RP,CHW,Ugly Spuds
+6,RP,Colin Poche RP | TB,38,0,0,0,1,1,12,2,31,10,21,1.18,0.82,260,4.982222222222221,Start,Colin Poche,RP,TB,Ugly Spuds
+7,RP,"Luis Severino RP,SP | NYY",92,17,6,0,5,3,0,0,98,24,79,3.23,1.12,177,33.01777777777777,Start,Luis Severino,"RP,SP",NYY,Ugly Spuds
+8,RP,Devin Williams RP | MIL,40,0,0,0,2,1,1,0,62,19,22,2.02,1.02,358,8.977777777777778,Start,Devin Williams,RP,MIL,Ugly Spuds
+9,SP,Ian Anderson SP | ATL,94,17,6,0,8,4,0,0,77,36,82,3.64,1.26,255,38.01777777777778,Bench,Ian Anderson,SP,ATL,Ugly Spuds
+10,RP,Liam Hendriks RP | CHW,38,0,0,0,1,2,19,3,56,8,27,2.60,0.92,156,10.97777777777778,Bench,Liam Hendriks,RP,CHW,Ugly Spuds
+11,RP,"Drew Rasmussen RP,SP | TB",69,14,2,0,5,3,0,0,53,21,58,3.13,1.14,340,23.996666666666663,Bench,Drew Rasmussen,"RP,SP",TB,Ugly Spuds
+12,RP,Drew Steckenrider RP | SEA,0,0,0,0,0,0,0,0,0,0,0,0.00,0.00,9999,0.0,Bench,Drew Steckenrider,RP,SEA,Ugly Spuds
+0,SP,Zach Davies SP | ARI,92,17,5,0,4,5,0,0,68,28,90,4.21,1.28,518,43.035555555555554,Start,Zach Davies,SP,ARI,Roiders
+1,SP,Clayton Kershaw SP | LAD,92,16,9,0,10,3,0,0,92,18,75,3.03,1.01,50,30.973333333333333,Start,Clayton Kershaw,SP,LAD,Roiders
+2,SP,"Jose Quintana RP,SP | PIT",82,16,2,0,1,5,0,0,63,25,72,3.84,1.18,562,34.986666666666665,Start,Jose Quintana,"RP,SP",PIT,Roiders
+3,SP,Carlos Rodon SP | SF,93,16,8,0,9,4,0,0,95,28,73,2.71,1.09,62,28.003333333333334,Start,Carlos Rodon,SP,SF,Roiders
+4,SP,Trevor Rogers SP | MIA,93,18,4,0,7,5,0,0,81,36,83,3.58,1.28,283,36.99333333333333,Start,Trevor Rogers,SP,MIA,Roiders
+5,RP,"Erick Fedde RP,SP | WAS",80,16,3,0,4,6,0,0,65,27,81,4.16,1.35,545,36.97777777777778,Start,Erick Fedde,"RP,SP",WAS,Roiders
+6,RP,Raisel Iglesias RP | LAA,35,0,0,0,1,1,19,3,54,7,28,3.60,1.00,230,14.0,Start,Raisel Iglesias,RP,LAA,Roiders
+7,RP,"Patrick Sandoval RP,SP | LAA",72,13,6,0,3,4,0,0,65,28,62,3.12,1.25,438,24.96,Start,Patrick Sandoval,"RP,SP",LAA,Roiders
+8,RP,"Taijuan Walker RP,SP | NYM",96,17,7,0,7,4,0,0,82,28,84,3.56,1.17,213,37.97333333333333,Start,Taijuan Walker,"RP,SP",NYM,Roiders
+9,SP,"Mike Clevinger RP,SP | SD",74,16,3,0,4,3,0,0,75,28,61,4.13,1.20,426,33.95777777777778,Bench,Mike Clevinger,"RP,SP",SD,Roiders
+10,SP,"Dane Dunning RP,SP | TEX",93,17,5,0,3,5,0,0,75,30,84,3.87,1.23,464,39.99,Bench,Dane Dunning,"RP,SP",TEX,Roiders
+11,SP,Chris Sale SP | BOS,58,12,2,0,4,3,0,0,57,19,58,4.19,1.33,532,27.002222222222226,Bench,Chris Sale,SP,BOS,Roiders
+12,RP,"Zack Greinke RP,SP | KC",97,17,7,0,3,5,0,0,62,25,95,3.99,1.24,528,43.00333333333334,Bench,Zack Greinke,"RP,SP",KC,Roiders
+0,SP,Chris Bassitt SP | NYM,99,16,10,0,7,4,0,0,99,26,81,3.09,1.08,99,33.99,Start,Chris Bassitt,SP,NYM,Trouble
+1,SP,Corbin Burnes SP | MIL,101,17,13,0,7,4,0,0,120,27,82,2.76,1.08,59,30.97333333333333,Start,Corbin Burnes,SP,MIL,Trouble
+2,SP,Yu Darvish SP | SD,111,18,13,0,8,6,0,0,105,27,96,3.49,1.11,95,43.04333333333334,Start,Yu Darvish,SP,SD,Trouble
+3,SP,Merrill Kelly SP | ARI,96,16,8,0,6,5,0,0,74,28,92,3.84,1.25,345,40.959999999999994,Start,Merrill Kelly,SP,ARI,Trouble
+4,SP,"Cal Quantrill RP,SP | CLE",111,18,12,0,6,4,0,0,79,29,95,3.08,1.12,168,37.986666666666665,Start,Cal Quantrill,"RP,SP",CLE,Trouble
+5,SP,Zack Wheeler SP | PHI,112,17,13,1,9,4,0,0,109,25,97,3.05,1.09,52,37.95555555555555,Start,Zack Wheeler,SP,PHI,Trouble
+6,RP,Daniel Bard RP | COL,40,0,0,0,1,2,14,3,56,22,34,3.83,1.40,397,17.022222222222222,Start,Daniel Bard,RP,COL,Trouble
+7,RP,Emilio Pagan RP | MIN,38,0,0,0,1,2,16,5,46,16,29,3.79,1.18,339,16.002222222222223,Start,Emilio Pagan,RP,MIN,Trouble
+8,RP,"Nick Pivetta RP,SP | BOS",94,16,8,1,8,4,0,0,90,31,81,3.73,1.19,182,38.95777777777778,Start,Nick Pivetta,"RP,SP",BOS,Trouble
+9,SP,"Johnny Cueto RP,SP | CHW",100,17,9,0,5,5,0,0,88,32,93,3.60,1.25,317,40.0,Bench,Johnny Cueto,"RP,SP",CHW,Trouble
+10,SP,Anthony DeSclafani SP | SF,86,17,6,1,5,5,0,0,81,22,83,3.87,1.22,343,36.98,Bench,Anthony DeSclafani,SP,SF,Trouble
+11,SP,Cole Irvin SP | OAK,105,17,9,0,6,6,0,0,70,26,97,3.26,1.17,259,38.03333333333333,Bench,Cole Irvin,SP,OAK,Trouble
+12,RP,"Corey Knebel RP,SP | PHI",35,0,0,0,4,2,5,1,38,22,30,3.60,1.49,495,14.0,Bench,Corey Knebel,"RP,SP",PHI,Trouble
+0,SP,"Michael King RP,SP | NYY",58,0,0,0,5,4,1,0,68,18,45,3.10,1.09,277,19.977777777777778,Start,Michael King,"RP,SP",NYY,Wu-Tang
+1,SP,Pablo Lopez SP | MIA,95,17,8,0,5,4,0,0,86,25,81,3.22,1.12,211,33.988888888888894,Start,Pablo Lopez,SP,MIA,Wu-Tang
+2,SP,Alek Manoah SP | TOR,109,17,14,0,9,3,0,0,99,29,89,3.06,1.08,61,37.06,Start,Alek Manoah,SP,TOR,Wu-Tang
+3,SP,Shane McClanahan SP | TB,96,17,9,0,8,4,0,0,98,25,80,3.09,1.09,88,32.96,Start,Shane McClanahan,SP,TB,Wu-Tang
+4,SP,Frankie Montas SP | OAK,104,17,11,0,7,6,0,0,93,26,88,2.94,1.10,102,33.97333333333333,Start,Frankie Montas,SP,OAK,Wu-Tang
+5,SP,"Brady Singer RP,SP | KC",86,16,6,0,5,5,0,0,77,25,80,3.77,1.22,348,36.02444444444444,Start,Brady Singer,"RP,SP",KC,Wu-Tang
+6,SP,"Spencer Strider RP,SP | ATL",97,19,5,0,6,6,0,0,88,36,88,3.99,1.28,331,43.00333333333334,Start,Spencer Strider,"RP,SP",ATL,Wu-Tang
+7,RP,Jason Adam RP | TB,31,0,0,0,1,1,1,0,37,11,13,1.45,0.77,453,4.994444444444444,Start,Jason Adam,RP,TB,Wu-Tang
+8,RP,Edwin Diaz RP | NYM,38,0,0,0,1,2,22,5,64,15,26,2.60,1.08,135,10.97777777777778,Start,Edwin Diaz,RP,NYM,Wu-Tang
+9,SP,"Anthony Bender RP,SP | MIA",34,0,0,0,2,2,0,0,37,12,32,3.44,1.29,644,12.995555555555557,Bench,Anthony Bender,"RP,SP",MIA,Wu-Tang
+10,SP,Alex Cobb SP | SF,88,17,3,0,7,3,0,0,86,25,84,3.58,1.24,244,35.004444444444445,Bench,Alex Cobb,SP,SF,Wu-Tang
+11,SP,Patrick Corbin SP | WAS,98,17,7,1,7,8,0,0,77,30,102,4.50,1.35,449,49.0,Bench,Patrick Corbin,SP,WAS,Wu-Tang
+12,SP,"Joe Musgrove RP,SP | SD",87,14,12,0,6,3,0,0,83,26,78,3.21,1.20,233,31.03,Bench,Joe Musgrove,"RP,SP",SD,Wu-Tang
+0,SP,"Kyle Gibson RP,SP | PHI",92,17,9,0,5,4,0,0,77,31,106,4.50,1.49,619,46.0,Start,Kyle Gibson,"RP,SP",PHI,Young Guns
+1,SP,Marco Gonzales SP | SEA,101,17,10,0,7,5,0,0,72,30,89,3.39,1.18,232,38.04333333333334,Start,Marco Gonzales,SP,SEA,Young Guns
+2,SP,"Chad Kuhl RP,SP | COL",86,16,8,0,5,6,0,0,61,30,83,3.98,1.31,482,38.031111111111116,Start,Chad Kuhl,"RP,SP",COL,Young Guns
+3,SP,Tyler Mahle SP | CIN,100,18,8,0,5,5,0,0,99,32,82,3.33,1.14,187,37.0,Start,Tyler Mahle,SP,CIN,Young Guns
+4,SP,Miles Mikolas SP | STL,107,17,10,1,6,6,0,0,83,31,92,3.45,1.15,221,41.01666666666667,Start,Miles Mikolas,SP,STL,Young Guns
+5,SP,"Michael Wacha RP,SP | BOS",85,16,3,1,5,3,0,0,70,23,78,3.60,1.19,336,34.0,Start,Michael Wacha,"RP,SP",BOS,Young Guns
+6,SP,Adam Wainwright SP | STL,111,17,12,1,8,5,0,0,83,35,92,3.16,1.14,122,38.973333333333336,Start,Adam Wainwright,SP,STL,Young Guns
+7,RP,Josh Hader RP | MIL,35,0,0,0,1,1,23,1,55,12,12,1.29,0.69,73,5.016666666666667,Start,Josh Hader,RP,MIL,Young Guns
+8,RP,"David Robertson RP,SP | CHC",40,0,0,0,1,2,15,4,58,21,26,2.25,1.18,256,10.0,Start,David Robertson,"RP,SP",CHC,Young Guns
+9,SP,Walker Buehler SP | LAD,27,5,3,0,2,1,0,0,26,7,22,3.00,1.07,612,9.0,Bench,Walker Buehler,SP,LAD,Young Guns
+10,SP,Aaron Civale SP | CLE,100,18,7,0,7,7,0,0,85,28,94,3.87,1.22,269,43.0,Bench,Aaron Civale,SP,CLE,Young Guns
+11,SP,Tyler Glasnow SP | TB,10,3,1,0,1,1,0,0,14,3,7,3.60,1.00,802,4.0,Bench,Tyler Glasnow,SP,TB,Young Guns
+12,SP,"David Peterson RP,SP | NYM",31,7,2,0,2,3,0,0,27,14,26,4.06,1.29,740,13.984444444444444,Bench,David Peterson,"RP,SP",NYM,Young Guns
+13,SP,Zach Plesac SP | CLE,106,18,9,0,6,4,0,0,75,22,100,3.82,1.15,292,44.99111111111111,Bench,Zach Plesac,SP,CLE,Young Guns
