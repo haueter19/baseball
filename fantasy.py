@@ -25,9 +25,9 @@ tot_dollars = n_teams * tm_dollars
 tot_players = n_teams * tm_players
 tot_hitters = n_teams * 14
 tot_pitchers = n_teams * 9
-total_z_over_0 = 630.75#701.39442#591.1999720030974
+total_z_over_0 = 626.134#701.39442#591.1999720030974
 orig_conv =  (tm_dollars/tm_players)*(tot_players/total_z_over_0)
-owner_list = ['Brewbirds', 'Charmer', 'Dirty Birds', 'Harvey', 'Lil Trump', 'Lima Time', 'Madness', 'Roid Ragers', 'Trouble', 'Ugly Spuds', 'Wu-Tang', 'Young Guns']
+owner_list = ['Brewbirds', 'Charmer', 'Dirty Birds', 'Harvey', 'Lil Trump', 'Lima Time', 'Midnight', 'Roid Ragers', 'Trouble', 'Ugly Spuds', 'Wu-Tang', 'Young Guns']
 
 drafted_by_pos = {
     'C':n_teams,
@@ -157,7 +157,8 @@ async def draft_view(request: Request):
             if row['Paid']==0:
                 pass
             else:
-                check_roster_pos(roster, h.loc[i]['Name'], h.loc[i]['Owner'], h.loc[i]['Primary_Pos'], h.loc[i]['Pos'])
+                if h.loc[i]['Paid'] > 0:
+                    check_roster_pos(roster, h.loc[i]['Name'], h.loc[i]['Owner'], h.loc[i]['Primary_Pos'], h.loc[i]['Pos'])
     dollars_rem = (tot_dollars - owners_df['Paid'].sum())
     z_rem = (h[h['z']>0]['z'].sum() - owners_df['z'].sum())
     conv_factor = dollars_rem / z_rem
@@ -196,7 +197,7 @@ async def sim_players(playerid: str):
 
 @router.get('/draft/reset_all')
 async def reset_all():
-    t = text("UPDATE players SET Paid=NULL, Owner=NULL")
+    t = text("UPDATE players SET Paid=NULL, Owner=NULL WHERE Keeper=NULL")
     conn = engine.connect()
     conn.execute(t)
     return RedirectResponse('/fantasy/draft')

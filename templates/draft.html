@@ -33,10 +33,6 @@
                     <table style="font-size:12px" id="team_input">
                         <tr>
                             <td>
-                                <input type="radio" id="team1" name="owner" value="Avg Joes">
-                                <label for="team1">Avg Joes</label>
-                            </td>
-                            <td>
                                 <input type="radio" id="team2" name="owner" value="Brewbirds">
                                 <label for="team2">Brewbirds</label>
                             </td>
@@ -44,12 +40,12 @@
                                 <input type="radio" id="team3" name="owner" value="Charmer">
                                 <label for="team3">Charmer</label>
                             </td>
-                        </tr>
-                        <tr>
                             <td>
                                 <input type="radio" id="team4" name="owner" value="Dirty Birds">
                                 <label for="team4">Dirty Birds</label>
                             </td>
+                        </tr>
+                        <tr>
                             <td>
                                 <input type="radio" id="team5" name="owner" value="Harvey">
                                 <label for="team5">Harvey</label>
@@ -58,21 +54,16 @@
                                 <input type="radio" id="team6" name="owner" value="Lil Trump">
                                 <label for="team6">Lil Trump</label>
                             </td>
-                        </tr>
-                        <tr>
                             <td>
                                 <input type="radio" id="team7" name="owner" value="Lima Time">
                                 <label for="team7">Lima Time</label>
                             </td>
+                        </tr>
+                        <tr>
                             <td>
                                 <input type="radio" id="team8" name="owner" value="Midnight">
                                 <label for="team8">Midnight</label>
                             </td>
-                            <td>
-                                <input type="radio" id="team9" name="owner" value="Moms Cookin">
-                                <label for="team9">Mother</label>
-                            </td>
-                        <tr>
                             <td>
                                 <input type="radio" id="team10" name="owner" value="Roid Ragers">
                                 <label for="team10">Roiders</label>
@@ -81,17 +72,22 @@
                                 <input type="radio" id="team11" name="owner" value="Trouble">
                                 <label for="team11">Trouble</label>
                             </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="radio" id="team9" name="owner" value="Ugly Spuds">
+                                <label for="team9">Ugly Spuds</label>
+                            </td>
                             <td>
                                 <input type="radio" id="team12" name="owner" value="Wu-Tang">
                                 <label for="team12">Wu-Tang</label>
                             </td>
-                        </tr>
-                        <tr>
                             <td>
                                 <input type="radio" id="team13" name="owner" value="Young Guns">
                                 <label for="team13">Young Guns</label>
                             </td>
                         </tr>
+                        
                     </table>
                     <br>
                     <label for="price">Auction Price</label>
@@ -269,34 +265,32 @@
                         <table class='table table-condensed table-hover' id="rosterTable" style="font-size:10px;">
                             <thead>
                                 <th>Pos</th>
-                                <th>AvgJoes</th>
                                 <th>Brewbirds</th>
-                                <th>DB's</th>
                                 <th>Charmer</th>
+                                <th>DB's</th>
                                 <th>Harvey</th>
                                 <th>Lil T</th>
                                 <th>Lima</th>
                                 <th>Midnight</th>
-                                <th>Mother</th>
                                 <th>Ragers</th>
                                 <th>Trouble</th>
+                                <th>Ugly Spuds</th>
                                 <th>Wu-Tang</th>
                                 <th>Young Guns</th>
                             </thead>
                             {% for i, row in roster.iterrows() %}
                                 <tr>
                                     <td>{{ i }}</td>
-                                    <td>{{ row['Avg Joes'] }}</td>
                                     <td>{{ row['Brewbirds'] }}</td>
-                                    <td>{{ row['Dirty Birds'] }}</td>
                                     <td>{{ row['Charmer'] }}</td>
+                                    <td>{{ row['Dirty Birds'] }}</td>
                                     <td>{{ row['Harvey'] }}</td>
                                     <td>{{ row['Lil Trump'] }}</td>
                                     <td>{{ row['Lima Time'] }}</td>
                                     <td>{{ row['Midnight'] }}</td>
-                                    <td>{{ row['Moms Cookin'] }}</td>
                                     <td>{{ row['Roid Ragers'] }}</td>
                                     <td>{{ row['Trouble'] }}</td>
+                                    <td>{{ row['Ugly Spuds'] }}</td>
                                     <td>{{ row['Wu-Tang'] }}</td>
                                     <td>{{ row['Young Guns'] }}</td>
                                 </tr>
