@@ -102,16 +102,97 @@ $.fn.tiers = function(){
     Plotly.newPlot("tiers_chart", tiers_data, layout, {displayModeBar: false})
 }
 
+$.fn.update_player_stats_window = function(selected_index){
+    let tbl_html = '<table class="table" id="player_table">'
+    +'<tr><thead><th>playerid</th><th>Name</th><th>Team</th><th>Pos</th><th>Age</th><th>Proj Value</th><th>Market</th><th>CBS</th><th>Z</th></thead></tr>'
+    +'<tr><td>'+data[selected_index]['playerid']+'</td>'
+    +'<td>'+data[selected_index]['Name']+'</td>'
+    +'<td>'+data[selected_index]['Team']+'</td>'
+    +'<td>'+data[selected_index]['Pos']+'</td>'
+    +'<td>'+data[selected_index]['Age']+'</td>'
+    +'<td><font color="red">$'+data[selected_index]['Value']+'</font></td>'
+    +'<td>'+data[selected_index]['curValue']+'</td>'
+    +'<td>'+data[selected_index]['CBS']+'</td>'
+    +'<td>'+data[selected_index]['z']+'</td>'
+    +'</tr></table><br>'
+    
+    if ((data[selected_index]['Primary_Pos']=='SP') || (data[selected_index]['Primary_Pos']=='RP')){
+        tbl_html += '<table class="table table-striped"><tr><thead><th>Type</th><th>IP</th><th>ERA</th><th>WHIP</th><th>K</th><th>W</th><th>S+H</th><th>FIP</th><th>HR/9</th><th>K/9</th><th>BB/9</th><th>K%</th><th>BB%</th><th>SIERA</th><th>ERA-</th><th>CSW%</th><th>FBv</th></thead></tr>'
+        +'<tr><td>Proj</td>'
+        +'<td>'+data[selected_index]['IP']+'</td>'
+        +'<td>'+data[selected_index]['ERA']+'</td>'
+        +'<td>'+data[selected_index]['WHIP']+'</td>'
+        +'<td>'+data[selected_index]['SO']+'</td>'
+        +'<td>'+data[selected_index]['W']+'</td>'
+        +'<td>'+data[selected_index]['Sv+Hld']+'</td>'
+        +'</tr><tr><td>2022</td>'
+        +'<td>'+data[selected_index]['IP_ly']+'</td>'
+        +'<td>'+data[selected_index]['ERA_ly']+'</td>'
+        +'<td>'+data[selected_index]['WHIP_ly']+'</td>'
+        +'<td>'+data[selected_index]['SO_ly']+'</td>'
+        +'<td>'+data[selected_index]['W_ly']+'</td>'
+        +'<td>'+data[selected_index]['Sv+Hld_ly']+'</td>'
+        +'<td>'+data[selected_index]['FIP']+'</td>'
+        +'<td>'+data[selected_index]['HR/9']+'</td>'
+        +'<td>'+data[selected_index]['K/9']+'</td>'
+        +'<td>'+data[selected_index]['BB/9']+'</td>'
+        +'<td>'+data[selected_index]['K%']+'</td>'
+        +'<td>'+data[selected_index]['BB%']+'</td>'
+        +'<td>'+data[selected_index]['SIERA']+'</td>'
+        +'<td>'+data[selected_index]['ERA-']+'</td>'
+        +'<td>'+data[selected_index]['CSW%']+'</td>'
+        +'<td>'+data[selected_index]['FBv']+'</td>'
+        +'</tr></table>'
+    } else {
+        tbl_html += '<table class="table table-striped"><tr><thead><th>Type</th><th>PA</th><th>xwOBA</th><th>xBA</th><th>BA</th><th>HR</th><th>SB</th><th>R</th><th>RBI</th><th>Brl%</th><th>BB%</th><th>K%</th><th>Cont%</th><th>O-Swing%</th><th>HardHit%</th><th>maxEV</th><th>EV</th></thead></tr>'
+        +'<tr><td>Proj</td>'
+        +'<td>'+data[selected_index]['PA']+'</td>'
+        +'<td>-</td><td>-</td>'
+        +'<td>'+data[selected_index]['BA']+'</td>'
+        +'<td>'+data[selected_index]['HR']+'</td>'
+        +'<td>'+data[selected_index]['SB']+'</td>'
+        +'<td>'+data[selected_index]['R']+'</td>'
+        +'<td>'+data[selected_index]['RBI']+'</td>'
+        +'</tr><tr><td>2022</td>'
+        +'<td>'+data[selected_index]['PA_ly']+'</td>'
+        +'<td>'+data[selected_index]['xwOBA']+'</td>'
+        +'<td>'+data[selected_index]['xBA']+'</td>'
+        +'<td>'+data[selected_index]['BA_ly']+'</td>'
+        +'<td>'+data[selected_index]['HR_ly']+'</td>'
+        +'<td>'+data[selected_index]['SB_ly']+'</td>'
+        +'<td>'+data[selected_index]['R_ly']+'</td>'
+        +'<td>'+data[selected_index]['RBI_ly']+'</td>'
+        +'<td>'+data[selected_index]['Barrel%']+'</td>'
+        +'<td>'+data[selected_index]['BB%']+'</td>'
+        +'<td>'+data[selected_index]['K%']+'</td>'
+        +'<td>'+data[selected_index]['Contact%']+'</td>'
+        +'<td>'+data[selected_index]['O-Swing%']+'</td>'
+        +'<td>'+data[selected_index]['HardHit%']+'</td>'
+        +'<td>'+data[selected_index]['maxEV']+'</td>'
+        +'<td>'+data[selected_index]['EV']+'</td>'
+        +'</tr></table>'
+    }
+    
+    $("#player_stats_window").html(tbl_html);
+    
+    console.log(data[selected_index]['Primary_Pos']);
+
+}
+
 $.fn.create_radar_chart = function(selected){
     $("#projected_stats_table tr").hide();
     $("#projected_stats_table tr:first").show();
+    $("#statcast_stats_table tr").hide();
+    $("#statcast_stats_table tr:first").show();
     $("#"+selected).show();
+    $("#"+selected+'_sc').show();
     $.each(data, function(i, v) {
             if (v.playerid == selected) {
                 selected_index = i
                 return;
             }
         });
+    $.fn.update_player_stats_window(selected_index);
     $("#radar_chart_player_name").text(data[selected_index]['Name']);
     let position = data[selected_index]['Primary_Pos'];
     if ((position == 'SP') | (position =='RP')){
@@ -155,6 +236,8 @@ function bid_amounts(id){
 $(document).ready(function(){
     $("#projected_stats_table tr").hide();
     $("#projected_stats_table tr:first").show();
+    $("#statcast_stats_table tr").hide();
+    $("#statcast_stats_table tr:first").show();
     $.fn.z_players();
     $.fn.owners_chart('Owner', '$ Left');
     $.fn.tiers();
