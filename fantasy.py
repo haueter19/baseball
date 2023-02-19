@@ -127,10 +127,11 @@ async def draft_view(request: Request):
     h = pd.read_sql('players', engine)
     h['Paid'].fillna(0,inplace=True)
     h['Paid'] = h['Paid'].apply(lambda x: int(x) if x>0 else x)
-    for i in ['z', 'Dollars', 'Value', 'IP']:
+    for i in ['z', 'Dollars', 'Value', 'IP', 'K/9']:
         h[i] = round(h[i],1)
-    h['BA'] = round(h['BA'],3)
-    for i in ['ERA', 'WHIP']:
+    for i in ['BA', 'BA_ly', 'Contact%', 'Z-Contact%', 'BB%', 'K%']:
+        h[i] = round(h[i],3)
+    for i in ['ERA', 'WHIP', 'Barrel%', 'O-Swing%', 'HardHit%']:
         h[i] = round(h[i],2)
     for i in ['SO', 'W', 'Sv+Hld', 'R', 'RBI', 'SB', 'HR']:
         h[i].fillna(0,inplace=True)
@@ -197,7 +198,7 @@ async def sim_players(playerid: str):
 
 @router.get('/draft/reset_all')
 async def reset_all():
-    t = text("UPDATE players SET Paid=NULL, Owner=NULL WHERE Keeper=NULL")
+    t = text("UPDATE players SET Paid=NULL, Owner=NULL WHERE Keeper=0")
     conn = engine.connect()
     conn.execute(t)
     return RedirectResponse('/fantasy/draft')
