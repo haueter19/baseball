@@ -106,59 +106,8 @@
                 <h5 id=radar_chart_player_name>Radar Chart</h5>
                 <div id="radar_chart"></div>
             </div>
-            <div class='col-md-6 mb-2 border-start border-dark'>
-                <table class='table' id="projected_stats_table">
-                    <thead>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Team</th>
-                        <th>Pos</th>
-                        <th>PA | IP</th>
-                        <th>BA | ERA</th>
-                        <th>HR | WHIP</th>
-                        <th>R | SO</th>
-                        <th>RBI | W</th>
-                        <th>SB | Sv+Hld</th>
-                        <th>Init $</th>
-                        <th>Market $</th>
-                        <th>CBS</th>
-                    </thead>
-                    {% for i, row in players.iterrows() %}
-                        {% if row['Primary_Pos']=='SP' or row['Primary_Pos']=='RP' %}
-                        <tr id="{{ row['playerid'] }}">
-                            <td>{{ row['playerid'] }}</td>
-                            <td>{{ row['Name'] }}</td>
-                            <td>{{ row['Team'] }}</td>
-                            <td>{{ row['Pos'] }}</td>
-                            <td>{{ row['IP'] }}</td>
-                            <td>{{ row['ERA'] }}</td>
-                            <td>{{ row['WHIP'] }}</td>
-                            <td>{{ row['SO'] }}</td>
-                            <td>{{ row['W'] }}</td>
-                            <td>{{ row['Sv+Hld'] }}</td>
-                            <td>{{ row['Value'] }}</td>
-                            <td>{{ row['curValue'] }}</td>
-                            <td>{{ row['CBS'] }}</td>
-                        </tr>
-                        {% else %}
-                        <tr id="{{ row['playerid'] }}">
-                            <td>{{ row['playerid'] }}</td>
-                            <td>{{ row['Name'] }}</td>
-                            <td>{{ row['Team'] }}</td>
-                            <td>{{ row['Pos'] }}</td>
-                            <td>{{ row['PA'] }}</td>
-                            <td>{{ row['BA'] }}</td>
-                            <td>{{ row['HR'] }}</td>
-                            <td>{{ row['R'] }}</td>
-                            <td>{{ row['RBI'] }}</td>
-                            <td>{{ row['SB'] }}</td>
-                            <td>{{ row['Value'] }}</td>
-                            <td>{{ row['curValue'] }}</td>
-                            <td>{{ row['CBS'] }}</td>
-                        </tr>
-                        {% endif %}
-                    {% endfor %}
-                </table>
+            <div class='col-md-6 mb-2 border-start border-dark' id="player_stats_window">
+                
             </div>
         </div>
         <div class="row p-3">
