@@ -102,9 +102,45 @@ $.fn.tiers = function(){
     Plotly.newPlot("tiers_chart", tiers_data, layout, {displayModeBar: false})
 }
 
+$.fn.paid_histogram = function(){
+    let x_data = [];
+    let y_data = [];
+    let hover_data = [];
+    let p_id = [];
+    let color_map = [];
+    var j = 0;
+    $.each(paid_hist_data, function(i, v){
+        y_data.push(v)
+    })
+    var trace1 = 
+        {
+            name:'Historical',
+            type: 'bar',
+            x:['1-4', '5-9', '10-14', '15-19', '20-24', '25-29', '30-34', '35-39', '40+'],
+            y:[5.27, 7.4, 4.07, 2.13, 1.87, 1.07, .6, .27, .33],
+            opacity:.75,
+            marker:{color:'gray'},
+        }
+    
+    var trace2 = 
+        {
+            name:'Lima Time',
+            type: 'bar',
+            x:['1-4', '5-9', '10-14', '15-19', '20-24', '25-29', '30-34', '35-39', '40+'],
+            y:y_data,
+            opacity:.75,
+            marker:{color:'blue'},
+        }
+    
+    pd_hist_data = [trace1, trace2];
+    layout = {title: "Historical Paid by Amount", hovermode:'closest', height: 400, width: 1050, margin: {l:20, t:30}},
+    Plotly.newPlot("paid_hist_chart", pd_hist_data, layout, {displayModeBar: false})
+}
+
+
 $.fn.update_player_stats_window = function(selected_index){
     let tbl_html = '<table class="table" id="player_table">'
-    +'<tr><thead><th>playerid</th><th>Name</th><th>Team</th><th>Pos</th><th>Age</th><th>Proj Value</th><th>Market</th><th>CBS</th><th>Z</th></thead></tr>'
+    +'<tr><thead><th>playerid</th><th>Name</th><th>Team</th><th>Pos</th><th>Age</th><th>Proj Value</th><th>Market</th><th>CBS</th><th>FG</th><th>Val_ly</th><th>Z</th></thead></tr>'
     +'<tr><td>'+data[selected_index]['playerid']+'</td>'
     +'<td>'+data[selected_index]['Name']+'</td>'
     +'<td>'+data[selected_index]['Team']+'</td>'
@@ -113,6 +149,8 @@ $.fn.update_player_stats_window = function(selected_index){
     +'<td><font color="red">$'+data[selected_index]['Value']+'</font></td>'
     +'<td>'+data[selected_index]['curValue']+'</td>'
     +'<td>'+data[selected_index]['CBS']+'</td>'
+    +'<td>'+data[selected_index]['Dollars']+'</td>'
+    +'<td>'+data[selected_index]['Value_ly']+'</td>'
     +'<td>'+data[selected_index]['z']+'</td>'
     +'</tr></table><br>'
     
@@ -241,6 +279,7 @@ $(document).ready(function(){
     $.fn.z_players();
     $.fn.owners_chart('Owner', '$ Left');
     $.fn.tiers();
+    $.fn.paid_histogram();
     $("input[name='playerid']").on('focusout', function(e){
         var selected = $(this).val();
         $(this).create_radar_chart(selected);
