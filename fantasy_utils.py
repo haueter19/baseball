@@ -35,6 +35,7 @@ class Fantasy_Projections():
         }
         self.quals = None
         #self.qual_p = None
+        self.proj_systems = ['atc', 'thebatx', 'dc', 'steamer', 'zips']
         self.pos_hierarchy = ['C', '2B', '3B', 'OF', 'SS', '1B', 'DH', 'SP', 'RP', 'P']
         self.keepers_url = 'https://docs.google.com/spreadsheets/d/1dwDC2uMsfVRYeDECKLI0Mm_QonxkZvTkZTfBgnZo7-Q/edit#gid=1723951361'
 
@@ -84,21 +85,51 @@ class Fantasy_Projections():
             zBA = (ba_pts-qual['zlgBA']['mean'])/qual['zlgBA']['std']
             #return ((row['AB'] * (((row['H']/row['AB'])-qual_avgs['AVG'][0])/qual_avgs['AVG'][1])) - qual_avgs['zlgBA'][0])/qual_avgs['zlgBA'][1]
             return zBA
+        if stat == 'BA_ly':
+            ba_pts = row['H_ly']-(row['AB_ly']*(qual['H']['mean']/qual['AB']['mean']))
+            zBA = (ba_pts-qual['zlgBA']['mean'])/qual['zlgBA']['std']
+            #return ((row['AB'] * (((row['H']/row['AB'])-qual_avgs['AVG'][0])/qual_avgs['AVG'][1])) - qual_avgs['zlgBA'][0])/qual_avgs['zlgBA'][1]
+            return zBA
         elif stat=='ERA':
             pts = ((row['ER']*9) - ((row['IP']*qual['ER']['mean']*9)/qual['IP']['mean'])) * -1
+            zERA = (pts-qual['zlgERA']['mean'])/qual['zlgERA']['std']
+            return zERA
+        elif stat=='ERA_ly':
+            pts = ((row['ER_ly']*9) - ((row['IP_ly']*qual['ER']['mean']*9)/qual['IP']['mean'])) * -1
             zERA = (pts-qual['zlgERA']['mean'])/qual['zlgERA']['std']
             return zERA
         elif stat=='WHIP':
             pts = ((row['HA']+row['BB'])-(row['IP']*((qual['HA']['mean']+qual['BB']['mean'])/qual['IP']['mean']))) * -1
             zWHIP = (pts-qual['zlgWHIP']['mean'])/qual['zlgWHIP']['std']
             return zWHIP
+        elif stat=='WHIP_ly':
+            pts = ((row['HA_ly']+row['BB_ly'])-(row['IP_ly']*((qual['HA']['mean']+qual['BB']['mean'])/qual['IP']['mean']))) * -1
+            zWHIP = (pts-qual['zlgWHIP']['mean'])/qual['zlgWHIP']['std']
+            return zWHIP
         else:
-            return (row[stat] - qual[stat]['mean']) / qual[stat]['std']
+            if stat[-3:] == '_ly':
+                return (row[stat] - qual[stat[:-3]]['mean']) / qual[stat[:-3]]['std']
+            else:
+                return (row[stat] - qual[stat]['mean']) / qual[stat]['std']
 
-
+    def calc_z(self, df, kind):
+        if kind=='h':
+            for stat in ['R', 'HR', 'RBI', 'SB', 'BA', 'R_ly', 'HR_ly', 'RBI_ly', 'SB_ly', 'BA_ly']:
+                df['z'+stat] = df.apply(lambda row: self.big_board(row, stat, self.quals), axis=1)
+            df['BIGAAh'] = df['zR']+df['zRBI']+df['zHR']+df['zSB']+df['zBA']
+            df['z_h_ly'] = df['zR_ly']+df['zRBI_ly']+df['zHR_ly']+df['zSB_ly']+df['zBA_ly']
+            return df
+        else:
+            for stat in ['ERA', 'WHIP', 'SO', 'W', 'Sv+Hld', 'ERA_ly', 'WHIP_ly', 'SO_ly', 'W_ly', 'Sv+Hld_ly']:
+                df['z'+stat] = df.apply(lambda row: self.big_board(row, stat, self.quals), axis=1)
+            df['BIGAAp'] = df['zERA']+df['zWHIP']+df['zW']+df['zSO']+df['zSv+Hld']
+            df['z_p_ly'] = df['zERA_ly']+df['zWHIP_ly']+df['zW_ly']+df['zSO_ly']+df['zSv+Hld_ly']
+            return df
+        
+    
     def make_projections(self, yr):
         proj_system_list = []
-        for proj_file in ['atc', 'thebatx', 'dc', 'steamer', 'zips']:
+        for proj_file in self.proj_systems:
             try:
                 temp = pd.read_csv('data/'+str(yr)+'-'+proj_file+'-proj-h.csv', encoding="latin-1")
                 proj_system_list.append(temp)
@@ -131,7 +162,7 @@ class Fantasy_Projections():
 
         # Pitching section
         proj_system_list = []
-        for proj_file in ['atc', 'thebatx', 'dc', 'steamer', 'zips']:
+        for proj_file in self.proj_systems:
             try:
                 temp = pd.read_csv('data/'+str(yr)+'-'+proj_file+'-proj-p.csv', encoding="latin-1")
                 proj_system_list.append(temp)
@@ -188,46 +219,52 @@ class Fantasy_Projections():
         p['Name'].fillna(p['CBSNAME_x'],inplace=True)
         p['Name'].fillna(p['CBSNAME_y'],inplace=True)
         p.drop(columns=['CBSNAME_x', 'CBSNAME_y'],inplace=True)
+
+        # Establish previous year qualifying averages for the major stat categories
+        quals = self.get_qual_avgs(self.yr-1)
+
+        # Adding StatCast data
+        scb = pd.read_csv('data/'+str(yr-1)+'-statcast-h.csv')
+        scb.rename(columns={'IDfg':'playerid', 'PA':'PA_ly', 'HR':'HR_ly', 'R':'R_ly', 'RBI':'RBI_ly', 'SB':'SB_ly', 'AVG':'BA_ly'},inplace=True)
+        scb['playerid'] = scb['playerid'].astype(str)
+        scp = pd.read_csv('data/'+str(yr-1)+'-statcast-p.csv')
+        scp.rename(columns={'IDfg':'playerid', 'IP':'IP_ly', 'W':'W_ly', 'ERA':'ERA_ly', 'WHIP':'WHIP_ly', 'SV':'SV_ly', 'HLD':'HLD_ly', 'SO':'SO_ly'},inplace=True)
+        scp['playerid'] = scp['playerid'].astype(str)
+        scp['Sv+Hld_ly'] = scp['SV_ly']+scp['HLD_ly']
+        sc = pd.concat([scb,scp])
+        h = h.merge(sc[['playerid', 'Age', 'PA_ly', 'H_ly', 'AB_ly', 'HR_ly', 'SB_ly', 'R_ly', 'RBI_ly', 'BA_ly', 'BB%', 'K%', 'Contact%', 'O-Contact%', 'Z-Contact%', 'O-Swing%', 'Z-Swing%', 'Swing%', 'Hard%+', 'Hard%', 'HardHit%', 'EV', 'maxEV', 'LA', 'Barrels', 'Barrel%', 'Events', 'xBA', 'xSLG', 'xwOBA', 'IP_ly', 'ER_ly', 'HA_ly', 'BB_ly', 'HBP_ly', 'ERA_ly', 'WHIP_ly', 'Sv+Hld_ly', 'W_ly', 'SO_ly', 'CSW%', 'SIERA', 'FIP', 'xFIP', 'xERA', 'ERA-', 'FBv', 'HR/9', 'BB/9']], on='playerid',how='left')
+        p = p.merge(sc[['playerid', 'Age', 'PA_ly', 'H_ly', 'AB_ly', 'HR_ly', 'SB_ly', 'R_ly', 'RBI_ly', 'BA_ly', 'BB%', 'K%', 'Contact%', 'O-Contact%', 'Z-Contact%', 'O-Swing%', 'Z-Swing%', 'Swing%', 'Hard%+', 'Hard%', 'HardHit%', 'EV', 'maxEV', 'LA', 'Barrels', 'Barrel%', 'Events', 'xBA', 'xSLG', 'xwOBA', 'IP_ly', 'ER_ly', 'HA_ly', 'BB_ly', 'HBP_ly', 'ERA_ly', 'WHIP_ly', 'Sv+Hld_ly', 'W_ly', 'SO_ly', 'CSW%', 'SIERA', 'FIP', 'xFIP', 'xERA', 'ERA-', 'FBv', 'HR/9', 'BB/9']], on='playerid',how='left')
         
-        qual_h = self.get_qual_avgs(self.yr-1)
-        #qual_p['HA'] = qual_p.pop('H')
-        #qual_h.update(qual_p)
-        self.quals = qual_h
+        h.loc[(h['playerid'].duplicated()) & (h['Primary_Pos'].isin(['C', '1B', '2B', '3B', 'SS', 'OF', 'DH'])), 'keep'] = 0
+        h['keep'].fillna(1,inplace=True)
+        h = h[h['keep']==1]
 
+        p.loc[(p['playerid'].duplicated()) & (p['Primary_Pos'].isin(['SP', 'RP', 'P'])), 'keep'] = 0
+        p['keep'].fillna(1,inplace=True)
+        p = p[p['keep']==1]
+        
         print('Doing the BIGAA calculations...')
-        h['zR'] = h.apply(lambda row: self.big_board(row, 'R', qual_h), axis=1)
-        h['zHR'] = h.apply(lambda row: self.big_board(row, 'HR', qual_h), axis=1)
-        h['zRBI'] = h.apply(lambda row: self.big_board(row, 'RBI', qual_h), axis=1)
-        h['zSB'] = h.apply(lambda row: self.big_board(row, 'SB', qual_h), axis=1)
-        h['zBA'] = h.apply(lambda row: self.big_board(row, 'BA', qual_h), axis=1)
-        h['BIGAA'] = h['zR']+h['zRBI']+h['zHR']+h['zSB']+h['zBA']
-
-        print(p.columns)
-        p['zSO'] = p.apply(lambda row: self.big_board(row, 'SO', qual_h), axis=1)
-        p['zW'] = p.apply(lambda row: self.big_board(row, 'W', qual_h), axis=1)
-        p['zSv+Hld'] = p.apply(lambda row: self.big_board(row, 'Sv+Hld', qual_h), axis=1)
-        p['zERA'] = p.apply(lambda row: self.big_board(row, 'ERA', qual_h), axis=1)
-        p['zWHIP'] = p.apply(lambda row: self.big_board(row, 'WHIP', qual_h), axis=1)
-        p['BIGAA'] = p['zSv+Hld']+p['zSO']+p['zW']+p['zERA']+p['zWHIP']
+        h = self.calc_z(h, 'h')
+        p = self.calc_z(p, 'p')
 
         print('Making adjustments by position...')
-        c_adjust = abs(h[h['Primary_Pos']=='C'].sort_values('BIGAA',ascending=False).iloc[self.drafted_by_pos['C']]['BIGAA'])
+        c_adjust = abs(h[h['Primary_Pos']=='C'].sort_values('BIGAAh',ascending=False).iloc[self.drafted_by_pos['C']]['BIGAAh'])
         h.loc[h['Primary_Pos']=='C', 'Pos_adj'] = c_adjust
-        ci_adjust = abs(h[h['Primary_Pos'].isin(['1B', '3B'])].sort_values('BIGAA',ascending=False).iloc[self.drafted_by_pos['1B']+self.drafted_by_pos['3B']]['BIGAA'])
+        ci_adjust = abs(h[h['Primary_Pos'].isin(['1B', '3B'])].sort_values('BIGAAh',ascending=False).iloc[self.drafted_by_pos['1B']+self.drafted_by_pos['3B']]['BIGAAh'])
         h.loc[h['Primary_Pos'].isin(['1B', '3B']), 'Pos_adj'] = ci_adjust
-        mi_adjust = abs(h[h['Primary_Pos'].isin(['2B', 'SS'])].sort_values('BIGAA',ascending=False).iloc[self.drafted_by_pos['SS']+self.drafted_by_pos['2B']]['BIGAA'])
+        mi_adjust = abs(h[h['Primary_Pos'].isin(['2B', 'SS'])].sort_values('BIGAAh',ascending=False).iloc[self.drafted_by_pos['SS']+self.drafted_by_pos['2B']]['BIGAAh'])
         h.loc[h['Primary_Pos'].isin(['2B', 'SS']), 'Pos_adj'] = mi_adjust
-        of_adjust = abs(h[h['Primary_Pos'].isin(['OF', 'DH'])].sort_values('BIGAA',ascending=False).iloc[self.drafted_by_pos['OF']]['BIGAA'])
+        of_adjust = abs(h[h['Primary_Pos'].isin(['OF', 'DH'])].sort_values('BIGAAh',ascending=False).iloc[self.drafted_by_pos['OF']]['BIGAAh'])
         h.loc[h['Primary_Pos'].isin(['OF', 'DH']), 'Pos_adj'] = of_adjust
 
-        sp_adjust = abs(p[p['Primary_Pos']=='SP'].sort_values('BIGAA',ascending=False).iloc[self.drafted_by_pos['SP']]['BIGAA'])
+        sp_adjust = abs(p[p['Primary_Pos']=='SP'].sort_values('BIGAAp',ascending=False).iloc[self.drafted_by_pos['SP']]['BIGAAp'])
         p.loc[p['Primary_Pos']=='SP', 'Pos_adj'] = sp_adjust
-        rp_adjust = abs(p[p['Primary_Pos']=='RP'].sort_values('BIGAA',ascending=False).iloc[self.drafted_by_pos['RP']]['BIGAA'])
+        rp_adjust = abs(p[p['Primary_Pos']=='RP'].sort_values('BIGAAp',ascending=False).iloc[self.drafted_by_pos['RP']]['BIGAAp'])
         p.loc[p['Primary_Pos']=='RP', 'Pos_adj'] = rp_adjust
         
         # Apply Positional adjustment
-        h['z'] = h['BIGAA'] + h['Pos_adj']
-        p['z'] = p['BIGAA'] + p['Pos_adj']
+        h['z'] = h['BIGAAh'] + h['Pos_adj']
+        p['z'] = p['BIGAAp'] + p['Pos_adj']
 
         conv = (self.tm_dollars/self.tm_players)*(self.tot_players/(h[h['z']>0]['z'].sum()+p[p['z']>0]['z'].sum()))
         print('\nTotal z:',h[h['z']>0]['z'].sum()+p[p['z']>0]['z'].sum())
@@ -235,12 +272,14 @@ class Fantasy_Projections():
         print('Conversion to $:',conv)
         
         h['Value'] = h['z']*conv
+        h['Value_ly'] = h['z_h_ly']*conv
+        
         p['Value'] = p['z']*conv
+        p['Value_ly'] = p['z_p_ly']*conv
 
         b = pd.concat([h,p])
         b['Outs'] = b['IP']*3
         b['K/9'] = b['SO']*9/(b['Outs']/3)
-        #b['Used'] = None
         
         print('Adding keepers')
         kdf = pd.read_csv('data/'+str(self.yr)+'-keepers.csv')
@@ -250,18 +289,8 @@ class Fantasy_Projections():
         b["Paid"] = pd.to_numeric(b.Paid, downcast='integer')
         b['Keeper'].fillna(0,inplace=True)
 
-        print('Adding StatCast data')
-        scb = pd.read_csv('data/'+str(yr-1)+'-statcast-h.csv')
-        scb.rename(columns={'IDfg':'playerid', 'PA':'PA_ly', 'HR':'HR_ly', 'R':'R_ly', 'RBI':'RBI_ly', 'SB':'SB_ly', 'AVG':'BA_ly'},inplace=True)
-        scb['playerid'] = scb['playerid'].astype(str)
-        scp = pd.read_csv('data/'+str(yr-1)+'-statcast-p.csv')
-        scp.rename(columns={'IDfg':'playerid', 'IP':'IP_ly', 'W':'W_ly', 'ERA':'ERA_ly', 'WHIP':'WHIP_ly', 'SV':'SV_ly', 'HLD':'HLD_ly', 'SO':'SO_ly'},inplace=True)
-        scp['playerid'] = scp['playerid'].astype(str)
-        scp['Sv+Hld_ly'] = scp['SV_ly']+scp['HLD_ly']
-        sc = pd.concat([scb,scp])
-        b = b.merge(sc[['playerid', 'Age', 'PA_ly', 'HR_ly', 'SB_ly', 'R_ly', 'RBI_ly', 'BA_ly', 'BB%', 'K%', 'Contact%', 'O-Contact%', 'Z-Contact%', 'O-Swing%', 'Z-Swing%', 'Swing%', 'Hard%+', 'Hard%', 'HardHit%', 'EV', 'maxEV', 'LA', 'Barrels', 'Barrel%', 'Events', 'xBA', 'xSLG', 'xwOBA', 'IP_ly', 'ERA_ly', 'WHIP_ly', 'Sv+Hld_ly', 'W_ly', 'SO_ly', 'CSW%', 'SIERA', 'FIP', 'xFIP', 'xERA', 'ERA-', 'FBv', 'HR/9', 'BB/9']], on='playerid',how='left')        
+        
         self.data = b.sort_values('Value', ascending=False)
-
         return b.sort_values('Value', ascending=False)
     
     def upload(self, tbl='players'):
