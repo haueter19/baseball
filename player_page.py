@@ -27,7 +27,7 @@ async def player_page(request: Request, pid: int = 876, org: Optional[str] = 'MA
     obp = round((gp.H.sum()+gp.BB.sum()+gp.HBP.sum())/(gp.AB.sum()+gp.BB.sum()+gp.HBP.sum()+gp.SF.sum()),3)
     slg = round(gp.TB.sum()/gp.AB.sum(),3)
     ops = round(obp + slg,3)
-    gp.at[-1] = ['Career', gp.GP.sum(), gp.PA.sum(), gp.AB.sum(), gp.R.sum(), gp.H.sum(), gp['1B'].sum(), gp['2B'].sum(), gp['3B'].sum(), gp.HR.sum(), gp.RBI.sum(), gp.BB.sum(),gp.K.sum(),gp.HBP.sum(),gp.SB.sum(),gp.CS.sum(),gp.SF.sum(),gp.SH.sum(),gp.TB.sum(),round(gp.wRAAc.sum(),2), round(gp.WAR.sum(),2), round(gp.RC.sum(),2), ba,obp,slg,ops]
+    gp.loc[-1] = ['Career', gp.GP.sum(), gp.PA.sum(), gp.AB.sum(), gp.R.sum(), gp.H.sum(), gp['1B'].sum(), gp['2B'].sum(), gp['3B'].sum(), gp.HR.sum(), gp.RBI.sum(), gp.BB.sum(),gp.K.sum(),gp.HBP.sum(),gp.SB.sum(),gp.CS.sum(),gp.SF.sum(),gp.SH.sum(),gp.TB.sum(),round(gp.wRAAc.sum(),2), round(gp.WAR.sum(),2), round(gp.RC.sum(),2), ba,obp,slg,ops]
     for col in ['GP', 'PA', 'AB', 'R', 'H','1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K','HBP', 'SB', 'CS', 'SF', 'SH', 'TB']:
         gp[col] = gp[col].astype(int)
     for col in ['wRAAc', 'WAR']:
