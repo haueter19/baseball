@@ -127,7 +127,7 @@ async def draft_view(request: Request):
     h = pd.read_sql('players', engine)
     h['Paid'].fillna(0,inplace=True)
     h['Paid'] = h['Paid'].apply(lambda x: int(x) if x>0 else x)
-    for i in ['z', 'Dollars', 'Value', 'IP', 'K/9']:
+    for i in ['z', 'Dollars', 'Value', 'Value_ly', 'IP', 'K/9']:
         h[i] = round(h[i],1)
     for i in ['BA', 'BA_ly', 'Contact%', 'Z-Contact%', 'BB%', 'K%']:
         h[i] = round(h[i],3)
@@ -160,6 +160,16 @@ async def draft_view(request: Request):
             else:
                 if h.loc[i]['Paid'] > 0:
                     check_roster_pos(roster, h.loc[i]['Name'], h.loc[i]['Owner'], h.loc[i]['Primary_Pos'], h.loc[i]['Pos'])
+    
+    h.loc[h['Paid'].between(1,4), 'hist'] = '1-4'
+    h.loc[h['Paid'].between(5,9), 'hist'] = '5-9'
+    h.loc[h['Paid'].between(10,14), 'hist'] = '10-14'
+    h.loc[h['Paid'].between(15,19), 'hist'] = '15-19'
+    h.loc[h['Paid'].between(20,24), 'hist'] = '20-24'
+    h.loc[h['Paid'].between(25,29), 'hist'] = '25-29'
+    h.loc[h['Paid'].between(30,34), 'hist'] = '30-34'
+    h.loc[h['Paid'].between(35,39), 'hist'] = '35-39'
+    h.loc[h['Paid']>=40, 'hist'] = '40+'
     dollars_rem = (tot_dollars - owners_df['Paid'].sum())
     z_rem = (h[h['z']>0]['z'].sum() - owners_df['z'].sum())
     conv_factor = dollars_rem / z_rem
@@ -172,7 +182,10 @@ async def draft_view(request: Request):
                                     'players_left':(tot_players - owners_df.Drafted.sum()),
                                     'dollars_left':(tot_dollars - owners_df.Paid.sum()),
                                     'init_dollars_per_z':round((tot_dollars/h[h['z']>=0]['z'].sum()*player_split),2),
-                                    'current_dollars_per_z':round(owners_df.Paid.sum() / owners_df.z.sum(),2)})
+                                    'current_dollars_per_z':round(owners_df.Paid.sum() / owners_df.z.sum(),2),
+                                    'paid_histogram_data':h[h['Owner']=='Lima Time'].groupby('hist')['Paid'].count().reindex(pd.Series(['1-4', '5-9', '10-14', '15-19', '20-24', '25-29', '30-34', '35-39', '40+'])).fillna(0).to_json(orient='index'),
+                                    'team_z':h.groupby('Owner')[['zHR', 'zSB', 'zR', 'zRBI', 'zBA', 'zW', 'zSO', 'zSv+Hld', 'zERA', 'zWHIP']].mean().reset_index().round(2),
+                                    })
 
 @router.get("/draft/update_bid")
 async def update_db(playerid: str, price: int, owner: str):
@@ -185,16 +198,15 @@ async def update_db(playerid: str, price: int, owner: str):
 @router.get("/draft/sims/{playerid}")
 async def sim_players(playerid: str):
     h = pd.read_sql('players', engine)
-    if h[h['playerid']==playerid]['Owner'].any():
-        return '<br>sims unavailable for owned players'
+    
+    if h[h['playerid']==playerid]['Primary_Pos'].iloc[0] in ['C', '1B', '2B', '3B', 'SS', 'OF', 'DH']:
+        sims = add_distance_metrics(h, playerid, ['BA', 'R', 'RBI', 'HR', 'SB']).sort_values('eucl_dist')
     else:
-        if h[h['playerid']==playerid]['Primary_Pos'].iloc[0] in ['C', '1B', '2B', '3B', 'SS', 'OF', 'DH']:
-            sims = add_distance_metrics(h, playerid, ['BA', 'R', 'RBI', 'HR', 'SB']).sort_values('eucl_dist')
-        else:
-            sims = add_distance_metrics(h, playerid, ['ERA', 'WHIP', 'W', 'SO', 'Sv+Hld']).sort_values('eucl_dist')
-        sims_data = h[h['playerid'].isin(sims['Name'].index)][['Name', 'Value']]
-        #print('<br>'.join(sims_data))
-        return sims_data.to_json(orient='records')#'<br>'.join(sims_data['Name'])
+        sims = add_distance_metrics(h, playerid, ['ERA', 'WHIP', 'W', 'SO', 'Sv+Hld']).sort_values('eucl_dist')
+    print(sims)
+    sims_data = h[h['playerid'].isin(sims['Name'].index)][['Name', 'Value']]
+    #print('<br>'.join(sims_data))
+    return sims_data.to_json(orient='records')#'<br>'.join(sims_data['Name'])
 
 @router.get('/draft/reset_all')
 async def reset_all():
