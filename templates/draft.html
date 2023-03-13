@@ -14,9 +14,14 @@
         <script>
             var data = {{ json|safe }};
             var owners = {{ owners_json|safe }};
+            var paid_hist_data = {{ paid_histogram_data|safe }};
         </script>
         <script src="/static/js_functions.js"></script>
         <script src="/static/sort-table.js"></script>
+
+        <style>
+            tr[id='summary_Lima Time'] { color: blue;}
+        </style>
     </head>
     <body>
         <div class="row border-bottom border-3 border-primary p-3">
@@ -145,7 +150,7 @@
             <div class="col-md-9 border-start border-dark">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                      <a class="nav-link active" data-bs-toggle="tab" href="#summary">Summary</a>
+                      <a class="nav-link" data-bs-toggle="tab" href="#summary">Summary</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#rosters">Rosters</a>
@@ -157,11 +162,17 @@
                         <a class="nav-link" data-bs-toggle="tab" href="#tiers">Tiers</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" data-bs-toggle="tab" href="#players">Players</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#players">Players</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#paid_hist">Paid $ Hist</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#team_z">Total Z</a>
                     </li>
                   </ul>
                   <div class="tab-content">
-                    <div class="tab-pane container active" id="summary">
+                    <div class="tab-pane container" id="summary">
                         <table class="table table-condensed table-hover" id="myTable" style="font-size:12px;">
                             <thead>
                                 <th onclick="sortTable(0)">Owner</th>
@@ -186,7 +197,7 @@
                                 
                             </thead>
                         {% for i, row in owners_df.iterrows() %}
-                            <tr>
+                            <tr id="summary_{{ row['Owner'] }}">
                                 <td>{{ row['Owner'] }}</td>
                                 <td>{{ row['Cash'] }}</td>
                                 <td>{{ row['$ Left'] }}</td>
@@ -219,7 +230,7 @@
                                 <th>DB's</th>
                                 <th>Harvey</th>
                                 <th>Lil T</th>
-                                <th>Lima</th>
+                                <th><font color='blue'>Lima</font></th>
                                 <th>Midnight</th>
                                 <th>Ragers</th>
                                 <th>Trouble</th>
@@ -235,7 +246,7 @@
                                     <td>{{ row['Dirty Birds'] }}</td>
                                     <td>{{ row['Harvey'] }}</td>
                                     <td>{{ row['Lil Trump'] }}</td>
-                                    <td>{{ row['Lima Time'] }}</td>
+                                    <td><b>{{ row['Lima Time'] }}</b></td>
                                     <td>{{ row['Midnight'] }}</td>
                                     <td>{{ row['Roid Ragers'] }}</td>
                                     <td>{{ row['Trouble'] }}</td>
@@ -245,6 +256,9 @@
                                 </tr>
                             {% endfor %}
                         </table>
+                    </div>
+                    <div class="tab-pane container  active" id="paid_hist">
+                        <div id="paid_hist_chart"></div>
                     </div>
                     <div class="tab-pane container fade pt-4" id="charts">
                         <button type="button" class="btn btn-primary" id="button-1">Pts</button>
@@ -256,6 +270,39 @@
                     </div>
                     <div class="tab-pane container fade pt-4" id="tiers">
                         <div id="tiers_chart"></div>
+                    </div>
+                    <div class="tab-pane container fade pt-4" id="team_z">
+                        <table class="table table-condensed table-hover" id="z_table" style="font-size:12px;">
+                            <thead>
+                                <th onclick="sortTable(0)">Owner</th>
+                                <th onclick="sortTable(1)">HR</th>
+                                <th onclick="sortTable(2)">SB</th>
+                                <th onclick="sortTable(3)">R</th>
+                                <th onclick="sortTable(4)">RBI</th>
+                                <th onclick="sortTable(5)">BA</th>
+                                <th onclick="sortTable(6)">W</th>
+                                <th onclick="sortTable(7)">K</th>
+                                <th onclick="sortTable(8)">Sv+Hld</th>
+                                <th onclick="sortTable(9)">ERA</th>
+                                <th onclick="sortTable(10)">WHIP</th>                                
+                            </thead>
+                        {% for i, row in team_z.iterrows() %}
+                            <tr>
+                                <td>{{ row['Owner'] }}</td>
+                                <td>{{ row['zHR'] }}</td>
+                                <td>{{ row['zSB'] }}</td>
+                                <td>{{ row['zR'] }}</td>
+                                <td>{{ row['zRBI'] }}</td>
+                                <td>{{ row['zBA'] }}</td>
+                                <td>{{ row['zW'] }}</td>
+                                <td>{{ row['zSO'] }}</td>
+                                <td>{{ row['zSv+Hld'] }}</td>
+                                <td>{{ row['zERA'] }}</td>
+                                <td>{{ row['zWHIP'] }}</td>
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    </div>
                     </div>
                     <div class="tab-pane container fade" id="players">
                         <div id="z_players_chart"></div>
