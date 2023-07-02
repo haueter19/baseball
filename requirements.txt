@@ -1,5 +1,4 @@
 fastapi[all]
-Jinja2==2.11.2
 jsonschema==3.2.0
 numpy==1.15.4
 pandas==0.23.4
