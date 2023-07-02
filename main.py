@@ -26,6 +26,10 @@ app.include_router(nav.router)
 async def slash():
     return RedirectResponse("/home")
 
+@app.get('/healthz')
+async def health_check():
+    return {'status':'good'}
+
 @app.get("/home")
 async def home(request: Request):
     orgs = df['Org'].sort_values().unique()
