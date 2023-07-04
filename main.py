@@ -26,6 +26,10 @@ app.include_router(nav.router)
 async def slash():
     return RedirectResponse("/home")
 
+@app.get('/healthz')
+async def health_check():
+    return {'status':'good'}
+
 @app.get("/home")
 async def home(request: Request):
     orgs = df['Org'].sort_values().unique()
@@ -44,7 +48,7 @@ async def pid_list():
 def run():
     LOGGING_CONFIG["formatters"]["default"]["fmt"] = "%(asctime)s [%(name)s] %(levelprefix)s %(message)s"
     LOGGING_CONFIG["formatters"]["access"]["fmt"] = '%(asctime)s [%(name)s] %(levelprefix)s %(client_addr)s - "%(request_line)s" %(status_code)s'
-    uvicorn.run(app)
+    uvicorn.run(app, port=10000)
     
 if __name__=='__main__':
     run()
