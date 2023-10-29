@@ -124,7 +124,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-*.ipynb
+.ipynb
 data/2023*
-data/per*.csv
+data/razz*
+data/period*.csv
 data/*.xlsx
