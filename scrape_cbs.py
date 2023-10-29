@@ -12,10 +12,10 @@ fp = fu.Fantasy_Projections()
 proj_url = 'https://xdl.baseball.cbssports.com/stats/stats-main'
 elig_url = 'https://xdl.baseball.cbssports.com/teams/eligibility/'
 
-eligibility_url_dict = {"8 Grand Kids":'30', 'Brewbirds':'3', 'Charmer':'36', 'Dirty Birds':'41', "Harveys Wallbangers":'4', 'Lil Trump & the Ivanabees':'27', 'Lima Time!':'38', 
+eligibility_url_dict = {"9 Grand Kids":'30', 'Brewbirds':'3', 'Charmer':'36', 'Dirty Birds':'41', "Harveys Wallbangers":'4', 'Lil Trump & the Ivanabees':'27', 'Lima Time!':'38', 
                         'Roid Ragers':'44', 'Trouble with the Curve':'1', 'Ugly Spuds':'29', 'Wiscompton Wu-Tang':'42', 'Young Guns':'45'}
 
-name_change = {"8 Gran...":'Madness', 'Brewbi...':'Brewbirds', 'Charme...':'Charmer', 'Dirty ...':'Dirty Birds', 'Harvey...':'Harvey', 'Lil Tr...':'Lil Trump', 
+name_change = {"9 Gran...":'Madness', 'Brewbi...':'Brewbirds', 'Charme...':'Charmer', 'Dirty ...':'Dirty Birds', 'Harvey...':'Harvey', 'Lil Tr...':'Lil Trump', 
                'Lima T...':'Lima Time', 'Roid R...':'Roiders', 'Troubl...':'Trouble', 'Ugly S...':'Ugly Spuds', 'Wiscom...':'Wu Tang', 'Young ...':'Young Guns'}
 position_priority = ['C', '2B', '3B', 'SS', 'OF', '1B', 'MI', 'CI', 'DH', 'SP', 'RP']
 
@@ -153,7 +153,7 @@ def parse_projections_data(master):
 
 
 def login():
-    driver = webdriver.Chrome("C:\\WebDriver\\bin\\chromedriver.exe")
+    driver = webdriver.Chrome("C:\\ProgramData\\Anaconda3\\WebDriver\\bin\\chromedriver.exe")
     driver.get('https://www.cbssports.com/login?master_product=150&xurl=https%3A%2F%2Fwww.cbssports.com%2Flogin')
     search_box = driver.find_element_by_id('userid')
     search_box.send_keys('gostros09')

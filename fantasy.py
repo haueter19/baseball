@@ -128,14 +128,18 @@ async def draft_view(request: Request):
     h['Paid'].fillna(0,inplace=True)
     h['Paid'] = h['Paid'].apply(lambda x: int(x) if x>0 else x)
     for i in ['z', 'Dollars', 'Value', 'Value_ly', 'IP', 'K/9']:
-        h[i] = round(h[i],1)
+        if i in h.columns:
+            h[i] = round(h[i],1)
     for i in ['BA', 'BA_ly', 'Contact%', 'Z-Contact%', 'BB%', 'K%']:
-        h[i] = round(h[i],3)
+        if i in h.columns:
+            h[i] = round(h[i],3)
     for i in ['ERA', 'WHIP', 'Barrel%', 'O-Swing%', 'HardHit%']:
-        h[i] = round(h[i],2)
+        if i in h.columns:
+            h[i] = round(h[i],2)
     for i in ['SO', 'W', 'Sv+Hld', 'R', 'RBI', 'SB', 'HR']:
-        h[i].fillna(0,inplace=True)
-        h[i] = h[i].astype(int)
+        if i in h.columns:
+            h[i].fillna(0,inplace=True)
+            h[i] = h[i].astype(int)
     owners_df = h.query('Paid>0').groupby('Owner').agg({'Name':'count', 'Paid':'sum', 'z':'sum', 'H':'sum', 'AB':'sum', 'HR':'sum', 'R':'sum', 'RBI':'sum', 'SB':'sum', 'Outs':'sum', 'W':'sum', 'SO':'sum', 'Sv+Hld':'sum', 'ER':'sum', 'IP':'sum', 'BB':'sum', 'HA':'sum'}).reset_index()
     owners_df.rename(columns={'Name':'Drafted'},inplace=True)
     owners_df['Paid'] = owners_df['Paid'].apply(lambda x: int(x) if x>0 else x)
