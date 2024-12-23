@@ -47,7 +47,7 @@
 <br /><br />
 <div class="row">
     <div class="col-lg-12">
-        <table class='table table-condensed table-hover' id='myTable'>
+        <table class='table table-condensed table-sm table-striped table-hover' id='myTable'>
             <tr>
                 <th align='left' onclick="sortTable_alpha(0)">Player</th>
                 <th onclick="sortTable(1)">GP</th>
@@ -87,9 +87,9 @@
                     <td>{{ val['AB'] }}</td>
                     <td>{{ val['R'] }}</td>
                     <td>{{ val['H'] }}</td>
-                    <td>{{ val['1B'] }}</td>
-                    <td>{{ val['2B'] }}</td>
-                    <td>{{ val['3B'] }}</td>
+                    <td>{{ val['single'] }}</td>
+                    <td>{{ val['double'] }}</td>
+                    <td>{{ val['triple'] }}</td>
                     <td>{{ val['HR'] }}</td>
                     <td>{{ val['RBI'] }}</td>
                     <td>{{ val['BB'] }}</td>
@@ -121,9 +121,9 @@
                     <td>{{ val['AB'] }}</td>
                     <td>{{ val['R'] }}</td>
                     <td>{{ val['H'] }}</td>
-                    <td>{{ val['1B'] }}</td>
-                    <td>{{ val['2B'] }}</td>
-                    <td>{{ val['3B'] }}</td>
+                    <td>{{ val['single'] }}</td>
+                    <td>{{ val['double'] }}</td>
+                    <td>{{ val['triple'] }}</td>
                     <td>{{ val['HR'] }}</td>
                     <td>{{ val['RBI'] }}</td>
                     <td>{{ val['BB'] }}</td>
@@ -134,7 +134,6 @@
                     <td>{{ val['SF'] }}</td>
                     <td>{{ val['SH'] }}</td>
                     <td>{{ val['TB'] }}</td>
-                    <td>{{ val['RC'] }}</td>
                     <td>{{ val['BA'] }}</td>
                     <td>{{ val['OBP'] }}</td>
                     <td>{{ val['SLG'] }}</td>
@@ -144,6 +143,7 @@
                     <td>{{ 0.0 }}</td>
                     <td>{{ val['wRC'] }}</td>
                     <td>{{ 100 }}</td>
+                    <td></td>
                 </tr>
                 {% endfor %}
         </table>

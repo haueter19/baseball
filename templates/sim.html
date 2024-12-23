@@ -6,6 +6,7 @@
 {% block content %}
 
 <script>
+    let proj = {{ players | safe }}; // player projection data
     var form = document.getElementById("myform");
     function submitFormChangeLeague(){        
         var input = $("<input>")
@@ -14,59 +15,137 @@
         $('#myForm').append(input);
         $("#myForm").submit()
     }
-    function submitFormRunSims(){        
-        var lineup1 = $("#a1").val().toString()+"+"+$("#a2").val().toString()+"+"+$("#a3").val().toString()+"+"+$("#a4").val().toString()+"+"+$("#a5").val().toString()+"+"+$("#a6").val().toString()+"+"+$("#a7").val().toString()+"+"+$("#a8").val().toString()+"+"+$("#a9").val().toString()+"+"+$("#a10").val().toString();
-        var lineup2 = $("#h1").val().toString()+"+"+$("#h2").val().toString()+"+"+$("#h3").val().toString()+"+"+$("#h4").val().toString()+"+"+$("#h5").val().toString()+"+"+$("#h6").val().toString()+"+"+$("#h7").val().toString()+"+"+$("#h8").val().toString()+"+"+$("#h9").val().toString()+"+"+$("#h10").val().toString();
-        var input = $("<input>")
-                .attr("name", "go").val(1)
-                .attr("action", "/sim");
-        $('#myForm').append(input);
-        var input = $("<input>")
-                .attr("name", "away_lineup").val(encodeURIComponent(lineup1))
-        $('#myForm').append(input);
-        var input = $("<input>")
-                .attr("name", "away_pitcher").val(encodeURIComponent($("#a_p").val().toString()))
-                .attr("action", "/sim");
-        $('#myForm').append(input);
-        var input = $("<input>")
-                .attr("name", "home_lineup").val(encodeURIComponent(lineup2))
-        $('#myForm').append(input);
-        var input = $("<input>")
-                .attr("name", "home_pitcher").val(encodeURIComponent($("#h_p").val().toString()))
-                .attr("action", "/sim");
-        $('#myForm').append(input);
-        $("#myForm").submit()
+
+
+    function getLineupValues(){
+        let inningSelection = 0
+        $.each($("input[name='innings']"), function(i,j){
+            if (j.checked){
+            inningSelection = j['value']
+            }
+        });
+
+        jsonData = {
+            "awayLineup":[$("#a1").val(), $("#a2").val(),$("#a3").val(), $("#a4").val(), $("#a5").val(), $("#a6").val(), $("#a7").val(), $("#a8").val(), $("#a9").val(), $("#a10").val()],
+            "homeLineup":[$("#h1").val(), $("#h2").val(),$("#h3").val(), $("#h4").val(), $("#h5").val(), $("#h6").val(), $("#h7").val(), $("#h8").val(), $("#h9").val(), $("#h10").val()],
+        };
+        const idsToFilter = jsonData['awayLineup'].concat(jsonData['homeLineup']);
+        const idsToFilterInt = idsToFilter.map(id => parseInt(id, 10));
+        const hittersInGame = {'players':proj.filter(item => idsToFilterInt.includes(parseInt(item.PID, 10)))};
+        hittersInGame.org = '{{ org }}';
+        hittersInGame.lg = '{{ lg }}';
+        hittersInGame.yr = '{{ yr }}';
+        hittersInGame.awayLineup = jsonData.awayLineup;
+        hittersInGame.homeLineup = jsonData.homeLineup;
+        hittersInGame.awayPitcher = $("#a_p").val();
+        hittersInGame.homePitcher = $("#h_p").val();
+        hittersInGame.innings = parseInt(inningSelection);
+        hittersInGame.sims = parseInt($("#sims").val());
+
+        console.log(hittersInGame)
+        return hittersInGame
     }
+
+
+    function runSimulations(){
+        lineupData = getLineupValues();
+        $.ajax({
+            url: "/simulation/simulate",
+            type: 'POST',
+            data: JSON.stringify(lineupData),
+            success: function(response){
+                console.log(response)
+                resultScore = response['awayResult']['runs_per_game'].toString()+' - '+response['homeResult']['runs_per_game'].toString()
+                $("#score").text(resultScore)
+                $("#game_log_away_side").html(response['awayResult']['game_log'])
+                $("#game_log_home_side").html(response['homeResult']['game_log'])
+                $("#awayBoxResults").text(response['awayResult']['box_results'])
+            }
+        })
+    }
+
     function setDefaultAs35(){
         $("#a1").val('1781');
-        $("#a2").val('304');
+        updateTable(1781, 'row_a1');
+        $("#a2").val('1063');
+        updateTable(1063, 'row_a2');
         $("#a3").val('876');
-        $("#a4").val('1063');
-        $("#a5").val('2019');
-        $("#a6").val('718');
-        $("#a7").val('2043');
-        $("#a8").val('900');
-        $("#a9").val('750');
-        $("#a10").val('1319');
+        updateTable(876, 'row_a3');
+        $("#a4").val('1357');
+        updateTable(1357, 'row_a4');
+        $("#a5").val('3328');
+        updateTable(3328, 'row_a5');
+        $("#a6").val('304');
+        updateTable(304, 'row_a6');
+        $("#a7").val('718');
+        updateTable(718, 'row_a7');
+        $("#a8").val('2043');
+        updateTable(2043, 'row_a8');
+        $("#a9").val('1319');
+        updateTable(1319, 'row_a9');
+        $("#a10").val('1886');
+        updateTable(1886, 'row_a10');
         $("#a_p").val('484');
-        $("#h1").val('579');
-        $("#h2").val('391');
-        $("#h3").val('3059');
-        $("#h4").val('492');
-        $("#h5").val('3062');
-        $("#h6").val('3061');
-        $("#h7").val('17');
-        $("#h8").val('2375');
-        $("#h9").val('825');
-        $("#h10").val('3060');
-        $("#h_p").val('3134');
+        $("#h1").val('3144');
+        updateTable(3144, 'row_h1');
+        $("#h2").val('592');
+        updateTable(592, 'row_h2');
+        $("#h3").val('1754');
+        updateTable(1754, 'row_h3');
+        $("#h4").val('690');
+        updateTable(690, 'row_h4');
+        $("#h5").val('2764');
+        updateTable(2764, 'row_h5');
+        $("#h6").val('275');
+        updateTable(275, 'row_h6');
+        $("#h7").val('3145');
+        updateTable(3145, 'row_h7');
+        $("#h8").val('995');
+        updateTable(995, 'row_h8');
+        $("#h9").val('1082');
+        updateTable(1082, 'row_h9');
+        $("#h10").val('360');
+        updateTable(360, 'row_h10');
+        $("#h_p").val('592');
+        
     }
+    
+    // Function to update the table based on the selected PID
+    function updateTable(pid, rowId) {
+        const playerData = proj.filter(record => record.PID == pid)[0];
+        const row = document.getElementById(rowId);
+
+        // Clear existing data cells
+        while (row.childElementCount > 2) {
+            row.removeChild(row.lastChild);
+        }
+
+        if (playerData) {
+            // Create and append new <td> elements
+            const baCell = document.createElement('td');
+            baCell.textContent = playerData.BA;
+            row.appendChild(baCell);
+
+            const obpCell = document.createElement('td');
+            obpCell.textContent = playerData.OBP;
+            row.appendChild(obpCell);
+
+            const slgCell = document.createElement('td');
+            slgCell.textContent = playerData.SLG;
+            row.appendChild(slgCell);
+
+            const opsCell = document.createElement('td');
+            opsCell.textContent = playerData.OPS;
+            row.appendChild(opsCell);
+        }
+    }
+
     
 </script>
 
 <form id="myForm" method="GET">
 <div class="row">
-    <div class="col-lg-3">
+    <div class="col-lg-2">
             <input type="radio" id="MABL" name="org" value="MABL" checked>MABL
             <input type="radio" id="RRL" name="org" value="RRL">RRL
             <input type="radio" id="MSCR" name="org" value="MSCR" disabled>MSCR<br>
@@ -77,17 +156,27 @@
             <input type="radio" name="lg" value="55" disabled>55+<br>
             <input type="radio" name="lg" value="Southern">Southern
             <input type="radio" name="lg" value="Northern">Northern<br>
-            <label for="range"># of Simulations</label><br><input type="range"name="sims" min="1" max="1000" step="50" value="1"><br>
-            <label for="innings">Innings:</label>
+            <br>
+            <label for="range"># of Simulations</label><br><input type="range"name="sims" id="sims" min="1" max="1000" step="50" value="1"><br>
+            <br><label for="innings">Innings:</label>
             <input type="radio" name="innings" value="7" checked>7
             <input type="radio" name="innings" value="9">9
-            <br><input type="button" id="submit-button" value='Run Simulations' onclick="submitFormRunSims()">
-            <br><input type="button" id="submit-button" value='Change League' onclick="submitFormChangeLeague()">
+            <br><input type="button" id="submit-sims" class="mt-2" value='Run Simulations' onclick="runSimulations()">
+            <br><input type="button" id="submit-league-change" value='Change League' onclick="submitFormChangeLeague()">
             <br><input type='button' id="As_35" value="A's" onclick="setDefaultAs35()">
     </div>
-    <div class="col-lg-4" id="away_team">
+    <div class="col-lg-5" id="away_team">
+        <h5>Away Team</h5>
         <table>
-            <tr>
+            <thead>
+                <th>#</th>
+                <th>Player</th>
+                <th>BA</th>
+                <th>OBP</th>
+                <th>SLG</th>
+                <th>OPS</th>
+            </thead>
+            <tr id="row_a1">
                 <td>1</td>
                 <td>
                     <select id="a1">
@@ -97,16 +186,8 @@
                     {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in away_proj.iterrows() %}
-                        {% if key==0 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_a2">
                 <td>2</td>
                 <td>
                     <select id="a2">
@@ -116,16 +197,8 @@
                     {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in away_proj.iterrows() %}
-                        {% if key==1 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_a3">
                 <td>3</td>
                 <td>
                     <select id="a3">
@@ -135,16 +208,8 @@
                         {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in away_proj.iterrows() %}
-                        {% if key==2 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_a4">
                 <td>4</td>
                 <td>
                     <select id="a4">
@@ -154,16 +219,8 @@
                         {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in away_proj.iterrows() %}
-                        {% if key==3 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_a5">
                 <td>5</td>
                 <td>
                     <select id="a5">
@@ -173,16 +230,8 @@
                         {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in away_proj.iterrows() %}
-                        {% if key==4 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_a6">
                 <td>6</td>
                 <td>
                     <select id="a6">
@@ -192,16 +241,8 @@
                         {% endfor %}
                     </select>
                 </td>
-                {% for key, val in away_proj.iterrows() %}
-                    {% if key==5 %}
-                        <td>{{ val['BA'] }}</td>
-                        <td>{{ val['OBP'] }}</td>
-                        <td>{{ val['SLG'] }}</td>
-                        <td>{{ val['OPS'] }}</td>
-                    {% endif %}
-                {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_a7">
                 <td>7</td>
                 <td>
                     <select id="a7">
@@ -211,16 +252,8 @@
                         {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in away_proj.iterrows() %}
-                        {% if key==6 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_a8">
                 <td>8</td>
                 <td>
                     <select id="a8">
@@ -230,16 +263,8 @@
                         {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in away_proj.iterrows() %}
-                        {% if key==7 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_a9">
                 <td>9</td>
                 <td>
                     <select id="a9">
@@ -249,16 +274,8 @@
                         {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in away_proj.iterrows() %}
-                        {% if key==8 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_a10">
                 <td>10</td>
                 <td>
                     <select id="a10">
@@ -268,14 +285,6 @@
                         {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in away_proj.iterrows() %}
-                        {% if key==9 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
             <tr>
                 <td>P</td>
@@ -290,9 +299,10 @@
             </tr>
         </table>
     </div>
-    <div class="col-lg-4" id="home_team">
+    <div class="col-lg-5" id="home_team">
+        <h5>Home Team</h5>
         <table>
-            <tr>
+            <tr id="row_h1">
                 <td>1</td>
                 <td>
                     <select id="h1">
@@ -302,16 +312,8 @@
                     {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in home_proj.iterrows() %}
-                        {% if key==0 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_h2">
                 <td>2</td>
                 <td>
                     <select id="h2">
@@ -321,16 +323,8 @@
                         {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in home_proj.iterrows() %}
-                        {% if key==1 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_h3">
                 <td>3</td>
                 <td>
                     <select id="h3">
@@ -340,16 +334,8 @@
                         {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in home_proj.iterrows() %}
-                        {% if key==2 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_h4">
                 <td>4</td>
                 <td>
                     <select id="h4">
@@ -359,16 +345,8 @@
                         {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in home_proj.iterrows() %}
-                        {% if key==3 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_h5">
                 <td>5</td>
                 <td>
                     <select id="h5">
@@ -378,16 +356,8 @@
                         {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in home_proj.iterrows() %}
-                        {% if key==4 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_h6">
                 <td>6</td>
                 <td>
                     <select id="h6">
@@ -397,16 +367,8 @@
                         {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in home_proj.iterrows() %}
-                        {% if key==5 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_h7">
                 <td>7</td>
                 <td>
                     <select id="h7">
@@ -416,16 +378,8 @@
                         {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in home_proj.iterrows() %}
-                        {% if key==6 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_h8">
                 <td>8</td>
                 <td>
                     <select id="h8">
@@ -435,16 +389,8 @@
                         {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in home_proj.iterrows() %}
-                        {% if key==7 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_h9">
                 <td>9</td>
                 <td>
                     <select id="h9">
@@ -454,16 +400,8 @@
                         {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in home_proj.iterrows() %}
-                        {% if key==8 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
-            <tr>
+            <tr id="row_h10">
                 <td>10</td>
                 <td>
                     <select id="h10">
@@ -473,14 +411,6 @@
                         {% endfor %}
                     </select>
                 </td>
-                    {% for key, val in home_proj.iterrows() %}
-                        {% if key==9 %}
-                            <td>{{ val['BA'] }}</td>
-                            <td>{{ val['OBP'] }}</td>
-                            <td>{{ val['SLG'] }}</td>
-                            <td>{{ val['OPS'] }}</td>
-                        {% endif %}
-                    {% endfor %}
             </tr>
             <tr>
                 <td>P</td>
@@ -500,59 +430,38 @@
 <div class="row">
     <div class="col-lg-4">
         <div id="ab_results">
-            <h5>{{ score }}</h5>
-            <p>{{ ab_results_away }}</p>
+            <h5 id="score">{{ score }}</h5>
+            <p id="awayBoxResults"></p>
             
         </div>
     </div>
     <div class="col-lg-4">
         <div id="game_log_away_side">
-            {{ game_log_away|safe }}
         </div>
     </div>
     <div class="col-lg-4">
         <div id="game_log_home_side">
-            {{ game_log_home|safe }}
         </div>
     </div>
 </div>
 <script>
-    var urlParams = new URLSearchParams(window.location.search);
-        
-    if (urlParams.has('org')==true){
-        if (urlParams.get('org')=='MABL'){
-            $("#MABL").val(urlParams.get('org'));
-        } else {
-            $("#RRL").val(urlParams.get('org'));
-        }
-    } else {
-        $("#org").val('');
-    }
-    if (urlParams.has('lg')==true){
-        $("#lg").val(urlParams.get('lg'));
-    } else {
-        $("#lg").val('');
-    }
-    if (urlParams.has('innings')==true){
-        $("#innings").val(urlParams.get('innings'));
-    } else {
-        $("#innings").val('');
-    }
-    if (urlParams.has('go')==true){
-        $("#go").val(urlParams.get('go'));
-    } else {
-        $("#go").val('');
-    }
-    {% for i in away_team %}
-        $("#a{{ loop.index }}").val("{{ i }}");
-    {% endfor %}
+    // Attach event listener to the dropdown
     
-    {% for i in home_team %}
-        $("#h{{ loop.index }}").val("{{ i }}");
-    {% endfor %}
+    document.getElementById('away_team').addEventListener('change', function(event) {
+        if (event.target && event.target.tagName === 'SELECT') {
+            const selectedPID = event.target.value;
+            const rowId = 'row_' + event.target.id;
+            updateTable(selectedPID, rowId);
+        }
+    });
 
-    $("#a_p").val("{{ away_pitcher }}");
-    $("#h_p").val("{{ home_pitcher }}");
+    document.getElementById('home_team').addEventListener('change', function(event) {
+        if (event.target && event.target.tagName === 'SELECT') {
+            const selectedPID = event.target.value;
+            const rowId = 'row_' + event.target.id;
+            updateTable(selectedPID, rowId);
+        }
+    });
 </script>
 
 {% endblock %}

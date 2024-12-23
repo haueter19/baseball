@@ -25,6 +25,7 @@ col:nth-child(2n+3) {background: #CCC}
 #myTable {
 	width: 100%;
 	overflow-x: scroll;
+	overflow-y: auto;
 	cursor: pointer;
 }
 #df_table {

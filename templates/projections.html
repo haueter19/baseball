@@ -1,7 +1,7 @@
 {% extends "header.html" %}
 {% block title %}Clubhouse{% endblock %}
-{% block hitting_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}}
-{% block pitching_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}}
+{% block hitting_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}
+{% block pitching_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}
 {% block h_records_season %}{{ org }}/{{ lg }}{% endblock %}
 {% block h_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block p_records_season %}{{ org }}/{{ lg }}{% endblock %}
@@ -45,6 +45,7 @@
         <th onclick="sortTable(20)">SLG</th>
         <th onclick="sortTable(21)">OPS</th>
         <th onclick="sortTable(22)">wOBA</th>
+        <th>RegFac</th>
     </tr>
         {% for key,val in df2.iterrows() %}
         <tr align='center'>
@@ -53,9 +54,9 @@
             <td>{{ val['AB'] }}</td>
             <td>{{ val['R'] }}</td>
             <td>{{ val['H'] }}</td>
-            <td>{{ val['1B'] }}</td>
-            <td>{{ val['2B'] }}</td>
-            <td>{{ val['3B'] }}</td>
+            <td>{{ val['single'] }}</td>
+            <td>{{ val['double'] }}</td>
+            <td>{{ val['triple'] }}</td>
             <td>{{ val['HR'] }}</td>
             <td>{{ val['RBI'] }}</td>
             <td>{{ val['BB'] }}</td>
@@ -71,6 +72,7 @@
             <td>{{ val['SLG'] }}</td>
             <td>{{ val['OPS'] }}</td>
             <td>{{ val['wOBA'] }}</td>
+            <td>{{ val['Regression_Factor'] }}</td>
         </tr>
         {% endfor %}
 </table>

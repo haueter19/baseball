@@ -2,8 +2,8 @@
 {% block title %}League Stats{% endblock %}
 {% block standings %}"/standings/{{ org }}/{{ lg }}/{{ yr }}"{% endblock %}
 {% block champions %}"/{{ org }}/{{ lg }}/champions"{% endblock %}
-{% block hitting_stats %}{{ org }}/{{ lg }}/league/{{ yr }}{% endblock %}}
-{% block pitching_stats %}{{ org }}/{{ lg }}/league/{{ yr }}{% endblock %}}
+{% block hitting_stats %}{{ org }}/{{ lg }}/league/{{ yr }}{% endblock %}
+{% block pitching_stats %}{{ org }}/{{ lg }}/league/{{ yr }}{% endblock %}
 {% block h_records_season %}{{ org }}/{{ lg }}{% endblock %}
 {% block h_records_career %}{{ org }}/{{ lg }}{% endblock %}
 {% block p_records_season %}{{ org }}/{{ lg }}{% endblock %}
@@ -67,7 +67,7 @@
 </div>
 <div class="row">
     <div class="col-lg-12">
-        <table class='table-sm table-hover table-condensed' id='myTable' style="cursor:pointer;">
+        <table class='table table-sm table-hover table-striped table-sm table-condensed' id='myTable' style="cursor:pointer;">
             <thead>
                 <tr>
                     <th align="left">Player</th>
@@ -111,9 +111,9 @@
                     <td>{{ val['AB'] }}</td>
                     <td>{{ val['R'] }}</td>
                     <td>{{ val['H'] }}</td>
-                    <td>{{ val['1B'] }}</td>
-                    <td>{{ val['2B'] }}</td>
-                    <td>{{ val['3B'] }}</td>
+                    <td>{{ val['single'] }}</td>
+                    <td>{{ val['double'] }}</td>
+                    <td>{{ val['triple'] }}</td>
                     <td>{{ val['HR'] }}</td>
                     <td>{{ val['RBI'] }}</td>
                     <td>{{ val['BB'] }}</td>
