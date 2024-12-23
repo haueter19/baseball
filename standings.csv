@@ -19,7 +19,7 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 1,RRL,Southern,2015,Rockers,11,7,0,0.611,4,124,66,0.779,14,-3,0,0
 1,MSCR,Pacific,2016,Rockers,10,0,0,1,0,120,18,0.978,9.8,0.2,1,1
 1,RRL,Southern,2016,Rockers,14,2,0,0.875,0,155,32,0.959,15.3,-1.3,1,0
-1,MABL,17+,2017,Karben4 Rockers,9,3,0,0.75,0,105,37,0.89,10.7,-1.7,0,0
+1,MABL,17+,2017,Rockers,9,3,0,0.75,0,105,37,0.89,10.7,-1.7,1,0
 1,RRL,Southern,2017,Rockers,9,7,0,0.563,6,119,60,0.797,12.8,-3.8,0,0
 2,MABL,18+,2012,Angels,0,16,0,0,11,82,231,0.112,1.8,-1.8,0,0
 2,MABL,18+,2013,Angels,6,9,0,0.4,6,77,98,0.382,5.7,0.3,0,0
@@ -327,7 +327,7 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 43,MSCR,Pacific,2015,Epic,5,7,0,0.417,6,45,66,0.317,3.8,1.2,0,0
 43,RRL,Northern,2016,Grafton,5,14,0,0.263,9,86,124,0.325,6.2,-1.2,0,0
 43,MSCR,Pacific,2016,Epic,8,2,0,0.8,2,71,39,0.768,7.7,0.3,0,0
-43,MABL,17+,2017,Epic,9,3,0,0.75,0,75,46,0.727,8.7,0.3,0,0
+43,MABL,17+,2017,Epic,9,3,0,0.75,0,75,46,0.727,8.7,0.3,0,1
 43,MABL,17+,2021,Epic,12,0,0,1,0,115,25,0.955,11.5,0.5,1,1
 43,MABL,17+,2022,Epic,10,2,0,0.833,0,114,31,0.931,11.2,-1.2,1,0
 44,MABL,35+,2012,Grays,2,14,0,0.125,12.5,60,153,0.133,2.1,-0.1,0,0
@@ -368,7 +368,7 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 46,RRL,Northern,2019,Hartford,13,3,0,0.813,1,,,,,,0,1
 46,RRL,Northern,2021,Hartford,10,3,0,0.769,0,112,43,0.872,11.3,-1.3,1,1
 46,RRL,Northern,2022,Hartford,10,8,0,0.556,4,164,81,0.804,14.5,-4.5,0,0
-46,RRL,Northern,2024,Hartford,14,0,0,1.000,0,170,54,0.908,12.7,1.3,1,1
+46,RRL,Northern,2024,Hartford,14,0,0,1,0,170,54,0.908,12.7,1.3,1,1
 47,RRL,Southern,2012,Helenville,0,16,0,0,12,,,,,,0,0
 47,RRL,Southern,2013,Helenville,1,15,0,0.063,12,40,150,0.066,1.1,-0.1,0,0
 47,RRL,Southern,2014,Helenville,7,11,0,0.389,9,68,127,0.223,4,3,0,0
@@ -400,7 +400,7 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 50,RRL,Southern,2019,Hustisford,12,2,0,0.857,0,,,,,,1,0
 50,RRL,Northern,2021,Hustisford,10,4,0,0.714,0.5,106,49,0.824,11.5,-1.5,0,0
 50,RRL,Northern,2022,Hustisford,10,8,0,0.556,4,127,114,0.554,10,0,0,0
-50,RRL,Northern,2024,Hustisford,7,7,0,0.500,7,122,115,0.530,7.4,-0.4,0,0
+50,RRL,Northern,2024,Hustisford,7,7,0,0.5,7,122,115,0.53,7.4,-0.4,0,0
 51,MSCR,Caspian,2009,Interstate Battery,7,3,0,0.7,1,,,,,,0,0
 52,RRL,Southern,2012,Janesville,12,4,0,0.75,1,,,,,,0,0
 52,RRL,Southern,2013,Janesville,6,10,0,0.375,7,91,108,0.415,6.6,-0.6,0,0
@@ -514,7 +514,7 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 68,RRL,Southern,2020,Neosho,11,1,0,0.917,0,,,,,,1,0
 68,RRL,Southern,2021,Neosho,10,3,0,0.769,3.5,104,40,0.871,11.3,-1.3,0,0
 68,RRL,Southern,2022,Neosho,12,4,0,0.75,1,135,67,0.802,12.8,-0.8,0,0
-68,RRL,Southern,2024,Neosho,9,5,0,0.643,4,121,90,0.644,9.0,0.0,0,0
+68,RRL,Southern,2024,Neosho,9,5,0,0.643,4,121,90,0.644,9,0,0,0
 69,MABL,18+,2023,Nueva Segovia,8,7,0,0.533,5,117,136,0.425,6.4,1.6,0,0
 70,RRL,Northern,2012,Oakfield,9,7,0,0.563,6,90,57,0.714,11.4,-2.4,0,0
 70,RRL,Northern,2013,Oakfield,3,13,0,0.188,11,49,101,0.191,3,0,0,0
@@ -526,7 +526,7 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 70,RRL,Northern,2019,Oakfield,9,7,0,0.563,5,,,,,,0,0
 70,RRL,Northern,2021,Oakfield,3,9,0,0.25,6.5,57,67,0.42,5,-2,0,0
 70,RRL,Northern,2022,Oakfield,10,8,0,0.556,5,114,110,0.518,9.3,0.7,0,0
-70,RRL,Northern,2024,Oakfield,7,7,0,0.500,7,87,87,0.500,7.0,0.0,0,0
+70,RRL,Northern,2024,Oakfield,7,7,0,0.5,7,87,87,0.5,7,0,0,0
 71,MABL,18+,2014,Orioles,8,7,0,0.533,3,104,132,0.383,5.7,2.3,0,0
 71,MABL,18+,2015,Orioles,5,9,0,0.357,6,74,90,0.403,5.6,-0.6,0,0
 71,MABL,45+,2016,Orioles,2,14,0,0.125,13.5,124,224,0.235,3.8,-1.8,0,0
@@ -616,7 +616,7 @@ TeamID,Org,League,Year,Team,W,L,T,Pct,GB,RF,RA,Pyth,xWin,W_added,Season,Postseas
 90,RRL,Northern,2019,Thiensville-Mequon,6,10,0,0.375,8,,,,,,0,0
 90,RRL,Northern,2021,Thiensville-Mequon,5,7,0,0.417,5.5,56,90,0.279,3.3,1.7,0,0
 90,RRL,Northern,2022,Thiensville-Mequon,9,9,0,0.5,5,125,103,0.596,10.7,-1.7,0,0
-90,RRL,Northern,2024,Thiensville-Mequon,6,8,0,0.429,8,101,86,0.580,8.1,-2.1,0,0
+90,RRL,Northern,2024,Thiensville-Mequon,6,8,0,0.429,8,101,86,0.58,8.1,-2.1,0,0
 91,MSCR,Pacific,2003,Top Promotions,2,0,0,1,0,29,6,0.959,1.9,0.1,0,0
 91,MSCR,Pacific,2004,Top Promotions,7,7,0,0.5,6,67,76,0.437,6.1,0.9,0,0
 92,MSCR,Pacific,2012,UW Club,9,6,0,0.6,4,92,89,0.517,7.7,1.3,0,0

@@ -75,6 +75,10 @@ async def player_page(request: Request, pid: int = 876, org: Optional[str] = 'MA
     win_df['W_added'] = round(win_df['W'] - win_df['xWin'],1)
     for col in ['G', 'W', 'L', 'T', 'RF', 'RA', 'Season', 'Postseason']:
         win_df[col] = win_df[col].astype(int)
+    standings_total = win_df.groupby('Last').agg({'W':'sum', 'L':'sum', 'T':'sum', 'G':'sum', 'Season':'sum', 'Postseason':'sum', 'RF':'sum', 'RA':'sum', 'PA':'sum', 'xWin':'sum', 'W_added':'sum'}).reset_index()
+    standings_total['Pct'] = round(standings_total['W'] / standings_total['G'],3)
+    standings_total['Pyth'] = round((standings_total['RF']**2) / (standings_total['RF']**2 + standings_total['RA']**2),3)
+    standings_total['ch_pct'] = round(standings_total['Postseason'] / standings_total['PA'],3)
     return templates.TemplateResponse("players.html", {"request": request, "df":players, "df2":gp, 'fname':df2.First.max(), 'lname':df2.Last.max(), 
                                                        'org':org, 'lg':lg, "team_list":df2.Team.unique(), 'gp2':gp2, 'pit':pit2, 'pit_career':pit_career, 
-                                                       'standings':win_df})
+                                                       'standings':win_df, 'standings_total':standings_total})

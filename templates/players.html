@@ -37,9 +37,10 @@ $(document).ready(function(){
 //https://bootswatch.com/sandstone/
 </script>
 
-<div class="row">
+<div class="row mt-3">
     <div class="col-lg-4">
-        <div><h1>{{ fname }} {{ lname }}</h1>
+        <div>
+            <h1>{{ fname }} {{ lname }}</h1>
             {% for team in team_list %}
             <span class="badge bg-info">{{ team }}</span>
             {% endfor %}
@@ -527,6 +528,23 @@ $(document).ready(function(){
                         <td>{{ row['ch_pct'] }}</td>
                     </tr>
                     {% endfor %}
+                    <tr class="bg-light">
+                        <td colspan="3">Career Totals</td>
+                        <td>{{ standings_total['PA'].iloc[0] }}</td>
+                        <td>{{ standings_total['G'].iloc[0] }}</td>
+                        <td>{{ standings_total['W'].iloc[0] }}</td>
+                        <td>{{ standings_total['L'].iloc[0] }}</td>
+                        <td>{{ standings_total['T'].iloc[0] }}</td>
+                        <td>{{ standings_total['Pct'].iloc[0] }}</td>
+                        <td>{{ standings_total['RF'].iloc[0] }}</td>
+                        <td>{{ standings_total['RA'].iloc[0] }}</td>
+                        <td>{{ standings_total['Pyth'].iloc[0] }}</td>
+                        <td>{{ standings_total['xWin'].iloc[0] }}</td>
+                        <td>{{ standings_total['W_added'].iloc[0] }}</td>
+                        <td>{{ standings_total['Season'].iloc[0] }}</td>
+                        <td>{{ standings_total['Postseason'].iloc[0] }}</td>
+                        <td>{{ standings_total['ch_pct'].iloc[0] }}</td>
+                    </tr>
                 </table>
             </div>
         </div>
