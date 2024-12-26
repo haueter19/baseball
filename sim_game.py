@@ -100,9 +100,9 @@ def sim_game(prj, tp, innings):
     p = 0
     tto = 1
     game_log = "<b>Inning 1</b><br>"
-
+    
     while inn < innings+1:
-        result = at_bat_result(prj['1B_per_PA'].iloc[p], prj['2B_per_PA'].iloc[p], prj['3B_per_PA'].iloc[p], prj['HR_per_PA'].iloc[p], prj['BB_per_PA'].iloc[p], prj['HBP_per_PA'].iloc[p], prj['K_per_PA'].iloc[p], tp['K_rate'].iloc[0], tp['BB_rate'].iloc[0], tp['HBP_rate'].iloc[0], tp['H_rate'].iloc[0])
+        result = at_bat_result(prj['single_per_PA'].iloc[p], prj['double_per_PA'].iloc[p], prj['triple_per_PA'].iloc[p], prj['HR_per_PA'].iloc[p], prj['BB_per_PA'].iloc[p], prj['HBP_per_PA'].iloc[p], prj['K_per_PA'].iloc[p], tp['K_rate'].iloc[0], tp['BB_rate'].iloc[0], tp['HBP_rate'].iloc[0], tp['H_rate'].iloc[0])
         game_log += prj['Last'].iloc[p]+': '+result+'<br>'
         ab_results[p-1].append(result)
         if result in ['Out', 'K']:
@@ -132,12 +132,14 @@ def run_sim(prj, tp, innings, g):
     
     """
     tot_runs = 0
+    runs_scored = []
     for x in range(g):
         new_runs, game_log, ab_results = sim_game(prj, tp, innings)
         tot_runs += new_runs
+        runs_scored.append(new_runs)
         if x==g-1:
             if x==0:
                 rpg = tot_runs / g
             else:
                 rpg = round(tot_runs / g,2)
-    return {"runs_per_game":rpg, "game_log":game_log, "box_results":ab_results}
+    return {"runs_per_game":rpg, "game_log":game_log, "box_results":ab_results, "runs_scored":runs_scored}

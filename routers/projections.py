@@ -162,7 +162,7 @@ def calculate_dynamic_regression_factor(player_pa, league_stats, min_pa=10, max_
     regression_factor = 1 - (clamped_pa - min_pa) / (max_pa - min_pa)
     
     # Additional adjustment to make the curve more pronounced
-    regression_factor = regression_factor ** 2
+    regression_factor = round(regression_factor ** 2,3)
     
     return max(0.05, min(0.5, regression_factor))
 
@@ -219,7 +219,7 @@ def project_and_regress_player_stats(
                            league_mean * regression_factor)
         
         # Rounding logic        
-        final_projections[stat] = round(max(0, regressed_value), 3)
+        final_projections[stat] = round(max(0, regressed_value), 2)
     
     return {
         'projections': final_projections,

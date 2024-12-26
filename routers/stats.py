@@ -26,7 +26,7 @@ async def tester():
 @router.get("/hitting/{org}/{lg}/{tm}/projections")
 async def league(request: Request, org: str, lg: str, tm: str):
     import routers.projections as projections
-    df = cache.get_hitting_data(org=org, league=lg)
+    df = cache.get_hitting_data(org=org, league=lg).sort_values(['Last', 'First'])
     yr = df['Year'].max()
     tm_mask = (df['Org']==org) & (df['League']==lg) & (df['Team']==tm)
     lg_mask = (df['Org']==org) & (df['League']==lg)
@@ -35,7 +35,7 @@ async def league(request: Request, org: str, lg: str, tm: str):
     # Subset just the league data for the last 4 years
     lg_data_subset = df.loc[lg_mask & (df['Year'] >= yr-3)]
 
-    stats = ['GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB']
+    stats = ['GP', 'PA', 'AB', 'R', 'H', 'single', 'double', 'triple', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB']
     proj_df = projections.generate_player_projections(lg_data_subset, stats, teams=[tm])
     functions.add_rate_stats(proj_df)
     functions.add_woba(proj_df)
@@ -97,30 +97,14 @@ async def team_stats_year(request: Request, org: str, lg: str, yr: int):
 
 
 @router.get("/hitting/{org}/{lg}/{tm}/{yr}")
-async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort: Optional[str] = None, asc: Optional[bool] = False):
-    df2 = cache.get_hitting_data(org=org, league=lg, team=tm, year=yr)
-    #df2 = df[(df['Org']==org.upper()) & (df['League']==lg) & (df['Team']==tm) & (df['Year']==yr)][['PID', 'First', 'Last', 'GP', 'PA', 'AB', 'R', 'H', '1B', '2B', '3B', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB', 'wRAA', 'BA', 'OBP', 'SLG', 'OPS', 'OPS+', 'wRAAc', 'wOBA', 'wRC', 'wRC+', 'WAR']]
+async def team_stats(request: Request, org: str, lg: str, tm: str, yr: int, sort: Optional[str] = 'wRAAc', asc: Optional[bool] = False):
+    df2 = cache.get_hitting_data(org=org, league=lg, team=tm, year=yr).sort_values(sort, ascending=asc)
     df2['PID'] = df2['PID'].astype(int)
     functions.add_rate_stats(df2)
     print(df2.columns)
     functions.add_runs_created(df2)
     lgtot = cache.get_hitting_data(org=org, league=lg, year=yr)
-    lgSLG = lgtot['TB'].sum()/lgtot['AB'].sum()
-    lgOBP = (lgtot['H'].sum()+lgtot['BB'].sum()+lgtot['HBP'].sum())/(lgtot['AB'].sum()+lgtot['BB'].sum()+lgtot['HBP'].sum()+lgtot['SF'].sum())
-    lgwOBA = round(((0.691*lgtot['BB'].sum()) + (0.722*lgtot['HBP'].sum()) + (0.884*lgtot['single'].sum()) + (1.257*lgtot['double'].sum()) + (1.593*lgtot['triple'].sum()) + (2.058*lgtot['HR'].sum())) / (lgtot['AB'].sum() + lgtot['BB'].sum() + lgtot['HBP'].sum() + lgtot['SF'].sum()),3)
     functions.add_woba(df2)
-    #add_wRAA(df2, lgwOBA, wOBAscale)
-    #add_wRC(df2, lgwOBA, wOBAscale, lgR, lgPA)
-    #add_wRC_plus(df2, lgR, lgPA)
-    #df2['wRC+'].fillna(0,inplace=True)
-    #df2['wRC+'] = df2['wRC+'].astype(int)
-    #df2.append({'Team Totals', df2['GP'].sum(), df2['PA'].sum(), df2['AB'].sum(), df2['R'].sum(), df2['H'].sum(), df2['1B'].sum(), df2['2B'].sum(), df2['3B'].sum(), df2['HR'].sum(), df2['RBI'].sum(), df2['BB'].sum(), df2['K'].sum(), df2['HBP'].sum(), df2['SB'].sum(), df2['CS'].sum(), df2['SF'].sum(), df2['SH'].sum(), df2['TB'].sum(), df2['wRAA'].sum(), df2['RC'].sum(), round(df2['H'].sum()/df2['AB'].sum(),3), '-', '-', '-', '-', '-', '-', '-', '-']
-    if asc==None:
-        asc=False
-    if sort==None:
-        df2 = df2.sort_values('WAR', ascending=False)
-    else:
-        df2 = df2.sort_values(sort, ascending=asc)
     h_lg_avg = functions.make_lg_avg(lgtot)
     lg_stats = h_lg_avg[(h_lg_avg['Org']==org) & (h_lg_avg['League']==lg) & (h_lg_avg['Year']==yr)]
     yrs = cache.get_hitting_data(org=org, league=lg, team=tm).sort_values('Year', ascending=False)['Year'].unique().tolist()

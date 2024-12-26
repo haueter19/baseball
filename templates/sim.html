@@ -60,6 +60,7 @@
                 $("#game_log_away_side").html(response['awayResult']['game_log'])
                 $("#game_log_home_side").html(response['homeResult']['game_log'])
                 $("#awayBoxResults").text(response['awayResult']['box_results'])
+                $("#home_win_pct").text(response['home_win_pct']+'%')
             }
         })
     }
@@ -431,6 +432,7 @@
     <div class="col-lg-4">
         <div id="ab_results">
             <h5 id="score">{{ score }}</h5>
+            <p id="home_win_pct">Home team win %: {{ home_win_pct }}%</p>
             <p id="awayBoxResults"></p>
             
         </div>

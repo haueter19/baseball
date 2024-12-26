@@ -20,7 +20,7 @@
     </div>
 </div>
 <br>
-<table class='table table-condensed table-hover' id='myTable'>
+<table class='table table-condensed table-hover table-sm table-striped' id='myTable'>
     <tr>
         <th align='left'>Player</th>
         <th onclick="sortTable(1)">PA</th>
@@ -38,13 +38,12 @@
         <th onclick="sortTable(13)">SB</th>
         <th onclick="sortTable(14)">CS</th>
         <th onclick="sortTable(15)">SF</th>
-        <th onclick="sortTable(16)">SH</th>
-        <th onclick="sortTable(17)">TB</th>
-        <th onclick="sortTable(18)">BA</th>
-        <th onclick="sortTable(19)">OBP</th>
-        <th onclick="sortTable(20)">SLG</th>
-        <th onclick="sortTable(21)">OPS</th>
-        <th onclick="sortTable(22)">wOBA</th>
+        <th onclick="sortTable(16)">TB</th>
+        <th onclick="sortTable(17)">BA</th>
+        <th onclick="sortTable(18)">OBP</th>
+        <th onclick="sortTable(19)">SLG</th>
+        <th onclick="sortTable(20)">OPS</th>
+        <th onclick="sortTable(21)">wOBA</th>
         <th>RegFac</th>
     </tr>
         {% for key,val in df2.iterrows() %}
@@ -65,7 +64,6 @@
             <td>{{ val['SB'] }}</td>
             <td>{{ val['CS'] }}</td>
             <td>{{ val['SF'] }}</td>
-            <td>{{ val['SH'] }}</td>
             <td>{{ val['TB'] }}</td>
             <td>{{ val['BA'] }}</td>
             <td>{{ val['OBP'] }}</td>
