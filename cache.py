@@ -15,7 +15,9 @@ class DataCache:
 
     async def update_cache(self, db: Session) -> None:
         try:
-            self.df = pd.DataFrame(db.execute(text("SELECT * FROM hitting")).fetchall())
+            result = db.execute(text("SELECT * FROM hitting"))
+            self.df = pd.DataFrame(result.fetchall(), columns=result.keys())
+            
             self.pit = pd.DataFrame(db.execute(text("SELECT players.First, players.Last, pitching.* FROM pitching LEFT JOIN players On (pitching.PID=players.PID)")).fetchall())
             self.st = pd.DataFrame(db.execute(text("SELECT * FROM standings")).fetchall())
             self.players = pd.DataFrame(db.execute(text("SELECT * FROM players")).fetchall())
