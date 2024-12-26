@@ -68,7 +68,8 @@ async def home(request: Request):
     df = cache.get_hitting_data()
     if df.empty:
         return {"error": "Cache not initialized"}
-        
+    else:
+        print(df.head())
     orgs = df['Org'].sort_values().unique()
     gp = df.sort_values(by=['Org', 'League']).groupby('Org')['League'].unique().reset_index()
     return templates.TemplateResponse("home.html", {"request": request, 'orgs':orgs, 'lgs':gp})
