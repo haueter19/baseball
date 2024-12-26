@@ -1,0 +1,50 @@
+{% extends "header.html" %}
+{% block title %}{{ org }} {{ lg }}{% endblock %}
+{% block standings %}"/standings/{{ org }}/{{ lg }}/{{ maxYear }}"{% endblock %}
+{% block champions %}"/{{ org }}/{{ lg }}/champions"{% endblock %}
+{% block hitting_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}
+{% block pitching_stats %}{{ org }}/{{ lg }}/league/{{ max_yr }}{% endblock %}
+{% block h_records_season %}{{ org }}/{{ lg }}{% endblock %}
+{% block h_records_career %}{{ org }}/{{ lg }}{% endblock %}
+{% block p_records_season %}{{ org }}/{{ lg }}{% endblock %}
+{% block p_records_career %}{{ org }}/{{ lg }}{% endblock %}
+
+{% block content %}
+<script>
+    let org = '{{org}}';
+    let lg = '{{lg}}';
+
+    function updatePlayerCareerComparisonChart(){
+        let stat = $("#select-stat-list").val()
+        
+        $.ajax({
+            url: `/{{org}}/{{lg}}/charts/${stat}`,
+            type: 'GET',
+            success: function(response){
+                console.log(response)
+                Plotly.newPlot('chart', JSON.parse(response));
+            }
+        })
+    }
+</script>
+
+<div class="row mt-3">
+    <div class="col">
+        Use dropdown to change chart<br>
+        <select id="select-stat-list">
+            {% for stat in statList %}
+            <option value="{{stat}}" selected>{{stat}}</option>
+            {% endfor %}
+        </select>
+        <br>
+    </div>
+</div>
+<div id="chart"></div>
+
+
+<script>
+    $("#select-stat-list").on('change', function(){
+        updatePlayerCareerComparisonChart()
+    })  
+</script>
+{% endblock %}

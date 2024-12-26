@@ -95,15 +95,25 @@ def career_line_chart(data_dict):
 
 
 
-@router.get("/{lg}/charts/career/{stat}")
+@router.get("/{lg}/charts", response_class=HTMLResponse)
+async def main_charts_page(request: Request, org: str, lg:str):
+    #stats = cache.get_hitting_data(org=org, league=lg).columns.tolist()
+    #stats = [stat for stat in stats if stat not in ['PID', 'First', 'Last', 'Team', 'Org', 'League', 'Year']]
+    stats = ['wRAAc', 'WAR', 'H', 'R', 'RBI', 'single', 'double', 'triple', 'HR', 'TB', 'BB', 'HBP', 'K', 'SB', 'CS', 'SF', 'SH', 'GP', 'GS', 'PA', 'AB', 'ROE', 'FC', 'LOB', 'All_Star']
+    return templates.TemplateResponse('league_charts.html', {'request':request, 'org':org, 'lg':lg, "statList":stats})
+
+
+@router.get("/{lg}/charts/{stat}")
 async def cumsum_chart(request: Request, org: str, lg: str, stat: Optional[str] = 'wRAAc'):
     z = cache.get_hitting_data(org=org, league=lg)
+    num_of_teams_check = z.groupby('Year')['Team'].nunique().reset_index()
+    years_with_league_data = num_of_teams_check[num_of_teams_check ['Team']>2]['Year'].tolist()
     players = z[['PID', 'First', 'Last']].drop_duplicates()
-    zz = pd.pivot_table(z, index='PID', columns='Year', values=stat, aggfunc='sum')
+    zz = pd.pivot_table(z[z['Year'].isin(years_with_league_data)], index='PID', columns='Year', values=stat, aggfunc='sum')
     zz = zz.cumsum(axis=1)
 
     data_dict = {}
-    num_of_years = z.Year.max() - z.Year.min()
+    num_of_years = len(years_with_league_data)#z.Year.max() - z.Year.min()
     for i, row in zz.iterrows():
         d = zz.loc[i]
         s = zz.loc[i].notna()
@@ -115,4 +125,4 @@ async def cumsum_chart(request: Request, org: str, lg: str, stat: Optional[str] 
     chart_data = career_line_chart(data_dict)
 
     chart_data = json.dumps(chart_data, cls=plotly.utils.PlotlyJSONEncoder)
-    return templates.TemplateResponse('league_career_chart.html', {'request':request, 'chart_data':chart_data})
+    return chart_data

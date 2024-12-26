@@ -22,15 +22,15 @@ async def player_page(request: Request, pid: int = 876, org: Optional[str] = 'MA
     players = cache.get_player_data()
     df2 = cache.get_hitting_data(pid=pid)
     df2 = df2.sort_values(['Year', 'Org'], ascending=True)
-    gp = df2.groupby('Year').agg({'GP':'sum', 'PA':'sum', 'AB':'sum', 'R':'sum', 'H':'sum', 'single':'sum', 'double':'sum', 'triple':'sum', 'HR':'sum', 'RBI':'sum', 'BB':'sum', 'K':'sum', 'HBP':'sum', 'SB':'sum', 'CS':'sum', 'SF':'sum', 'SH':'sum', 'TB':'sum', 'wRAAc':'sum', 'WAR':'sum'}).reset_index()
+    gp = df2.groupby('Year').agg({'Age':'first', 'GP':'sum', 'PA':'sum', 'AB':'sum', 'R':'sum', 'H':'sum', 'single':'sum', 'double':'sum', 'triple':'sum', 'HR':'sum', 'RBI':'sum', 'BB':'sum', 'K':'sum', 'HBP':'sum', 'SB':'sum', 'CS':'sum', 'SF':'sum', 'SH':'sum', 'TB':'sum', 'wRAAc':'sum', 'WAR':'sum'}).reset_index()
     functions.add_runs_created(gp)
     functions.add_rate_stats(gp)
     ba = round(gp.H.sum()/gp.AB.sum(),3)
     obp = round((gp.H.sum()+gp.BB.sum()+gp.HBP.sum())/(gp.AB.sum()+gp.BB.sum()+gp.HBP.sum()+gp.SF.sum()),3)
     slg = round(gp.TB.sum()/gp.AB.sum(),3)
     ops = round(obp + slg,3)
-    gp.loc[-1] = ['Career', gp.GP.sum(), gp.PA.sum(), gp.AB.sum(), gp.R.sum(), gp.H.sum(), gp['single'].sum(), gp['double'].sum(), gp['triple'].sum(), gp.HR.sum(), gp.RBI.sum(), gp.BB.sum(),gp.K.sum(),gp.HBP.sum(),gp.SB.sum(),gp.CS.sum(),gp.SF.sum(),gp.SH.sum(),gp.TB.sum(),round(gp.wRAAc.sum(),2), round(gp.WAR.sum(),2), round(gp.RC.sum(),2), ba,obp,slg,ops]
-    for col in ['GP', 'PA', 'AB', 'R', 'H','single', 'double', 'triple', 'HR', 'RBI', 'BB', 'K','HBP', 'SB', 'CS', 'SF', 'SH', 'TB']:
+    gp.loc[-1] = ['Career', gp.Age.max(), gp.GP.sum(), gp.PA.sum(), gp.AB.sum(), gp.R.sum(), gp.H.sum(), gp['single'].sum(), gp['double'].sum(), gp['triple'].sum(), gp.HR.sum(), gp.RBI.sum(), gp.BB.sum(),gp.K.sum(),gp.HBP.sum(),gp.SB.sum(),gp.CS.sum(),gp.SF.sum(),gp.SH.sum(),gp.TB.sum(),round(gp.wRAAc.sum(),2), round(gp.WAR.sum(),2), round(gp.RC.sum(),2), ba,obp,slg,ops]
+    for col in ['Age', 'GP', 'PA', 'AB', 'R', 'H','single', 'double', 'triple', 'HR', 'RBI', 'BB', 'K','HBP', 'SB', 'CS', 'SF', 'SH', 'TB']:
         gp[col] = gp[col].astype(int)
     for col in ['wRAAc', 'WAR']:
         gp[col] = round(gp[col],3)
@@ -40,7 +40,7 @@ async def player_page(request: Request, pid: int = 876, org: Optional[str] = 'MA
     functions.add_rate_stats(gp2)
     #pitching section
     pit2 = cache.get_pitching_data(pid=pid).sort_values(['Year', 'Org'], ascending=True)
-    pit2 = pit2.groupby('Year').agg({'Outs':'sum', 'GP':'sum', 'GS':'sum', 'K':'sum', 'H':'sum', 'R':'sum', 'ER':'sum', 'BB':'sum', 'HBP':'sum', 'HR':'sum', 'CG':'sum', 'W':'sum', 'L':'sum', 'Sv':'sum', 'HLD':'sum', 'ABA':'sum', 'WAR':'sum'}).reset_index()
+    pit2 = pit2.groupby('Year').agg({'Age':'first', 'Outs':'sum', 'GP':'sum', 'GS':'sum', 'K':'sum', 'H':'sum', 'R':'sum', 'ER':'sum', 'BB':'sum', 'HBP':'sum', 'HR':'sum', 'CG':'sum', 'W':'sum', 'L':'sum', 'Sv':'sum', 'HLD':'sum', 'ABA':'sum', 'WAR':'sum'}).reset_index()
     pit_career = pit2.sum()
     pit2['WAR'] = pit2['WAR'].apply(lambda x: round(x,1))
     pit_career['WAR'] = round(pit_career['WAR'],1)

@@ -15,10 +15,10 @@ class DataCache:
 
     async def update_cache(self, db: Session) -> None:
         try:
-            result = db.execute(text("SELECT * FROM hitting"))
+            result = db.execute(text("SELECT p.id, p.DOB, h.*, julianday(h.Year)-julianday(substr(p.DOB,length(p.DOB)-4)) Age FROM hitting h INNER JOIN players p On (h.PID=p.PID)"))
             self.df = pd.DataFrame(result.fetchall(), columns=result.keys())
             
-            result1 = db.execute(text("SELECT * FROM pitching"))
+            result1 = db.execute(text("SELECT p.id, p.DOB, h.*, julianday(h.Year)-julianday(substr(p.DOB,length(p.DOB)-4)) Age FROM pitching h INNER JOIN players p On (h.PID=p.PID)"))
             self.pit = pd.DataFrame(result1.fetchall(), columns=result1.keys())
             
             result2 = db.execute(text("SELECT * FROM standings"))
