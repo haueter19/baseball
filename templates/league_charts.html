@@ -18,13 +18,24 @@
         let stat = $("#select-stat-list").val()
         
         $.ajax({
-            url: `/{{org}}/{{lg}}/charts/${stat}`,
+            url: `/{{org}}/{{lg}}/charts/player_comparison/${stat}`,
             type: 'GET',
             success: function(response){
                 console.log(response)
                 Plotly.newPlot('chart', JSON.parse(response));
             }
         })
+    }
+
+    function updateAgingCurve(stat){
+        $.ajax({
+            url: `/{{org}}/{{lg}}/charts/aging_curve/${stat}`,
+            type: 'GET',
+            success: function(response){
+                console.log(response)
+                Plotly.newPlot('aging_curve', JSON.parse(response));
+            }
+        })  
     }
 </script>
 
@@ -33,18 +44,42 @@
         Use dropdown to change chart<br>
         <select id="select-stat-list">
             {% for stat in statList %}
-            <option value="{{stat}}" selected>{{stat}}</option>
+            <option value="{{stat}}">{{stat}}</option>
             {% endfor %}
         </select>
         <br>
     </div>
 </div>
-<div id="chart"></div>
+<div class="row mt-3">
+    <div class="col">
+        <div id="chart"></div>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col">
+        Use dropdown to change chart<br>
+        <select id="select-stat-list-2">
+            {% for stat in ['BA', 'OBP', 'SLG', 'OPS'] %}
+            <option value="{{stat}}">{{stat}}</option>
+            {% endfor %}
+        </select>
+        <br>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col">
+        <div id="aging_curve"></div>
+    </div>
+</div>
 
 
 <script>
     $("#select-stat-list").on('change', function(){
         updatePlayerCareerComparisonChart()
+    })  
+    $("#select-stat-list-2").on('change', function(){
+        console.log(this.value)
+        updateAgingCurve(this.value)
     })  
 </script>
 {% endblock %}

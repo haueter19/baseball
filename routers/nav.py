@@ -103,7 +103,7 @@ async def main_charts_page(request: Request, org: str, lg:str):
     return templates.TemplateResponse('league_charts.html', {'request':request, 'org':org, 'lg':lg, "statList":stats})
 
 
-@router.get("/{lg}/charts/{stat}")
+@router.get("/{lg}/charts/player_comparison/{stat}")
 async def cumsum_chart(request: Request, org: str, lg: str, stat: Optional[str] = 'wRAAc'):
     z = cache.get_hitting_data(org=org, league=lg)
     num_of_teams_check = z.groupby('Year')['Team'].nunique().reset_index()
@@ -126,3 +126,52 @@ async def cumsum_chart(request: Request, org: str, lg: str, stat: Optional[str] 
 
     chart_data = json.dumps(chart_data, cls=plotly.utils.PlotlyJSONEncoder)
     return chart_data
+
+
+
+def group_by_age(age, lg):
+    if lg=='18+':
+        age_range = (18,44)
+    elif lg=='35+':
+        age_range = (35,51)
+    age_gp = age[(age['League']==lg) & (age['Age'].between(age_range[0], age_range[1]))].groupby('Age').agg({'id':'count', 'H':'sum', 'AB':'sum', 'TB':'sum', 'BB':'sum', 'HBP':'sum', 'SF':'sum'}).reset_index()
+    age_gp['BA'] = round(age_gp['H']/age_gp['AB'],3)
+    age_gp['SLG'] = round(age_gp['TB']/age_gp['AB'],3)
+    age_gp['OBP'] = (age_gp['H']+age_gp['BB']+age_gp['HBP']) / (age_gp['AB']+age_gp['HBP']+age_gp['BB']+age_gp['SF'])
+    age_gp['OPS'] = age_gp['OBP']+age_gp['SLG']
+    age_gp['BA'] = age_gp['BA'].rolling(3, min_periods=1).mean()
+    age_gp['OBP'] = age_gp['OBP'].rolling(3, min_periods=1).mean()
+    age_gp['SLG'] = age_gp['SLG'].rolling(3, min_periods=1).mean()
+    age_gp['OPS'] = age_gp['OPS'].rolling(3, min_periods=1).mean()
+    age_gp.rename(columns={'id':'n'},inplace=True)
+    return age_gp
+
+
+@router.get("/{lg}/charts/aging_curve/{stat}")
+async def aging_curve(request: Request, org: str, lg: str, stat: Optional[str] = None):
+    df = cache.get_hitting_data(org=org, league=lg)
+    if lg == '35+':
+        df = df[df['Age']>=35]
+    elif lg == '45+':
+        df = df[df['Age']>=45]
+    elif lg == '55+':
+        df = df[df['Age']>=52]
+    else:
+        df = df[df['Age']>=17]
+
+    age_gp = group_by_age(df, lg)
+    print(age_gp)
+
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            name='18+',
+            x=age_gp['Age'],
+            y=age_gp[stat],
+            mode='lines+markers',
+        )
+    )
+    fig.update_layout(
+        height=650,
+    )
+    return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
