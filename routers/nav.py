@@ -160,7 +160,6 @@ async def aging_curve(request: Request, org: str, lg: str, stat: Optional[str] =
         df = df[df['Age']>=17]
 
     age_gp = group_by_age(df, lg)
-    print(age_gp)
 
     fig = go.Figure()
     fig.add_trace(
