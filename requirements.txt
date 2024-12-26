@@ -4,3 +4,4 @@ pandas
 python-dateutil==2.7.5
 aiofiles==0.6.0
 plotly
+sqlalchemy
