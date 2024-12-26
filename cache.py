@@ -18,12 +18,14 @@ class DataCache:
             result = db.execute(text("SELECT * FROM hitting"))
             self.df = pd.DataFrame(result.fetchall(), columns=result.keys())
             
-            result = db.execute(text("SELECT players.First, players.Last, pitching.* FROM pitching LEFT JOIN players on (pitching.PID=players.PID)"))
-            self.pit = pd.DataFrame(result.fetchall(), columns=result.keys())
+            result1 = db.execute(text("SELECT * FROM pitching"))
+            self.pit = pd.DataFrame(result1.fetchall(), columns=result1.keys())
             
-            result = db.execute(text("SELECT * FROM standings"))
-            self.players = pd.DataFrame(result.fetchall(), columns=result.keys())
+            result2 = db.execute(text("SELECT * FROM standings"))
+            self.st = pd.DataFrame(result2.fetchall(), columns=result2.keys())
+
             self._initialized = True
+            
             print("Cache updated successfully")
         except Exception as e:
             print(f"Error updating cache: {str(e)}")
@@ -37,10 +39,11 @@ class DataCache:
                    pid: Optional[Union[int, List[int]]] = None) -> pd.DataFrame:
         """Filter any dataset by common parameters."""
         filtered_data = data.copy()
-        
+
         if org:
             if isinstance(org, str):
                 filtered_data = filtered_data[filtered_data['Org'] == org]
+                
             else:
                 filtered_data = filtered_data[filtered_data['Org'].isin(org)]
                 
@@ -89,12 +92,13 @@ class DataCache:
         return self.filter_data(self.pit, org, league, team, year, pid)
 
     def get_standings_data(self,
-                          org: Optional[Union[str, List[str]]] = None,
-                          league: Optional[Union[str, List[str]]] = None,
-                          team: Optional[Union[str, List[str]]] = None,
-                          year: Optional[Union[int, List[int]]] = None) -> pd.DataFrame:
+                         org: Optional[Union[str, List[str]]] = None,
+                         league: Optional[Union[str, List[str]]] = None,
+                         team: Optional[Union[str, List[str]]] = None,
+                         year: Optional[Union[int, List[int]]] = None,
+                         pid: Optional[Union[int, List[int]]] = None) -> pd.DataFrame:
         """Get standings data with optional filters."""
-        return self.filter_data(self.st, org, league, team, year)
+        return self.filter_data(self.st, org, league, team, year, pid)
     
     def get_player_data(self,
                         org: Optional[Union[str, List[str]]] = None,
