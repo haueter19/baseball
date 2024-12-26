@@ -27,6 +27,7 @@ async def tester():
 async def league(request: Request, org: str, lg: str, tm: str):
     import routers.projections as projections
     df = cache.get_hitting_data(org=org, league=lg).sort_values(['Last', 'First'])
+    print(df.head())
     yr = df['Year'].max()
     tm_mask = (df['Org']==org) & (df['League']==lg) & (df['Team']==tm)
     lg_mask = (df['Org']==org) & (df['League']==lg)
@@ -59,7 +60,7 @@ async def stats_by_league(request: Request, org: str, lg: str, yr: int, sort: Op
     #lgPA = lgtot['PA'].sum()
     #wOBAscale = lgOBP/lgwOBA
     functions.add_woba(df2)
-    df2['wRC+'].fillna(0,inplace=True)
+    df2.fillna({'wRC+':0},inplace=True)
     df2['wRC+'] = df2['wRC+'].astype(int)
     if asc==None:
         asc=False
