@@ -18,9 +18,11 @@ class DataCache:
             result = db.execute(text("SELECT * FROM hitting"))
             self.df = pd.DataFrame(result.fetchall(), columns=result.keys())
             
-            self.pit = pd.DataFrame(db.execute(text("SELECT players.First, players.Last, pitching.* FROM pitching LEFT JOIN players On (pitching.PID=players.PID)")).fetchall())
-            self.st = pd.DataFrame(db.execute(text("SELECT * FROM standings")).fetchall())
-            self.players = pd.DataFrame(db.execute(text("SELECT * FROM players")).fetchall())
+            result = db.execute(text("SELECT players.First, players.Last, pitching.* FROM pitching LEFT JOIN players on (pitching.PID=players.PID)"))
+            self.pit = pd.DataFrame(result.fetchall(), columns=result.keys())
+            
+            result = db.execute(text("SELECT * FROM standings"))
+            self.players = pd.DataFrame(result.fetchall(), columns=result.keys())
             self._initialized = True
             print("Cache updated successfully")
         except Exception as e:
