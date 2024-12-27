@@ -459,24 +459,28 @@
 </div>
 <script>
     // Attach event listener to the dropdown
+    $(document).ready(function(){
+        console.log('doc is ready')
+        document.getElementById('away_team').addEventListener('change', function(event) {
+            //console.log(event)
+            //console.log(event.target.id, event.target.value)
+            if (event.target && event.target.tagName === 'SELECT') {
+                const selectedPID = event.target.value;
+                const rowId = 'row_' + event.target.id;
+                updateTable(selectedPID, rowId);
+            }
+        });
+        
+        document.getElementById('home_team').addEventListener('change', function(event) {
+            if (event.target && event.target.tagName === 'SELECT') {
+                const selectedPID = event.target.value;
+                const rowId = 'row_' + event.target.id;
+                updateTable(selectedPID, rowId);
+            }
+        });
+    })
     
-    document.getElementById('away_team').addEventListener('change', function(event) {
-        if (event.target && event.target.tagName === 'SELECT') {
-            const selectedPID = event.target.value;
-            const rowId = 'row_' + event.target.id;
-            updateTable(selectedPID, rowId);
-        }
-    });
 
-    document.getElementById('home_team').addEventListener('change', function(event) {
-        if (event.target && event.target.tagName === 'SELECT') {
-            const selectedPID = event.target.value;
-            const rowId = 'row_' + event.target.id;
-            updateTable(selectedPID, rowId);
-        }
-    });
-
-    var lp = '{{lg_pitchers|safe}}'
 
 </script>
 
