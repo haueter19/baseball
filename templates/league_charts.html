@@ -43,6 +43,7 @@
     <div class="col">
         Use dropdown to change chart<br>
         <select id="select-stat-list">
+            <option value="">Select a statistic</option>
             {% for stat in statList %}
             <option value="{{stat}}">{{stat}}</option>
             {% endfor %}
@@ -59,7 +60,7 @@
     <div class="col">
         Use dropdown to change chart<br>
         <select id="select-stat-list-2">
-            {% for stat in ['BA', 'OBP', 'SLG', 'OPS'] %}
+            {% for stat in ['', 'BA', 'OBP', 'SLG', 'OPS', 'wRAAc'] %}
             <option value="{{stat}}">{{stat}}</option>
             {% endfor %}
         </select>

@@ -134,7 +134,9 @@ def group_by_age(age, lg):
         age_range = (18,44)
     elif lg=='35+':
         age_range = (35,51)
-    age_gp = age[(age['League']==lg) & (age['Age'].between(age_range[0], age_range[1]))].groupby('Age').agg({'id':'count', 'H':'sum', 'AB':'sum', 'TB':'sum', 'BB':'sum', 'HBP':'sum', 'SF':'sum'}).reset_index()
+    else:
+        age_range = (17, 80)
+    age_gp = age[(age['League']==lg) & (age['Age'].between(age_range[0], age_range[1]))].groupby('Age').agg({'id':'count', 'H':'sum', 'AB':'sum', 'TB':'sum', 'BB':'sum', 'HBP':'sum', 'SF':'sum', 'wRAAc':'mean'}).reset_index()
     age_gp['BA'] = round(age_gp['H']/age_gp['AB'],3)
     age_gp['SLG'] = round(age_gp['TB']/age_gp['AB'],3)
     age_gp['OBP'] = (age_gp['H']+age_gp['BB']+age_gp['HBP']) / (age_gp['AB']+age_gp['HBP']+age_gp['BB']+age_gp['SF'])
@@ -143,6 +145,7 @@ def group_by_age(age, lg):
     age_gp['OBP'] = age_gp['OBP'].rolling(3, min_periods=1).mean()
     age_gp['SLG'] = age_gp['SLG'].rolling(3, min_periods=1).mean()
     age_gp['OPS'] = age_gp['OPS'].rolling(3, min_periods=1).mean()
+    age_gp['wRAAc'] = age_gp['wRAAc'].rolling(3, min_periods=1).mean()
     age_gp.rename(columns={'id':'n'},inplace=True)
     return age_gp
 
@@ -160,6 +163,7 @@ async def aging_curve(request: Request, org: str, lg: str, stat: Optional[str] =
         df = df[df['Age']>=17]
 
     age_gp = group_by_age(df, lg)
+    print(age_gp)
 
     fig = go.Figure()
     fig.add_trace(
@@ -172,5 +176,6 @@ async def aging_curve(request: Request, org: str, lg: str, stat: Optional[str] =
     )
     fig.update_layout(
         height=650,
+        
     )
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)

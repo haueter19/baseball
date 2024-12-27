@@ -41,6 +41,7 @@ $(document).ready(function(){
     <div class="col-lg-4">
         <div>
             <h1>{{ fname }} {{ lname }}</h1>
+            <h5>{{ age }}</h5> 
             {% for team in team_list %}
             <span class="badge bg-info">{{ team }}</span>
             {% endfor %}

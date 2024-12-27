@@ -16,11 +16,17 @@ async def player(request: Request, org: Optional[str] = 'MABL', lg: Optional[str
     df2 = df2.groupby('PID').agg({'First':'first', 'Last':'first'}).reset_index()
     return RedirectResponse('/player/876')
 
+
+
 @router.get("/{pid}")
 async def player_page(request: Request, pid: int = 876, org: Optional[str] = 'MABL', lg: Optional[str] = '18+'):
     #hitting section
     players = cache.get_player_data()
     df2 = cache.get_hitting_data(pid=pid)
+    if int(df2.Age.max()) > 15:
+        age = int(df2.Age.max())
+    else:
+        age = 0
     df2 = df2.sort_values(['Year', 'Org'], ascending=True)
     gp = df2.groupby('Year').agg({'Age':'first', 'GP':'sum', 'PA':'sum', 'AB':'sum', 'R':'sum', 'H':'sum', 'single':'sum', 'double':'sum', 'triple':'sum', 'HR':'sum', 'RBI':'sum', 'BB':'sum', 'K':'sum', 'HBP':'sum', 'SB':'sum', 'CS':'sum', 'SF':'sum', 'SH':'sum', 'TB':'sum', 'wRAAc':'sum', 'WAR':'sum'}).reset_index()
     functions.add_runs_created(gp)
@@ -81,4 +87,4 @@ async def player_page(request: Request, pid: int = 876, org: Optional[str] = 'MA
     standings_total['ch_pct'] = round(standings_total['Postseason'] / standings_total['PA'],3)
     return templates.TemplateResponse("players.html", {"request": request, "df":players, "df2":gp, 'fname':df2.First.max(), 'lname':df2.Last.max(), 
                                                        'org':org, 'lg':lg, "team_list":df2.Team.unique(), 'gp2':gp2, 'pit':pit2, 'pit_career':pit_career, 
-                                                       'standings':win_df, 'standings_total':standings_total})
+                                                       'standings':win_df, 'standings_total':standings_total, 'age':age})
