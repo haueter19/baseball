@@ -18,7 +18,7 @@ class DataCache:
             result = db.execute(text("SELECT p.id, p.DOB, h.*, COALESCE(julianday(h.Year)-julianday(substr(p.DOB,length(p.DOB)-4)),0) Age FROM hitting h INNER JOIN players p On (h.PID=p.PID)"))
             self.df = pd.DataFrame(result.fetchall(), columns=result.keys())
             
-            result1 = db.execute(text("SELECT p.id, p.DOB, h.*, COALESCE(julianday(h.Year)-julianday(substr(p.DOB,length(p.DOB)-4)),0) Age FROM pitching h INNER JOIN players p On (h.PID=p.PID)"))
+            result1 = db.execute(text("SELECT p.id, p.First, p.Last, p.DOB, h.*, COALESCE(julianday(h.Year)-julianday(substr(p.DOB,length(p.DOB)-4)),0) Age FROM pitching h INNER JOIN players p On (h.PID=p.PID)"))
             self.pit = pd.DataFrame(result1.fetchall(), columns=result1.keys())
             
             result2 = db.execute(text("SELECT * FROM standings"))
@@ -27,6 +27,7 @@ class DataCache:
             self._initialized = True
             
             print("Cache updated successfully")
+            
         except Exception as e:
             print(f"Error updating cache: {str(e)}")
 

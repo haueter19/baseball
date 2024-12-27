@@ -50,17 +50,22 @@
     function runSimulations(){
         lineupData = getLineupValues();
         $.ajax({
-            url: "/simulation/simulate",
+            url: "/sim/simulate",
             type: 'POST',
             data: JSON.stringify(lineupData),
             success: function(response){
                 console.log(response)
-                resultScore = response['awayResult']['runs_per_game'].toString()+' - '+response['homeResult']['runs_per_game'].toString()
+                resultScore = response['awayScore'].toString()+' - '+response['homeScore'].toString()
                 $("#score").text(resultScore)
-                $("#game_log_away_side").html(response['awayResult']['game_log'])
-                $("#game_log_home_side").html(response['homeResult']['game_log'])
-                $("#awayBoxResults").text(response['awayResult']['box_results'])
+                gameLog = ''
+                $.each(response['gameLog'], function(i,j){
+                    gameLog += j + '<br>'
+                })
+                $("#game_log_away_side").html(gameLog)
+                //$("#game_log_home_side").html(response['homeResult']['game_log'])
+                //$("#awayBoxResults").text(response['awayResult']['box_results'])
                 $("#home_win_pct").text(response['home_win_pct']+'%')
+
             }
         })
     }
@@ -95,8 +100,8 @@
         updateTable(1754, 'row_h3');
         $("#h4").val('690');
         updateTable(690, 'row_h4');
-        $("#h5").val('2764');
-        updateTable(2764, 'row_h5');
+        $("#h5").val('3432');
+        updateTable(3432, 'row_h5');
         $("#h6").val('275');
         updateTable(275, 'row_h6');
         $("#h7").val('3145');
@@ -303,6 +308,14 @@
     <div class="col-lg-5" id="home_team">
         <h5>Home Team</h5>
         <table>
+            <thead>
+                <th>#</th>
+                <th>Player</th>
+                <th>BA</th>
+                <th>OBP</th>
+                <th>SLG</th>
+                <th>OPS</th>
+            </thead>
             <tr id="row_h1">
                 <td>1</td>
                 <td>
@@ -419,7 +432,7 @@
                     <select id="h_p">
                         <option value="0">Pick a Pitcher</option>
                         {% for key, val in lg_pitchers.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            <option value="{{ val['PID'] }}">{{ val['Last'] }} {{ val['First'] }}</option>
                         {% endfor %}
                     </select>
                 </td>
@@ -432,17 +445,15 @@
     <div class="col-lg-4">
         <div id="ab_results">
             <h5 id="score">{{ score }}</h5>
-            <p id="home_win_pct">Home team win %: {{ home_win_pct }}%</p>
+            <p id="home_win_pct">Home team win percentage: {{ home_win_pct }}%</p>
             <p id="awayBoxResults"></p>
             
         </div>
     </div>
+</div>
+<div class="row mt-2">
     <div class="col-lg-4">
         <div id="game_log_away_side">
-        </div>
-    </div>
-    <div class="col-lg-4">
-        <div id="game_log_home_side">
         </div>
     </div>
 </div>
@@ -464,6 +475,9 @@
             updateTable(selectedPID, rowId);
         }
     });
+
+    var lp = '{{lg_pitchers|safe}}'
+
 </script>
 
 {% endblock %}

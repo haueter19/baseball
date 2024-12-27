@@ -10,8 +10,9 @@ templates = Jinja2Templates(directory="templates")
 #from data_init import df, pit
 import functions
 import routers.projections as projections
+from sim_game import BaseballGame, PlayerStats, PitcherStats
 
-router = APIRouter(prefix='/simulation', responses={404: {"description": "Not found"}})
+router = APIRouter(prefix='/sim', responses={404: {"description": "Not found"}})
 
 @router.get("/", response_class=HTMLResponse)
 async def run_sims(request: Request, org: Optional[str] = 'MABL', lg: Optional[str] = '35', innings: Optional[int] = 7, sims: Optional[int] = 1):
@@ -27,47 +28,74 @@ async def run_sims(request: Request, org: Optional[str] = 'MABL', lg: Optional[s
     
     # Subset just the league data for the last 4 years
     lg_data_subset = df.loc[lg_mask & (df['Year'] >= yr-3)]
-    print(lg_data_subset)
+
     stats = ['GP', 'PA', 'AB', 'R', 'H', 'single', 'double', 'triple', 'HR', 'RBI', 'BB', 'K', 'HBP', 'SB', 'CS', 'SF', 'SH', 'TB']
     plyrs = projections.generate_player_projections(lg_data_subset, stats, teams=lg_data_subset['Team'].unique().tolist()).sort_values(['Team', 'Last', 'First'])
     plyrs = functions.add_rate_stats(plyrs)
-    pit = cache.get_pitching_data(org=org, league=lg)
-    lg_pitchers = pit[(pit['Org']==org) & (pit['League']==lg) & (pit['Year']==yr)]
-    lg_pitchers['K_rate'] = lg_pitchers['K'] / lg_pitchers['ABA']
-    return templates.TemplateResponse("sim.html", {'request': request, 'org':org, 'lg':lg, 'yr':yr, 'players':plyrs.to_json(orient='records'), 'plyrs':plyrs, 'lg_pitchers':lg_pitchers})
+    pit = cache.get_pitching_data(org=org, league=lg, year=int(yr))
+    #lg_pitchers = pit[(pit['Year']==yr)].copy()
+    #lg_pitchers['K_rate'] = lg_pitchers['K'] / lg_pitchers['ABA']
+    return templates.TemplateResponse("sim.html", {'request': request, 'org':org, 'lg':lg, 'yr':yr, 'players':plyrs.to_json(orient='records'), 'plyrs':plyrs, 'lg_pitchers':pit})
 
 
 
 @router.post("/simulate", response_class=JSONResponse)
 async def post_simulations(request:Request):
     data = await request.json()
-    away_lineup = [int(i) for i in data['awayLineup']]
-    home_lineup = [int(i) for i in data['homeLineup']]
+    away_lineup_ids = [int(i) for i in data['awayLineup']]
+    home_lineup_ids = [int(i) for i in data['homeLineup']]
     players = pd.DataFrame(data['players'])
-    away_players = players[players['PID'].isin(away_lineup)].sort_values('PID', key=lambda x: x.map({k: v for v, k in enumerate(away_lineup)}))
-    home_players = players[players['PID'].isin(home_lineup)].sort_values('PID', key=lambda x: x.map({k: v for v, k in enumerate(home_lineup)}))
-    
-    for stat in ['single', 'double', 'triple', 'HR', 'BB', 'HBP', 'K']:
-        away_players[stat+'_per_PA'] = away_players[stat]/away_players['PA']
-        home_players[stat+'_per_PA'] = home_players[stat]/home_players['PA']
+    away_players = players[players['PID'].isin(away_lineup_ids)].sort_values('PID', key=lambda x: x.map({k: v for v, k in enumerate(away_lineup_ids)}))
+    home_players = players[players['PID'].isin(home_lineup_ids)].sort_values('PID', key=lambda x: x.map({k: v for v, k in enumerate(home_lineup_ids)}))
     
     pit = cache.get_pitching_data(org=data['org'], league=data['lg'])
-    pitcher_data = pit[(pit['PID'].isin([int(data['homePitcher']), int(data['awayPitcher'])])) & (pit['Org']==data['org']) & (pit['League']==data['lg']) & (pit['Year']==int(data['yr']))].reset_index()
-    pitcher_data['K_rate'] = pitcher_data['K']/pitcher_data['PAA']
-    pitcher_data['BB_rate'] = pitcher_data['BB']/pitcher_data['PAA']
-    pitcher_data['HBP_rate'] = pitcher_data['HBP']/pitcher_data['PAA']
-    pitcher_data['H_rate'] = pitcher_data['H']/pitcher_data['PAA']
+    #pitcher_data = pit[(pit['PID'].isin([int(data['homePitcher']), int(data['awayPitcher'])])) & (pit['Org']==data['org']) & (pit['League']==data['lg']) & (pit['Year']==int(data['yr']))].reset_index()
 
-    from sim_game import run_sim
     
-    home_result = run_sim(home_players, pitcher_data[pitcher_data['PID']==int(data['awayPitcher'])], int(data['innings']), int(data['sims']))
-    away_result = run_sim(away_players, pitcher_data[pitcher_data['PID']==int(data['homePitcher'])], int(data['innings']), int(data['sims']))
-    game_result_wins = 0
-    for j,k in zip(home_result['runs_scored'], away_result['runs_scored']):
-        if j > k:
-            game_result_wins += 1
-    home_win_pct = round(game_result_wins / int(data['sims']),3)
-    return {"data":data, 'type':str(type(data)), 'awayLineup':away_lineup, 'awayResult':away_result, 'homeLineup':home_lineup, 'homeResult':home_result, 'home_win_pct':home_win_pct}
+    games = int(data['sims'])
+    user_innings = int(data['innings'])
+
+    home_lineup = []
+    for i, rec in home_players.iterrows():
+        home_lineup.append(PlayerStats(rec['Last'], rec['PA'], rec['single'], rec['double'], rec['triple'], rec['HR'], rec['BB'], rec['HBP'], rec['K']))
+    
+    away_lineup = []
+    for i, rec in away_players.iterrows():
+        away_lineup.append(PlayerStats(rec['Last'], rec['PA'], rec['single'], rec['double'], rec['triple'], rec['HR'], rec['BB'], rec['HBP'], rec['K']))
+
+    dh = pit[(pit['PID']==int(data['homePitcher'])) & (pit['Year']==int(data['yr']))].rename(columns={'Last':'name', 'PAA':'batters_faced', 'H':'hits_allowed', 'BB':'bb_allowed', 'HBP':'hbp_allowed', 'K':'so_achieved'})\
+        [['name', 'batters_faced', 'hits_allowed', 'bb_allowed', 'hbp_allowed', 'so_achieved']].to_dict(orient='records')
+
+    for rec in dh:
+        home_pitcher = PitcherStats(**rec)
+    
+    dh = pit[(pit['Year']==int(data['yr'])) & (pit['PID']==int(data['awayPitcher']))].rename(columns={'Last':'name', 'PAA':'batters_faced', 'H':'hits_allowed', 'BB':'bb_allowed', 'HBP':'hbp_allowed', 'K':'so_achieved'})\
+        [['name', 'batters_faced', 'hits_allowed', 'bb_allowed', 'hbp_allowed', 'so_achieved']].to_dict(orient='records')
+
+    for rec in dh:
+        away_pitcher = PitcherStats(**rec)
+
+    game = BaseballGame(user_innings, home_lineup, away_lineup, home_pitcher, away_pitcher)
+
+    home_scores = []
+    away_scores = []
+
+    for g in range(games):
+        game.reset_game()
+        game_log = game.simulate_game()
+        home_scores.append(game.home_score)
+        away_scores.append(game.away_score)
+    
+    home_wins = 0
+    for a,b in zip(home_scores, away_scores):
+        if a>b:
+            home_wins += 1
+    home_win_pct = round((home_wins / games)*100,1)
+
+    for play in game_log:
+        print(play)
+    return {"data":data, 'type':str(type(data)), 'awayLineup':away_lineup, 'homeLineup':home_lineup, 'home_win_pct':home_win_pct, 'homeScore':round(sum(home_scores)/games,1), 
+            'awayScore':round(sum(away_scores)/games,1), 'gameLog':game_log}
     
 
 

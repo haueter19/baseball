@@ -4,5 +4,5 @@ pandas
 python-dateutil==2.7.5
 aiofiles==0.6.0
 plotly
-sqlalchemy
+sqlalchemy==2.0.36
 scikit-learn
