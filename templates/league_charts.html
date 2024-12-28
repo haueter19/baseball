@@ -13,7 +13,7 @@
 <script>
     let org = '{{org}}';
     let lg = '{{lg}}';
-    let highlightedTraceIndex = null;
+    let highlightedTraceIndex = 168;
 
     function updatePlayerCareerComparisonChart(){
         let stat = $("#select-stat-list").val()
@@ -80,35 +80,52 @@
 
 <div class="row mt-3">
     <div class="col">
-        Use dropdown to change chart<br>
-        <select id="select-stat-list">
-            <option value="">Select a statistic</option>
-            {% for stat in statList %}
-            <option value="{{stat}}">{{stat}}</option>
-            {% endfor %}
-        </select>
-        <br>
-    </div>
-</div>
-<div class="row mt-3">
-    <div class="col">
-        <div id="chart"></div>
-    </div>
-</div>
-<div class="row mt-3">
-    <div class="col">
-        Use dropdown to change chart<br>
-        <select id="select-stat-list-2">
-            {% for stat in ['', 'BA', 'OBP', 'SLG', 'OPS', 'wRAAc'] %}
-            <option value="{{stat}}">{{stat}}</option>
-            {% endfor %}
-        </select>
-        <br>
-    </div>
-</div>
-<div class="row mt-3">
-    <div class="col">
-        <div id="aging_curve"></div>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab" href="#home">Cumulative Stats</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#menu1">Aging Curves</a>
+            </li>
+        </ul>
+  
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane container active" id="home">
+                Click line to <font color="red">highlight</font>. Use dropdown to change chart statistic<br>
+                <select id="select-stat-list">
+                    <option value="">Select a statistic</option>
+                    {% for stat in statList %}
+                    <option value="{{stat}}">{{stat}}</option>
+                    {% endfor %}
+                </select>
+                <br>
+                <div class="row mt-3">
+                    <div class="col">
+                        <div id="chart"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane container fade" id="menu1">
+                <div class="row mt-3">
+                    <div class="col">
+                        Use dropdown to change chart<br>
+                        <select id="select-stat-list-2">
+                            {% for stat in ['', 'BA', 'OBP', 'SLG', 'OPS', 'wRAAc'] %}
+                            <option value="{{stat}}">{{stat}}</option>
+                            {% endfor %}
+                        </select>
+                        <br>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col">
+                        <div id="aging_curve"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

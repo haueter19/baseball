@@ -73,6 +73,7 @@ def career_line_chart(data_dict):
                 name=data_dict[i]['first']+' '+data_dict[i]['last'],
                 x=[n+1 for n in list(range(len(data_dict[i]['data'])))],
                 y=data_dict[i]['data'],
+                mode='lines',
                 marker_color = 'gray',
                 opacity = .2,
                 showlegend=False,
@@ -80,14 +81,15 @@ def career_line_chart(data_dict):
         )
 
     # Update the specific trace to make it stand out
-    index_to_highlight = list(data_dict.keys()).index(876)
-    fig.data[index_to_highlight].update(
-        marker_color='red',  # Change the color to red
-        opacity=1,  # Make it fully opaque
-        showlegend=True  # Show this line in the legend
-    )
+    #index_to_highlight = list(data_dict.keys()).index(876)
+    #fig.data[index_to_highlight].update(
+    #    marker_color='red',  # Change the color to red
+    #    opacity=1,  # Make it fully opaque
+    #    showlegend=True  # Show this line in the legend
+    #)
 
     fig.update_layout(
+        title="Player Cumulative Stat Comparison",
         height=650,
         template="seaborn",
         xaxis_dtick = 1,
@@ -166,7 +168,6 @@ async def aging_curve(request: Request, org: str, lg: str, stat: Optional[str] =
         df = df[df['Age']>=17]
 
     age_gp = group_by_age(df, lg)
-    print(age_gp)
 
     fig = go.Figure()
     fig.add_trace(
@@ -178,6 +179,7 @@ async def aging_curve(request: Request, org: str, lg: str, stat: Optional[str] =
         )
     )
     fig.update_layout(
+        title="Average League Stats of Players by Age<br>3 Year Moving Average",
         template="seaborn",
         height=650,
         xaxis_title = 'Age',
