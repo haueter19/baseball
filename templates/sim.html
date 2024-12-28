@@ -55,16 +55,16 @@
             data: JSON.stringify(lineupData),
             success: function(response){
                 console.log(response)
-                resultScore = response['awayScore'].toString()+' - '+response['homeScore'].toString()
+                resultScore = "Away Team: "+response['awayScore'].toString()+' - Home Team: ' + response['homeScore'].toString()
                 $("#score").text(resultScore)
-                gameLog = ''
+                gameLog = '<h5>Game Log</h5>'
                 $.each(response['gameLog'], function(i,j){
                     gameLog += j + '<br>'
                 })
                 $("#game_log_away_side").html(gameLog)
                 //$("#game_log_home_side").html(response['homeResult']['game_log'])
                 //$("#awayBoxResults").text(response['awayResult']['box_results'])
-                $("#home_win_pct").text(response['home_win_pct']+'%')
+                $("#home_win_pct").text("Home team win percentage: "+response['home_win_pct']+'%')
 
             }
         })
@@ -89,8 +89,8 @@
         updateTable(2043, 'row_a8');
         $("#a9").val('1319');
         updateTable(1319, 'row_a9');
-        $("#a10").val('1886');
-        updateTable(1886, 'row_a10');
+        $("#a10").val('2019');
+        updateTable('2019', 'row_a10');
         $("#a_p").val('484');
         $("#h1").val('3144');
         updateTable(3144, 'row_h1');
@@ -152,24 +152,33 @@
 <form id="myForm" method="GET">
 <div class="row">
     <div class="col-lg-2">
-            <input type="radio" id="MABL" name="org" value="MABL" checked>MABL
-            <input type="radio" id="RRL" name="org" value="RRL">RRL
-            <input type="radio" id="MSCR" name="org" value="MSCR" disabled>MSCR<br>
-            <input type="radio" name="lg" value="17" disabled>17+
-            <input type="radio" name="lg" value="18">18+
-            <input type="radio" name="lg" value="35" checked>35+
-            <input type="radio" name="lg" value="45" disabled>45+
-            <input type="radio" name="lg" value="55" disabled>55+<br>
-            <input type="radio" name="lg" value="Southern">Southern
-            <input type="radio" name="lg" value="Northern">Northern<br>
-            <br>
-            <label for="range"># of Simulations</label><br><input type="range"name="sims" id="sims" min="1" max="1000" step="50" value="1"><br>
-            <br><label for="innings">Innings:</label>
-            <input type="radio" name="innings" value="7" checked>7
-            <input type="radio" name="innings" value="9">9
-            <br><input type="button" id="submit-sims" class="mt-2" value='Run Simulations' onclick="runSimulations()">
-            <br><input type="button" id="submit-league-change" value='Change League' onclick="submitFormChangeLeague()">
-            <br><input type='button' id="As_35" value="A's" onclick="setDefaultAs35()">
+        <label for="org"><b>Org</b></label><br>
+        <input type="radio" id="MABL" name="org" value="MABL" checked>MABL
+        <input type="radio" id="RRL" name="org" value="RRL">RRL
+        <input type="radio" id="MSCR" name="org" value="MSCR" disabled>MSCR<br>
+        <br>
+        
+        <label for="lg"><b>League</b></label>
+        <br>
+        <input type="radio" name="lg" value="17" disabled>17+
+        <input type="radio" name="lg" value="18">18+
+        <input type="radio" name="lg" value="35" checked>35+
+        <input type="radio" name="lg" value="45" disabled>45+
+        <input type="radio" name="lg" value="55" disabled>55+<br>
+        <input type="radio" name="lg" value="Southern">Southern
+        <input type="radio" name="lg" value="Northern">Northern<br>
+        <br>
+        
+        <label for="range"><b># of Simulations</b></label>
+        <br><input type="range"name="sims" id="sims" min="1" max="1000" step="5" value="1"><br>
+        
+        <br><label for="innings"><b>Innings:</b></label>
+        <input type="radio" name="innings" value="7" checked>7
+        <input type="radio" name="innings" value="9">9
+        <br><br><input type='button' id="As_35" value="Set Default Lineup" onclick="setDefaultAs35()">
+        <br><br><input type="button" id="submit-sims" class="button btn-primary mt-2" value='Run Simulations' onclick="runSimulations()">
+
+        <br><br><input type="button" id="submit-league-change" value='Change League' onclick="submitFormChangeLeague()">
     </div>
     <div class="col-lg-5" id="away_team">
         <h5>Away Team</h5>
