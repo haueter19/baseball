@@ -55,12 +55,14 @@
             data: JSON.stringify(lineupData),
             success: function(response){
                 console.log(response)
+                console.log(response['data'])
                 resultScore = "Away Team: "+response['awayScore'].toString()+' - Home Team: ' + response['homeScore'].toString()
                 $("#score").text(resultScore)
                 gameLog = '<h5>Game Log</h5>'
                 $.each(response['gameLog'], function(i,j){
                     gameLog += j + '<br>'
                 })
+                $("#numOfSimsChosen").text(`Number of simulations run: ${response['data']['sims']}`)
                 $("#game_log_away_side").html(gameLog)
                 //$("#game_log_home_side").html(response['homeResult']['game_log'])
                 //$("#awayBoxResults").text(response['awayResult']['box_results'])
@@ -453,6 +455,7 @@
 <div class="row">
     <div class="col-lg-4">
         <div id="ab_results">
+            <p id="numOfSimsChosen"></p>
             <h5 id="score">{{ score }}</h5>
             <p id="home_win_pct">Home team win percentage: {{ home_win_pct }}%</p>
             <p id="awayBoxResults"></p>
