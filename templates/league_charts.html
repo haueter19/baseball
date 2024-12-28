@@ -13,6 +13,7 @@
 <script>
     let org = '{{org}}';
     let lg = '{{lg}}';
+    let highlightedTraceIndex = null;
 
     function updatePlayerCareerComparisonChart(){
         let stat = $("#select-stat-list").val()
@@ -21,11 +22,48 @@
             url: `/{{org}}/{{lg}}/charts/player_comparison/${stat}`,
             type: 'GET',
             success: function(response){
-                console.log(response)
-                Plotly.newPlot('chart', JSON.parse(response));
+                console.log(response);
+                let chartData = JSON.parse(response);
+                Plotly.newPlot('chart', chartData);
+
+                var myPlot = document.getElementById('chart');
+
+                // Function to handle the click event
+                function handleClick(data) {
+                    // Access information about the clicked point
+                    var point = data.points[0];
+                    var traceIndex = point.curveNumber;
+                    var traceName = point.data.name;
+
+                    // Reset the previously highlighted line
+                    if (highlightedTraceIndex !== null && highlightedTraceIndex !== traceIndex) {
+                        chartData.data[highlightedTraceIndex].marker.color = 'gray'; // Reset to original color
+                        chartData.data[highlightedTraceIndex].opacity = 0.2; // Reset to original opacity
+                        chartData.data[highlightedTraceIndex].showlegend = false; // Reset to original legend visibility
+                    }
+
+                    // Update the color of the clicked line
+                    chartData.data[traceIndex].marker.color = 'red'; // Change to desired color
+                    chartData.data[traceIndex].opacity = 1; // Make it fully opaque
+                    chartData.data[traceIndex].showlegend = true; // Show this line in the legend
+
+                    // Update the highlighted trace index
+                    highlightedTraceIndex = traceIndex;
+
+                    // Re-render the chart with the updated data
+                    Plotly.newPlot('chart', chartData);
+
+                    // Re-attach the click event listener
+                    myPlot.on('plotly_click', handleClick);
+
+                    console.log('Clicked line:', traceName, traceIndex);
+                }
+
+                // Attach the click event listener to the plot
+                myPlot.on('plotly_click', handleClick);
             }
         })
-    }
+    };
 
     function updateAgingCurve(stat){
         $.ajax({
@@ -34,6 +72,7 @@
             success: function(response){
                 console.log(response)
                 Plotly.newPlot('aging_curve', JSON.parse(response));
+                
             }
         })  
     }
@@ -82,5 +121,7 @@
         console.log(this.value)
         updateAgingCurve(this.value)
     })  
+
+
 </script>
 {% endblock %}

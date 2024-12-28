@@ -71,7 +71,7 @@ def career_line_chart(data_dict):
         fig.add_trace(
             go.Scatter(
                 name=data_dict[i]['first']+' '+data_dict[i]['last'],
-                x=list(range(len(data_dict[i]['data']))),
+                x=[n+1 for n in list(range(len(data_dict[i]['data'])))],
                 y=data_dict[i]['data'],
                 marker_color = 'gray',
                 opacity = .2,
@@ -88,7 +88,10 @@ def career_line_chart(data_dict):
     )
 
     fig.update_layout(
-        height=600,
+        height=650,
+        template="seaborn",
+        xaxis_dtick = 1,
+        xaxis_title = 'Years'
     )
     return fig
 
@@ -175,7 +178,10 @@ async def aging_curve(request: Request, org: str, lg: str, stat: Optional[str] =
         )
     )
     fig.update_layout(
+        template="seaborn",
         height=650,
-        
+        xaxis_title = 'Age',
+        xaxis_dtick = 1,
+        #yaxis = dict('title'='stat'), 
     )
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
