@@ -57,11 +57,11 @@ async def post_simulations(request:Request):
 
     home_lineup = []
     for i, rec in home_players.iterrows():
-        home_lineup.append(PlayerStats(rec['Last'], rec['PA'], rec['single'], rec['double'], rec['triple'], rec['HR'], rec['BB'], rec['HBP'], rec['K']))
-    
+        home_lineup.append(PlayerStats(rec['First']+' '+rec['Last'], rec['PA'], rec['single'], rec['double'], rec['triple'], rec['HR'], rec['BB'], rec['HBP'], rec['K']))
+
     away_lineup = []
     for i, rec in away_players.iterrows():
-        away_lineup.append(PlayerStats(rec['Last'], rec['PA'], rec['single'], rec['double'], rec['triple'], rec['HR'], rec['BB'], rec['HBP'], rec['K']))
+        away_lineup.append(PlayerStats(rec['First']+' '+rec['Last'], rec['PA'], rec['single'], rec['double'], rec['triple'], rec['HR'], rec['BB'], rec['HBP'], rec['K']))
 
     dh = pit[(pit['PID']==int(data['homePitcher'])) & (pit['Year']==int(data['yr']))].rename(columns={'Last':'name', 'PAA':'batters_faced', 'H':'hits_allowed', 'BB':'bb_allowed', 'HBP':'hbp_allowed', 'K':'so_achieved'})\
         [['name', 'batters_faced', 'hits_allowed', 'bb_allowed', 'hbp_allowed', 'so_achieved']].to_dict(orient='records')
@@ -75,8 +75,7 @@ async def post_simulations(request:Request):
     for rec in dh:
         away_pitcher = PitcherStats(**rec)
 
-    game = BaseballGame(user_innings, home_lineup, away_lineup, home_pitcher, away_pitcher)
-
+    game = BaseballGame(home_lineup, away_lineup, home_pitcher, away_pitcher, user_innings)
     home_scores = []
     away_scores = []
 
@@ -92,10 +91,17 @@ async def post_simulations(request:Request):
             home_wins += 1
     home_win_pct = round((home_wins / games)*100,1)
 
-    for play in game_log:
-        print(play)
+    game.results()
+    game.create_box_score()
+    fig = game.plot_win_exp()
+    print(game.box_score)
+    if len(game.box_score['home_runs']) < len(game.box_score['away_runs']):
+        game.box_score['home_runs'].extend(['']*(len(game.box_score['away_runs'])-len(game.box_score['home_runs'])))
+    game.box_score['home_team'] = home_players['Team'].iloc[0]
+    game.box_score['away_team'] = away_players['Team'].iloc[0]
+    game.results()
     return {"data":data, 'type':str(type(data)), 'awayLineup':away_lineup, 'homeLineup':home_lineup, 'home_win_pct':home_win_pct, 'homeScore':round(sum(home_scores)/games,1), 
-            'awayScore':round(sum(away_scores)/games,1), 'gameLog':game_log}
+            'awayScore':round(sum(away_scores)/games,1), 'gameLog':game_log, 'fig':fig.to_json(), 'boxScore':game.box_score, 'results':game.result_df.to_json(orient='records')}
     
 
 

@@ -15,7 +15,7 @@
         $('#myForm').append(input);
         $("#myForm").submit()
     }
-
+    let resp = {};
 
     function getLineupValues(){
         let inningSelection = 0
@@ -55,7 +55,9 @@
             data: JSON.stringify(lineupData),
             success: function(response){
                 console.log(response)
+                resp = response;
                 console.log(response['data'])
+                $("#controls").hide(duration=500);
                 resultScore = "Away Team: "+response['awayScore'].toString()+' - Home Team: ' + response['homeScore'].toString()
                 $("#score").text(resultScore)
                 gameLog = '<h5>Game Log</h5>'
@@ -63,11 +65,85 @@
                     gameLog += j + '<br>'
                 })
                 $("#numOfSimsChosen").text(`Number of simulations run: ${response['data']['sims']}`)
-                $("#game_log_away_side").html(gameLog)
+                $("#gameLog").html(gameLog)
                 //$("#game_log_home_side").html(response['homeResult']['game_log'])
                 //$("#awayBoxResults").text(response['awayResult']['box_results'])
                 $("#home_win_pct").text("Home team win percentage: "+response['home_win_pct']+'%')
+                Plotly.newPlot('winChart', JSON.parse(response['fig']), {responsive: true})
 
+                html = '<table class="table table-sm table-condensed"><thead><th>Team</th>'
+                $.each(response['boxScore']['away_runs'], function(i,j){
+                    html += '<th>'+ (parseInt(i)+1).toString() +'</th>'
+                })
+                html += '<th>R</th><th>H</th><th>E</th></thead><tr>'
+                html += '<td>' + response['boxScore']['away_team'] + '</td>'
+                $("#boxScoreAwayName").text(response['boxScore']['away_team']);
+
+                $.each(response['boxScore']['away_runs'], function(i,j){
+                    html += '<td>'+j+'</td>'
+                })
+                html += '<td>' + response['boxScore']['away_runs'].reduce((a,b) => a+b, 0) + '</td>'
+                html += '<td>' + response['boxScore']['away_hits'] + '</td>'
+                html += '<td>' + response['boxScore']['away_errors'] + '</td>'
+                html += '</tr><tr>'
+                html += '<td>' + response['boxScore']['home_team'] + '</td>'
+                $("#boxScoreHomeName").text(response['boxScore']['home_team']);
+                $.each(response['boxScore']['home_runs'], function(i,j){
+                    html += '<td>'+j+'</td>'
+                })
+                html += '<td>' + response['boxScore']['home_runs'].reduce((a,b) => a+b, 0) + '</td>'
+                html += '<td>' + response['boxScore']['home_hits'] + '</td>'
+                html += '<td>' + response['boxScore']['home_errors'] + '</td>'
+                html += '</tr></table>'
+                $("#boxScore").html(html);
+
+                // Box Score Stats
+                // Away Team
+                html = '<table class="table table-sm table-condensed mt-3"><thead><th>Player</th><th>AB</th><th>H</th><th>2B</th><th>3B</th><th>HR</th><th>BB</th><th>HBP</th><th>K</th><th>WPA</th></thead>'
+                stats = {'H':0, 'AB':0, '2B':0, '3B':0, 'HR':0, 'bb':0, 'hbp':0, 'so':0, 'wpa':0}
+                $.each(resp['awayLineup'], function(i,v){
+                    $.each(resp['boxScore']['stats'], function(j,k){
+                        if (k['batter'] == v['name']){
+                            console.log(k)
+                            stats['H'] += k['H']
+                            stats['AB'] += k['AB']
+                            stats['2B'] += k['2B']
+                            stats['3B'] += k['3B']
+                            stats['HR'] += k['HR']
+                            stats['bb'] += k['bb']
+                            stats['hbp'] += k['hbp']
+                            stats['so'] += k['so']
+                            stats['wpa'] += k['wpa']
+                            html += '<tr><td>'+k['batter']+'</td><td>'+k['AB']+'</td><td>'+k['H']+'</td><td>'+k['2B']+'</td><td>'+k['3B']+'</td><td>'+k['HR']+'</td><td>'+k['bb']+'</td><td>'+k['hbp']+'</td><td>'+k['so']+'</td><td>'+k['wpa'].toFixed(2)+'</td></tr>'        
+                        }
+                    })
+                })
+                html += '<tr><b><td>Total</td><td>'+stats['AB']+'</td><td>'+stats['H']+'</td><td>'+stats['2B']+'</td><td>'+stats['3B']+'</td><td>'+stats['HR']+'</td><td>'+stats['bb']+'</td><td>'+stats['hbp']+'</td><td>'+stats['so']+'</td><td>'+stats['wpa'].toFixed(2)+'</td></b></tr>'
+                html += '</table>'
+                $("#gameStatsAway").html(html)
+                // Home Team
+                html = '<table class="table table-sm table-condensed mt-3"><thead><th>Player</th><th>AB</th><th>H</th><th>2B</th><th>3B</th><th>HR</th><th>BB</th><th>HBP</th><th>K</th><th>WPA</th></thead>'
+                stats = {'H':0, 'AB':0, '2B':0, '3B':0, 'HR':0, 'bb':0, 'hbp':0, 'so':0, 'wpa':0}
+                $.each(resp['homeLineup'], function(i,v){
+                    $.each(resp['boxScore']['stats'], function(j,k){
+                        if (k['batter'] == v['name']){
+                            console.log(k)
+                            stats['H'] += k['H']
+                            stats['AB'] += k['AB']
+                            stats['2B'] += k['2B']
+                            stats['3B'] += k['3B']
+                            stats['HR'] += k['HR']
+                            stats['bb'] += k['bb']
+                            stats['hbp'] += k['hbp']
+                            stats['so'] += k['so']
+                            stats['wpa'] += k['wpa']
+                            html += '<tr><td>'+k['batter']+'</td><td>'+k['AB']+'</td><td>'+k['H']+'</td><td>'+k['2B']+'</td><td>'+k['3B']+'</td><td>'+k['HR']+'</td><td>'+k['bb']+'</td><td>'+k['hbp']+'</td><td>'+k['so']+'</td><td>'+k['wpa'].toFixed(2)+'</td></tr>'        
+                        }
+                    })
+                })
+                html += '<tr><b><td>Total</td><td>'+stats['AB']+'</td><td>'+stats['H']+'</td><td>'+stats['2B']+'</td><td>'+stats['3B']+'</td><td>'+stats['HR']+'</td><td>'+stats['bb']+'</td><td>'+stats['hbp']+'</td><td>'+stats['so']+'</td><td>'+stats['wpa'].toFixed(2)+'</td></b></tr>'
+                html += '</table>'
+                $("#gameStatsHome").html(html)
             }
         })
     }
@@ -151,307 +227,313 @@
     
 </script>
 
-<form id="myForm" method="GET">
+<div class="container" id="controls">
+    <form id="myForm" method="GET">
+    <div class="row">
+        <div class="col-lg-2">
+            <label for="org"><b>Org</b></label><br>
+            <input type="radio" id="MABL" name="org" value="MABL" checked>MABL
+            <input type="radio" id="RRL" name="org" value="RRL">RRL
+            <input type="radio" id="MSCR" name="org" value="MSCR" disabled>MSCR<br>
+            <br>
+            
+            <label for="lg"><b>League</b></label>
+            <br>
+            <input type="radio" name="lg" value="17" disabled>17+
+            <input type="radio" name="lg" value="18">18+
+            <input type="radio" name="lg" value="35" checked>35+
+            <input type="radio" name="lg" value="45" disabled>45+
+            <input type="radio" name="lg" value="55" disabled>55+<br>
+            <input type="radio" name="lg" value="Southern">Southern
+            <input type="radio" name="lg" value="Northern">Northern<br>
+            <br>
+            
+            <label for="range"><b># of Simulations</b></label>
+            <br><input type="range"name="sims" id="sims" min="1" max="1000" step="5" value="1"><br>
+            
+            <br><label for="innings"><b>Innings:</b></label>
+            <input type="radio" name="innings" value="7" checked>7
+            <input type="radio" name="innings" value="9">9
+            <br><br><input type='button' id="As_35" value="Set Default Lineup" onclick="setDefaultAs35()">    
+            <br><br><input type="button" id="submit-league-change" value='Change League' onclick="submitFormChangeLeague()">
+        </div>
+        <div class="col-lg-5" id="away_team">
+            <h5>Away Team</h5>
+            <table>
+                <thead>
+                    <th>#</th>
+                    <th>Player</th>
+                    <th>BA</th>
+                    <th>OBP</th>
+                    <th>SLG</th>
+                    <th>OPS</th>
+                </thead>
+                <tr id="row_a1">
+                    <td>1</td>
+                    <td>
+                        <select id="a1">
+                            <option value="0">Pick a player</option>
+                        {% for key, val in plyrs.iterrows() %}
+                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_a2">
+                    <td>2</td>
+                    <td>
+                        <select id="a2">
+                            <option value="0">Pick a player</option>
+                        {% for key, val in plyrs.iterrows() %}
+                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_a3">
+                    <td>3</td>
+                    <td>
+                        <select id="a3">
+                            <option value="0">Pick a player</option>
+                            {% for key, val in plyrs.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_a4">
+                    <td>4</td>
+                    <td>
+                        <select id="a4">
+                            <option value="0">Pick a player</option>
+                            {% for key, val in plyrs.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_a5">
+                    <td>5</td>
+                    <td>
+                        <select id="a5">
+                            <option value="0">Pick a player</option>
+                            {% for key, val in plyrs.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_a6">
+                    <td>6</td>
+                    <td>
+                        <select id="a6">
+                            <option value="0">Pick a player</option>
+                            {% for key, val in plyrs.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_a7">
+                    <td>7</td>
+                    <td>
+                        <select id="a7">
+                            <option value="0">Pick a player</option>
+                            {% for key, val in plyrs.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_a8">
+                    <td>8</td>
+                    <td>
+                        <select id="a8">
+                            <option value="0">Pick a player</option>
+                            {% for key, val in plyrs.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_a9">
+                    <td>9</td>
+                    <td>
+                        <select id="a9">
+                            <option value="0">Pick a player</option>
+                            {% for key, val in plyrs.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_a10">
+                    <td>10</td>
+                    <td>
+                        <select id="a10">
+                            <option value="0">Pick a player</option>
+                            {% for key, val in plyrs.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>P</td>
+                    <td>
+                        <select id="a_p">
+                            <option value="0">Pick a Pitcher</option>
+                            {% for key, val in lg_pitchers.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-lg-5" id="home_team">
+            <h5>Home Team</h5>
+            <table>
+                <thead>
+                    <th>#</th>
+                    <th>Player</th>
+                    <th>BA</th>
+                    <th>OBP</th>
+                    <th>SLG</th>
+                    <th>OPS</th>
+                </thead>
+                <tr id="row_h1">
+                    <td>1</td>
+                    <td>
+                        <select id="h1">
+                            <option value="0">Pick a player</option>
+                        {% for key, val in plyrs.iterrows() %}
+                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_h2">
+                    <td>2</td>
+                    <td>
+                        <select id="h2">
+                            <option value="0">Pick a player</option>
+                            {% for key, val in plyrs.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_h3">
+                    <td>3</td>
+                    <td>
+                        <select id="h3">
+                            <option value="0">Pick a player</option>
+                            {% for key, val in plyrs.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_h4">
+                    <td>4</td>
+                    <td>
+                        <select id="h4">
+                            <option value="0">Pick a player</option>
+                            {% for key, val in plyrs.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_h5">
+                    <td>5</td>
+                    <td>
+                        <select id="h5">
+                            <option value="0">Pick a player</option>
+                            {% for key, val in plyrs.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_h6">
+                    <td>6</td>
+                    <td>
+                        <select id="h6">
+                            <option value="0">Pick a player</option>
+                            {% for key, val in plyrs.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_h7">
+                    <td>7</td>
+                    <td>
+                        <select id="h7">
+                            <option value="0">Pick a player</option>
+                            {% for key, val in plyrs.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_h8">
+                    <td>8</td>
+                    <td>
+                        <select id="h8">
+                            <option value="0">Pick a player</option>
+                            {% for key, val in plyrs.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_h9">
+                    <td>9</td>
+                    <td>
+                        <select id="h9">
+                            <option value="0">Pick a player</option>
+                            {% for key, val in plyrs.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row_h10">
+                    <td>10</td>
+                    <td>
+                        <select id="h10">
+                            <option value="0">Pick a player</option>
+                            {% for key, val in plyrs.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>P</td>
+                    <td>
+                        <select id="h_p">
+                            <option value="0">Pick a Pitcher</option>
+                            {% for key, val in lg_pitchers.iterrows() %}
+                                <option value="{{ val['PID'] }}">{{ val['Last'] }} {{ val['First'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    </form>
+</div>
 <div class="row">
-    <div class="col-lg-2">
-        <label for="org"><b>Org</b></label><br>
-        <input type="radio" id="MABL" name="org" value="MABL" checked>MABL
-        <input type="radio" id="RRL" name="org" value="RRL">RRL
-        <input type="radio" id="MSCR" name="org" value="MSCR" disabled>MSCR<br>
-        <br>
-        
-        <label for="lg"><b>League</b></label>
-        <br>
-        <input type="radio" name="lg" value="17" disabled>17+
-        <input type="radio" name="lg" value="18">18+
-        <input type="radio" name="lg" value="35" checked>35+
-        <input type="radio" name="lg" value="45" disabled>45+
-        <input type="radio" name="lg" value="55" disabled>55+<br>
-        <input type="radio" name="lg" value="Southern">Southern
-        <input type="radio" name="lg" value="Northern">Northern<br>
-        <br>
-        
-        <label for="range"><b># of Simulations</b></label>
-        <br><input type="range"name="sims" id="sims" min="1" max="1000" step="5" value="1"><br>
-        
-        <br><label for="innings"><b>Innings:</b></label>
-        <input type="radio" name="innings" value="7" checked>7
-        <input type="radio" name="innings" value="9">9
-        <br><br><input type='button' id="As_35" value="Set Default Lineup" onclick="setDefaultAs35()">
-        <br><br><input type="button" id="submit-sims" class="button btn-primary mt-2" value='Run Simulations' onclick="runSimulations()">
-
-        <br><br><input type="button" id="submit-league-change" value='Change League' onclick="submitFormChangeLeague()">
-    </div>
-    <div class="col-lg-5" id="away_team">
-        <h5>Away Team</h5>
-        <table>
-            <thead>
-                <th>#</th>
-                <th>Player</th>
-                <th>BA</th>
-                <th>OBP</th>
-                <th>SLG</th>
-                <th>OPS</th>
-            </thead>
-            <tr id="row_a1">
-                <td>1</td>
-                <td>
-                    <select id="a1">
-                        <option value="0">Pick a player</option>
-                    {% for key, val in plyrs.iterrows() %}
-                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                    {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_a2">
-                <td>2</td>
-                <td>
-                    <select id="a2">
-                        <option value="0">Pick a player</option>
-                    {% for key, val in plyrs.iterrows() %}
-                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                    {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_a3">
-                <td>3</td>
-                <td>
-                    <select id="a3">
-                        <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_a4">
-                <td>4</td>
-                <td>
-                    <select id="a4">
-                        <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_a5">
-                <td>5</td>
-                <td>
-                    <select id="a5">
-                        <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_a6">
-                <td>6</td>
-                <td>
-                    <select id="a6">
-                        <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_a7">
-                <td>7</td>
-                <td>
-                    <select id="a7">
-                        <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_a8">
-                <td>8</td>
-                <td>
-                    <select id="a8">
-                        <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_a9">
-                <td>9</td>
-                <td>
-                    <select id="a9">
-                        <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_a10">
-                <td>10</td>
-                <td>
-                    <select id="a10">
-                        <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>P</td>
-                <td>
-                    <select id="a_p">
-                        <option value="0">Pick a Pitcher</option>
-                        {% for key, val in lg_pitchers.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <div class="col-lg-5" id="home_team">
-        <h5>Home Team</h5>
-        <table>
-            <thead>
-                <th>#</th>
-                <th>Player</th>
-                <th>BA</th>
-                <th>OBP</th>
-                <th>SLG</th>
-                <th>OPS</th>
-            </thead>
-            <tr id="row_h1">
-                <td>1</td>
-                <td>
-                    <select id="h1">
-                        <option value="0">Pick a player</option>
-                    {% for key, val in plyrs.iterrows() %}
-                        <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                    {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_h2">
-                <td>2</td>
-                <td>
-                    <select id="h2">
-                        <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_h3">
-                <td>3</td>
-                <td>
-                    <select id="h3">
-                        <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_h4">
-                <td>4</td>
-                <td>
-                    <select id="h4">
-                        <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_h5">
-                <td>5</td>
-                <td>
-                    <select id="h5">
-                        <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_h6">
-                <td>6</td>
-                <td>
-                    <select id="h6">
-                        <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_h7">
-                <td>7</td>
-                <td>
-                    <select id="h7">
-                        <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_h8">
-                <td>8</td>
-                <td>
-                    <select id="h8">
-                        <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_h9">
-                <td>9</td>
-                <td>
-                    <select id="h9">
-                        <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr id="row_h10">
-                <td>10</td>
-                <td>
-                    <select id="h10">
-                        <option value="0">Pick a player</option>
-                        {% for key, val in plyrs.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }}, {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>P</td>
-                <td>
-                    <select id="h_p">
-                        <option value="0">Pick a Pitcher</option>
-                        {% for key, val in lg_pitchers.iterrows() %}
-                            <option value="{{ val['PID'] }}">{{ val['Last'] }} {{ val['First'] }}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-            </tr>
-        </table>
+    <div class="col">
+        <button type="button" id="controlsToggle" class="button btn-success">Show/Hide Controls</button>
+        <input type="button" id="submit-sims" class="button btn-primary mt-2" value='Run Simulations' onclick="runSimulations()">
     </div>
 </div>
-</form>
 <div class="row">
     <div class="col-lg-4">
         <div id="ab_results">
@@ -459,16 +541,31 @@
             <h5 id="score">{{ score }}</h5>
             <p id="home_win_pct">Home team win percentage: {{ home_win_pct }}%</p>
             <p id="awayBoxResults"></p>
-            
         </div>
+    </div>
+    <div class="col">
+        <div id="boxScore"></div>
     </div>
 </div>
 <div class="row mt-2">
     <div class="col-lg-4">
-        <div id="game_log_away_side">
-        </div>
+        <div id="gameLog" style="max-height:700px; overflow-y: auto;"></div>
+    </div>
+    <div class="col-lg-8">
+        <div id="winChart"></div>
     </div>
 </div>
+<div class="row mt-4">
+    <div class="col">
+        <h5><span id="boxScoreAwayName">Away Team</span> Stats</h5>
+        <div id="gameStatsAway"></div>
+    </div>
+    <div class="col">
+        <h5><span id="boxScoreHomeName">Home Team</span> Stats</h5>
+        <div id="gameStatsHome"></div>
+    </div>
+</div>
+
 <script>
     // Attach event listener to the dropdown
     $(document).ready(function(){
@@ -490,6 +587,11 @@
                 updateTable(selectedPID, rowId);
             }
         });
+
+        // Function to show/hide the controls
+        $("#controlsToggle").on('click', function(){
+            $("#controls").toggle(duration=500);
+        })
     })
     
 

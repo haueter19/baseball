@@ -53,6 +53,7 @@ app.include_router(nav.router)
 
 @app.get('/')
 async def slash():
+    #pd.read_sql("SELECT * FROM hitting limit 5", db)
     return RedirectResponse("/home")
 
 
