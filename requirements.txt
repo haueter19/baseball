@@ -6,3 +6,5 @@ aiofiles==0.6.0
 plotly
 sqlalchemy==2.0.36
 scikit-learn
+jinja2
+uvicorn
